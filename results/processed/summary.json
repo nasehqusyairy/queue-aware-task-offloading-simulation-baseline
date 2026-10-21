@@ -1,0 +1,156 @@
+[
+  {
+    "run_id": "20261021T053932Z_trade-off_10devices",
+    "method": "trade-off",
+    "devices": 10,
+    "duration_minutes": 1,
+    "duration_seconds": 60,
+    "architecture": "EDGE_AND_CLOUD",
+    "validity": "technical baseline using built-in default orchestrator",
+    "status": "completed",
+    "generated_tasks": 62,
+    "successful_tasks": 12,
+    "failed_tasks": 50,
+    "task_success_rate": 0.1935483870967742,
+    "energy_consumption": 2.4964,
+    "energy_unit": "Wh",
+    "workload_distribution": {
+      "Cloud": 3,
+      "Edge": 9,
+      "Mist": 0
+    },
+    "source": "raw/2026-10-21_12-39-37/Sequential_simulation.csv"
+  },
+  {
+    "run_id": "20261021T054029Z_round-robin_10devices",
+    "method": "round-robin",
+    "devices": 10,
+    "duration_minutes": 1,
+    "duration_seconds": 60,
+    "architecture": "EDGE_AND_CLOUD",
+    "validity": "technical baseline using built-in default orchestrator",
+    "status": "completed",
+    "generated_tasks": 62,
+    "successful_tasks": 41,
+    "failed_tasks": 21,
+    "task_success_rate": 0.6612903225806451,
+    "energy_consumption": 2.4834,
+    "energy_unit": "Wh",
+    "workload_distribution": {
+      "Cloud": 3,
+      "Edge": 38,
+      "Mist": 0
+    },
+    "source": "raw/2026-10-21_12-40-34/Sequential_simulation.csv"
+  },
+  {
+    "run_id": "20261021T054047Z_trade-off_10devices",
+    "method": "trade-off",
+    "devices": 10,
+    "duration_minutes": 1,
+    "duration_seconds": 60,
+    "architecture": "EDGE_AND_CLOUD",
+    "validity": "technical baseline using built-in default orchestrator",
+    "status": "completed",
+    "generated_tasks": 62,
+    "successful_tasks": 42,
+    "failed_tasks": 20,
+    "task_success_rate": 0.6774193548387096,
+    "energy_consumption": 2.5083,
+    "energy_unit": "Wh",
+    "workload_distribution": {
+      "Cloud": 12,
+      "Edge": 30,
+      "Mist": 0
+    },
+    "source": "raw/2026-10-21_12-40-52/Sequential_simulation.csv"
+  },
+  {
+    "run_id": "20261021T054157Z_trade-off_10devices",
+    "method": "trade-off",
+    "devices": 10,
+    "duration_minutes": 1,
+    "duration_seconds": 60,
+    "architecture": "EDGE_AND_CLOUD",
+    "validity": "technical baseline using built-in default orchestrator",
+    "status": "completed",
+    "generated_tasks": 62,
+    "successful_tasks": 42,
+    "failed_tasks": 20,
+    "task_success_rate": 0.6774193548387096,
+    "energy_consumption": 2.4829,
+    "energy_unit": "Wh",
+    "workload_distribution": {
+      "Cloud": 3,
+      "Edge": 39,
+      "Mist": 0
+    },
+    "source": "raw/2026-10-21_12-42-02/Sequential_simulation.csv"
+  },
+  {
+    "run_id": "20261021T054203658391830_trade-off_10devices",
+    "method": "trade-off",
+    "devices": 10,
+    "duration_minutes": 1,
+    "duration_seconds": 60,
+    "architecture": "EDGE_AND_CLOUD",
+    "validity": "technical baseline using built-in default orchestrator",
+    "status": "completed",
+    "generated_tasks": 62,
+    "successful_tasks": 42,
+    "failed_tasks": 20,
+    "task_success_rate": 0.6774193548387096,
+    "energy_consumption": 2.491,
+    "energy_unit": "Wh",
+    "workload_distribution": {
+      "Cloud": 6,
+      "Edge": 36,
+      "Mist": 0
+    },
+    "source": "raw/2026-10-21_12-42-07/Sequential_simulation.csv"
+  },
+  {
+    "run_id": "20261021T061239512063790_trade-off_10devices",
+    "method": "trade-off",
+    "devices": 10,
+    "duration_minutes": 1,
+    "duration_seconds": 60,
+    "architecture": "EDGE_AND_CLOUD",
+    "validity": "technical baseline using built-in default orchestrator",
+    "status": "completed",
+    "generated_tasks": 62,
+    "successful_tasks": 40,
+    "failed_tasks": 22,
+    "task_success_rate": 0.6451612903225806,
+    "energy_consumption": 2.5092,
+    "energy_unit": "Wh",
+    "workload_distribution": {
+      "Cloud": 12,
+      "Edge": 28,
+      "Mist": 0
+    },
+    "source": "raw/2026-10-21_13-12-45/Sequential_simulation.csv"
+  },
+  {
+    "run_id": "20261021T061438798570610_trade-off_4devices",
+    "method": "trade-off",
+    "devices": 4,
+    "duration_minutes": 1,
+    "duration_seconds": 60,
+    "architecture": "EDGE_AND_CLOUD",
+    "validity": "technical baseline using built-in default orchestrator",
+    "status": "completed",
+    "generated_tasks": 6,
+    "successful_tasks": 6,
+    "failed_tasks": 0,
+    "task_success_rate": 1.0,
+    "energy_consumption": 1.9928,
+    "energy_unit": "Wh",
+    "workload_distribution": {
+      "Cloud": 3,
+      "Edge": 3,
+      "Mist": 0
+    },
+    "source": "raw/2026-10-21_13-14-44/Sequential_simulation.csv"
+  }
+]

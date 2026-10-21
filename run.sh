@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-METHOD=trade-off; DEVICES=10; DURATION=10; ARCH=EDGE_AND_CLOUD
+METHOD=trade-off; DEVICES=10; DURATION=1; ARCH=EDGE_AND_CLOUD
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
   printf 'Usage: ./run.sh [--method trade-off|round-robin|all] [--all-baselines] [--devices 10|20|30] [--duration-minutes N] [--architecture EDGE_AND_CLOUD]\\n'; exit 0
 fi
@@ -26,32 +26,23 @@ SIM="$ROOT/simulator/PureEdgeSim"
 python3 -c 'import matplotlib' 2>/dev/null || true
 printf '====================================================\n TASK OFFLOADING EXPERIMENT\n====================================================\n Simulator: PureEdgeSim | Method: %s | Devices: %s\n Duration: %s simulated minutes | Architecture: %s\n' "$METHOD" "$DEVICES" "$DURATION" "$ARCH"
 printf 'Build: '
-(cd "$SIM" && mvn -q -DskipTests package)
+(cd "$SIM" && mvn -q -DskipTests -Dmaven.javadoc.skip=true package)
 echo 'OK (Maven package)' 
-python3 - "$ROOT/configs/baseline/simulation_parameters.properties" "$DEVICES" "$DURATION" "$ARCH" "$METHOD" <<'PY'
-from pathlib import Path
-import sys
-p,n,d,a,m=sys.argv[1:]
-path=Path(p); lines=path.read_text().splitlines()
-values={'simulation_time':d,'min_number_of_edge_devices':n,'max_number_of_edge_devices':n,'edge_device_counter_size':'1','orchestration_architectures':a,'orchestration_algorithms':('TRADE_OFF' if m=='trade-off' else 'ROUND_ROBIN') if m!='all' else 'TRADE_OFF,ROUND_ROBIN','display_real_time_charts':'false','save_charts':'false','clear_output_folder':'false','parallel_simulation':'false'}
-out=[]
-for line in lines:
- key=line.split('=',1)[0].strip() if '=' in line else ''
- out.append(f'{key}={values[key]}' if key in values else line)
-path.write_text('\n'.join(out)+'\n')
-PY
 if [[ "$METHOD" == all ]]; then METHODS=(trade-off round-robin); else METHODS=("$METHOD"); fi
 for m in "${METHODS[@]}"; do
- ID="$(date -u +%Y%m%dT%H%M%SZ)_${m}_${DEVICES}devices"
+ ID="$(date -u +%Y%m%dT%H%M%S%N)_${m}_${DEVICES}devices"
  OUT="$ROOT/results/runs/$ID"; mkdir -p "$OUT/raw"
  ALGO=TRADE_OFF; [[ "$m" == round-robin ]] && ALGO=ROUND_ROBIN
  echo "Simulation: $m — running (no misleading progress estimate)"
- # configs are copied per-run, so further runs never overwrite their settings
+ # Every run gets independent properties, and upstream output cleanup stays disabled.
  cp -a "$ROOT/configs/baseline/." "$OUT/config/"
- python3 - "$OUT/config/simulation_parameters.properties" "$ALGO" <<'PY'
+ python3 - "$OUT/config/simulation_parameters.properties" "$DEVICES" "$DURATION" "$ARCH" "$ALGO" <<'PY'
 from pathlib import Path
 import sys
-p,a=sys.argv[1:]; x=Path(p); lines=x.read_text().splitlines(); x.write_text('\n'.join((('orchestration_algorithms='+a) if q.startswith('orchestration_algorithms=') else q) for q in lines)+'\n')
+p,n,d,arch,a=sys.argv[1:]; x=Path(p); values={'min_number_of_edge_devices':n,'max_number_of_edge_devices':n,'edge_device_counter_size':'1','simulation_time':d,'orchestration_architectures':arch,'orchestration_algorithms':a,'display_real_time_charts':'false','save_charts':'false','clear_output_folder':'false','parallel_simulation':'false'}; out=[]
+for line in x.read_text().splitlines():
+ k=line.split('=',1)[0].strip() if '=' in line else ''; out.append(f'{k}={values[k]}' if k in values else line)
+x.write_text('\n'.join(out)+'\n')
 PY
  # Run through the isolated wrapper against PureEdgeSim's built classes.
  python3 "$ROOT/scripts/execute_run.py" "$OUT" "$m" "$DEVICES" "$DURATION" "$ARCH" "$ALGO"

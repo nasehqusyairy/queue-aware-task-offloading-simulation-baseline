@@ -6,30 +6,35 @@ Project penelitian ini membungkus PureEdgeSim untuk menjalankan baseline teknis 
 
 ## Mulai cepat
 
-Perlu Java dan Maven (sudah terpasang di lingkungan yang diperiksa), Python 3.11+, Git, serta koneksi internet hanya saat pertama mengambil source/dependensi Maven. Dari direktori ini:
+Perlu Java dan Maven, Python 3, Git. Perintah cepat:
 
 ```bash
 ./run.sh --help
 ./run.sh --method trade-off --devices 10
 ./run.sh --method round-robin --devices 10
-./run.sh --all-baselines --devices 10
 ```
 
-Catatan: opsi `--all-baselines` belum diterima di versi awal; gunakan `--method all` untuk menjalankan keduanya. Durasi default 10 menit simulasi, dapat diubah `--duration-minutes`. Eksperimen default membatasi satu arsitektur `EDGE_AND_CLOUD` supaya baseline cepat dan jumlah skenario eksplisit.
+Gunakan server statis agar dashboard dapat memuat JSON (browser sering melarang `fetch()` saat file://):
 
-Run masuk ke `results/runs/<UTC-id>/` (tiap run terpisah). Metrik terproses: `results/processed/summary.csv` dan `.json`. Dashboard statis lokal: buka `results/dashboard.html` dengan browser (`xdg-open results/dashboard.html`) atau buka file dari browser. Untuk memproses ulang: `./analyze.sh --latest` atau `./analyze.sh --run results/runs/<id>`.
+```bash
+python3 -m http.server 8000 --directory results
+# buka http://localhost:8000/dashboard.html
+```
+
+CSV dan JSON agregat tersedia di `results/processed/summary.csv` dan `.json`. Untuk membangun ulang dari run sukses: `./analyze.sh --latest`.
 
 ## Apa yang dilakukan
 
-PureEdgeSim source berada di `simulator/PureEdgeSim` (repositori upstream terpisah); konfigurasi baseline salinan berada di `configs/baseline`. Wrapper mengkompilasi lalu menjalankan kelas runner sementara di source tree upstream, menghapusnya setelah proses, dan mengumpulkan hasil ke direktori run. Source upstream tidak dimodifikasi secara permanen.
+PureEdgeSim's tracked `pom.xml` needs a small source-root correction (`${project.basedir}/PureEdgeSim`) because repository Java files live there, not Maven's default `src/main/java`; without it Maven `package` reported success while compiling zero classes. This is an explicit local change in the nested upstream checkout and is visible in its Git diff. Dashboard and analyzer use the real row in `Sequential_simulation.csv`; metrics parser uses the simulator's actual column names and Wh energy field.
 
 PureEdgeSim default properties mendefinisikan `TRADE_OFF,ROUND_ROBIN`; `DefaultOrchestrator` mengimplementasikan keduanya. Perubahan konfigurasi penelitian mengatur 10/20/30 device dan satu arsitektur aktif. Pengaturan waktu PureEdgeSim bernilai **menit**, bukan detik. Simulasi di penelitian menyebut 200 detik, berbeda dari konfigurasi default; konfigurasi ini belum disamakan penuh.
 
 ## Status
 
-- **Berhasil diverifikasi**: clone source; Maven `package` berhasil dengan Java 25; kelas algoritma Trade-Off/Round Robin ada pada `DefaultOrchestrator`.
-- **Sudah diimplementasikan, belum diverifikasi end-to-end**: wrapper run, ekstraksi metrik, ekspor dan dashboard.
-- **Belum tersedia**: reproduksi parameter paper lengkap, enam tujuan offloading, tiga pengulangan, GNN/DQN paper, Queue-Aware.
+- **Berhasil diverifikasi**: upstream entry point `com.mechalikh.pureedgesim.MainApplication` berjalan dari Maven; source-root correction menghasilkan 87 source compiled; Trade-Off dan Round Robin masing-masing selesai, menulis CSV asli, dan terparse.
+- **Belum diuji penuh**: 20/30 perangkat dan seluruh konfigurasi paper.
+- **Belum tersedia**: GNN/DQN paper, Queue-Aware, 4 DC terkontrol, enam target, serta seed/repetisi yang direproduksikan.
+
 
 ## Hindari klaim berlebihan
 
