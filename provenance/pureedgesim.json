@@ -1,0 +1,9 @@
+{
+  "upstream_repository": "https://github.com/CharafeddineMechalikh/PureEdgeSim.git",
+  "upstream_commit": "bcdd239fa301bd7164526dc47685058288c305ef",
+  "upstream_version": "5.3.0",
+  "distribution_mode": "vendored source snapshot in the parent repository",
+  "source_provenance": "The parent repository's historical gitlink at commit 130fb9507349dc800e6a47c891774dc06b7a4f60 pointed to this upstream commit; commit 03ae4af expanded the populated source tree into tracked files.",
+  "local_build_patch": "patches/pureedgesim-maven-source-root.patch",
+  "local_build_patch_reason": "PureEdgeSim Java sources live under PureEdgeSim/ rather than Maven's default src/main/java."
+}
