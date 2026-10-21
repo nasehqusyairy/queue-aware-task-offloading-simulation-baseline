@@ -152,5 +152,27 @@
       "Mist": 0
     },
     "source": "raw/2026-10-21_13-14-44/Sequential_simulation.csv"
+  },
+  {
+    "run_id": "20261021T065412687703172_trade-off_10devices",
+    "method": "trade-off",
+    "devices": 10,
+    "duration_minutes": 1,
+    "duration_seconds": 60,
+    "architecture": "EDGE_AND_CLOUD",
+    "validity": "technical baseline using built-in default orchestrator",
+    "status": "completed",
+    "generated_tasks": 62,
+    "successful_tasks": 42,
+    "failed_tasks": 20,
+    "task_success_rate": 0.6774193548387096,
+    "energy_consumption": 2.4996,
+    "energy_unit": "Wh",
+    "workload_distribution": {
+      "Cloud": 9,
+      "Edge": 33,
+      "Mist": 0
+    },
+    "source": "raw/2026-10-21_13-54-15/Sequential_simulation.csv"
   }
 ]
