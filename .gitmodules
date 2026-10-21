@@ -1,0 +1,3 @@
+[submodule "simulator/PureEdgeSim"]
+	path = simulator/PureEdgeSim
+	url = https://github.com/CharafeddineMechalikh/PureEdgeSim.git

@@ -1,0 +1,8 @@
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml
++++ b/pom.xml
+@@ -220,2 +220,4 @@
+ 	<build>
++		<sourceDirectory>${project.basedir}/PureEdgeSim</sourceDirectory>
++		<testSourceDirectory>${project.basedir}/PureEdgeSim</testSourceDirectory>
+ 		<pluginManagement>

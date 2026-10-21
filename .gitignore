@@ -1,5 +1,7 @@
 # Local simulation outputs and build artifacts
 results/runs/*
+results/processed/*
+results/dashboard.html
 !results/runs/.gitkeep
 simulator/PureEdgeSim/target/
 simulator/PureEdgeSim/PureEdgeSim/output/

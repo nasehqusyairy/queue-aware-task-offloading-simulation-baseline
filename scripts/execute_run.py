@@ -5,9 +5,7 @@ from pathlib import Path
 run=Path(sys.argv[1]); method,devices,duration,arch,algorithm=sys.argv[2:]
 root=Path(__file__).resolve().parents[1]; sim=root/'simulator/PureEdgeSim'; settings=run/'config'
 start=datetime.now(timezone.utc).isoformat()
-# Build using the upstream repository's own Maven project after its declared source root was corrected.
-build=subprocess.run(['mvn','-q','-DskipTests','-Dmaven.javadoc.skip=true','package'],cwd=sim,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
-if build.returncode: print(build.stdout); sys.exit(build.returncode)
+# The calling run.sh has already built PureEdgeSim after applying the tracked source-root patch.
 cpfile=run/'classpath.txt'
 cp=subprocess.run(['mvn','-q','dependency:build-classpath','-Dmdep.outputFile='+str(cpfile)],cwd=sim,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
 if cp.returncode: print(cp.stdout); sys.exit(cp.returncode)
