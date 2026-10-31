@@ -12,7 +12,7 @@ This repository runs the built-in PureEdgeSim Trade-Off and Round Robin orchestr
 
 ## Clone and run
 
-Recommended clean clone (the submodule is pinned by the parent repository's gitlink):
+Clone the repository and its configured source dependencies, then run:
 
 ```bash
 git clone --recurse-submodules https://github.com/nasehqusyairy/queue-aware-task-offloading-simulation-baseline.git
@@ -21,7 +21,7 @@ cd queue-aware-task-offloading-simulation-baseline
 ./run.sh --method round-robin --devices 10
 ```
 
-If you cloned without `--recurse-submodules`, `run.sh` initializes the pinned submodule automatically. The script checks Java, Maven, Python, and Git; applies the tracked upstream Maven source-layout patch if needed; builds PureEdgeSim from source; and fails with a diagnostic if setup or simulation fails. No simulation output is deleted: each attempt gets a unique `results/runs/<UTC-run-id>/` directory.
+`run.sh` checks for Java, Maven, and Python; verifies the PureEdgeSim source-root configuration; builds PureEdgeSim from source; and stops if setup or simulation validation fails. It does not automatically initialize missing submodules. No simulation output is deleted: each attempt gets a unique `results/runs/<UTC-run-id>/` directory.
 
 Use `./run.sh --help` for options. The default simulated duration is 1 minute; `--duration-minutes N` controls it. Upstream `ParametersParser` converts this property from minutes to seconds. Per-run manifest/config, simulator log, and raw simulator CSVs are retained.
 
@@ -44,9 +44,9 @@ PureEdgeSim is the official Git submodule at `https://github.com/CharafeddineMec
 
 ## Scope and limitations
 
-This is not paper reproduction. The paper's four Edge Data Centers, 200-second duration, six destination configurations, three repetitions, and GNN/DQN implementations are not yet reproduced or validated. The baseline currently runs the locally configured `EDGE_AND_CLOUD` scenario with built-in Trade-Off or Round Robin and default task/network/device profile except explicit CLI settings. No random seed is asserted where the selected API/configuration does not expose one. Results across runs may vary.
+This is a technical baseline, not a paper reproduction. The `paper-aligned-baseline` profile configures four Edge Data Centers, a 200-second horizon, and six destination labels, but these settings and the task-rate interpretation still need verification against the full paper methodology. The current task generator interprets application rates as tasks per simulated second per assigned UE; this is an implementation choice, not a verified paper fact. Random seeds are not controlled, so results may vary. GNN, DQN, and Queue-Aware are not implemented.
 
-Next research step: parameterize paper-aligned topology and destination configurations and validate those against the paper before adding a Queue-Aware orchestrator. Do not label baseline values as GNN/DQN or Queue-Aware results.
+Before reporting results, run the 200-second acceptance test and inspect each run's `manifest.json` validation errors. Do not label baseline values as GNN/DQN or Queue-Aware results.
 
 ## License
 

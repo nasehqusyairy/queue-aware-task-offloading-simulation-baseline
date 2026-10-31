@@ -1,4 +1,5 @@
 import csv
+import json
 import sys
 import tempfile
 import unittest
@@ -7,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from analyze import parse
+from analyze import parse, _row_for_run
 
 
 HEADER = [
@@ -51,6 +52,22 @@ class AnalyzeTests(unittest.TestCase):
         metrics = parse(run)
         self.assertEqual(metrics["workload_distribution"], {"Cloud": 20, "Edge": 50, "Mist": 30})
         self.assertEqual(metrics["energy_consumption"], 0.0)
+
+    def test_row_preserves_manifest_validation_errors_separately_from_metric_errors(self):
+        tmp = tempfile.TemporaryDirectory()
+        run = Path(tmp.name)
+        (run / "raw").mkdir()
+        (run / "manifest.json").write_text(json.dumps({
+            "run_id": "failed-run",
+            "status": "failed",
+            "validation_errors": ["unexpected orchestrator types: ['EDGE_DEVICE']"],
+        }))
+        self.addCleanup(tmp.cleanup)
+
+        row = _row_for_run(run)
+        self.assertEqual(row["status"], "failed")
+        self.assertEqual(row["validation_errors"], ["unexpected orchestrator types: ['EDGE_DEVICE']"])
+        self.assertEqual(row["metric_validation_errors"], [])
 
     def test_missing_layer_count_remains_unavailable_not_zero(self):
         run = self.write_run({

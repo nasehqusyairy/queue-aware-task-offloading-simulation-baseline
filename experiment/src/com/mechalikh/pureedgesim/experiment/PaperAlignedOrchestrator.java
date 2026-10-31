@@ -2,6 +2,8 @@ package com.mechalikh.pureedgesim.experiment;
 
 import com.mechalikh.pureedgesim.datacentersmanager.ComputingNode;
 import com.mechalikh.pureedgesim.simulationmanager.SimulationManager;
+import com.mechalikh.pureedgesim.scenariomanager.SimulationParameters;
+import com.mechalikh.pureedgesim.datacentersmanager.ComputingNode.LinkOrientation;
 import com.mechalikh.pureedgesim.taskgenerator.Task;
 import com.mechalikh.pureedgesim.taskorchestrator.DefaultOrchestrator;
 
@@ -21,9 +23,28 @@ public final class PaperAlignedOrchestrator extends DefaultOrchestrator {
         if (node == null || node == ComputingNode.NULL || node.isDead() || node.isSensor()) return false;
         return switch (node.getType()) {
             case CLOUD -> arrayContains(architectureLayers, "Cloud");
-            case EDGE_DATACENTER -> arrayContains(architectureLayers, "Edge");
-            case EDGE_DEVICE -> arrayContains(architectureLayers, "Mist");
+            case EDGE_DATACENTER -> arrayContains(architectureLayers, "Edge")
+                    && isReachableEdgeDataCenter(task, node);
+            case EDGE_DEVICE -> arrayContains(architectureLayers, "Mist")
+                    && task.getEdgeDevice().getMobilityModel().distanceTo(node)
+                            <= SimulationParameters.edgeDevicesRange;
             default -> false;
         };
+    }
+
+    /**
+     * Preserve PureEdgeSim's connectivity constraint while allowing any EDC in
+     * the source UE's configured coverage radius, not just one mutable UP_LINK
+     * pointer. This prevents the candidate override from selecting remote EDCs.
+     */
+    private boolean isReachableEdgeDataCenter(Task task, ComputingNode node) {
+        ComputingNode source = task.getEdgeDevice();
+        try {
+            ComputingNode currentUplink = source.getCurrentLink(LinkOrientation.UP_LINK).getDst();
+            if (currentUplink == node) return true;
+        } catch (RuntimeException ignored) {
+            // Fall back to the explicit geometric coverage check below.
+        }
+        return source.getMobilityModel().distanceTo(node) <= SimulationParameters.edgeDataCentersRange;
     }
 }

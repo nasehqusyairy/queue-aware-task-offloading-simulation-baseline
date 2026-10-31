@@ -1,3 +1,5 @@
-# Project status after initial implementation attempt
+# Historical build note — review status before using old runs
 
-PureEdgeSim source was cloned successfully, but the upstream Maven build `mvn -DskipTests package` exits 0 without producing compiled classes: its source tree is `PureEdgeSim/` rather than Maven's default `src/main/java`. Therefore the attempted runtime cannot load `Simulation`; no valid simulation or metric output has been produced yet. This is a build-layout mismatch, not an experiment result. `scripts/execute_run.py` and `run.sh` are under active correction; do not interpret prior run folders as valid data.
+This file records an earlier build-layout blocker: PureEdgeSim sources are under `PureEdgeSim/`, not Maven's default `src/main/java`. The source-root fix is now present in `simulator/PureEdgeSim/pom.xml` and is checked by `run.sh`.
+
+The archived run directories are historical artifacts. Their validity must be determined from each `manifest.json`, especially `status` and `validation_errors`; the existence of metrics alone does not make a run valid. This audit environment did not have Maven installed, so the Java build and 200-second end-to-end acceptance test were not rerun here.

@@ -83,6 +83,17 @@ def _read_config(run):
 def _row_for_run(run):
     config = _read_config(run)
     metrics = parse(run)
+
+    # Keep run-level validation failures separate from parser/metric checks.
+    # Previously, **metrics overwrote manifest.validation_errors with the
+    # parser's usually-empty list, hiding why a simulation was marked failed.
+    manifest_errors = config.get("validation_errors", [])
+    metric_errors = metrics.pop("validation_errors", [])
+    if not isinstance(manifest_errors, list):
+        manifest_errors = [str(manifest_errors)]
+    if not isinstance(metric_errors, list):
+        metric_errors = [str(metric_errors)]
+
     row = {
         "run_id": config.get("run_id", run.name),
         "profile": config.get("profile", "technical-baseline"),
@@ -94,6 +105,8 @@ def _row_for_run(run):
         "simulator_revision": config.get("simulator_revision"),
         "status": config.get("status", "unknown"),
         **metrics,
+        "validation_errors": manifest_errors,
+        "metric_validation_errors": metric_errors,
     }
     return row
 

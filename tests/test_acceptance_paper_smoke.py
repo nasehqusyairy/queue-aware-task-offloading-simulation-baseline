@@ -33,7 +33,7 @@ class PaperSmokeAcceptanceTests(unittest.TestCase):
         self.assertEqual(manifest["coverage_violation_count"], 0)
         self.assertEqual(manifest["ue_decision_source_count"], 10)
         self.assertEqual(manifest["destination_counts"].get("NONE", 0), 0)
-        self.assertEqual(manifest["nearest_edc_mismatch_count"], 0)
+        self.assertEqual(manifest["none_decisions_with_edge_dc_uplink"], 0)
         self.assertTrue((run / "metrics.json").exists())
         self.assertTrue(list((run / "raw").rglob("*.csv")))
         self.assertTrue((run / "raw/destinations.csv").exists())

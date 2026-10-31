@@ -66,8 +66,18 @@ public final class PaperAlignedTaskGenerator extends DefaultTaskGenerator {
                         task.setMaxLatency(params.getLatency());
                         task.setLength((long) params.getTaskLength());
                         task.setEdgeDevice(device);
-                        task.setRegistry(getSimulationManager().getDataCentersManager()
-                                .getComputingNodesGenerator().getCloudOnlyList().get(0));
+                        ComputingNode cloud = getSimulationManager().getDataCentersManager()
+                                .getComputingNodesGenerator().getCloudOnlyList().get(0);
+                        if (SimulationParameters.enableOrchestrators
+                                && "CLOUD".equals(SimulationParameters.deployOrchestrators)) {
+                            // The task API lazily promotes its UE to orchestrator if this
+                            // field is unset. Explicitly bind the configured Cloud instead.
+                            if (device.getOrchestrator() != cloud) {
+                                device.setOrchestrator(cloud);
+                            }
+                            task.setOrchestrator(cloud);
+                        }
+                        task.setRegistry(cloud);
                         task.setTime(second);
                         taskList.add(task);
                         generated++;

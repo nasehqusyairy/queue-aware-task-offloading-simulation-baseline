@@ -38,9 +38,13 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
     public void processEvent(Event event) {
         if (event.getTag() == SEND_TO_ORCH) {
             Task task = (Task) event.getData();
-            ComputingNode orchestrator = task.getEdgeDevice().getOrchestrator();
-            orchestrators.put(task.getId(), orchestrator.getType().name());
+            // The base manager assigns task.orchestrator inside this event. Record the
+            // post-assignment value rather than inferring it from the source UE first.
             super.processEvent(event);
+            ComputingNode orchestrator = task.getOrchestrator();
+            String type = orchestrator == null || orchestrator == ComputingNode.NULL
+                    ? "UNKNOWN" : orchestrator.getType().name();
+            orchestrators.put(task.getId(), type);
             return;
         }
         if (event.getTag() == SEND_TASK_FROM_ORCH_TO_DESTINATION) {

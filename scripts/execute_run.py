@@ -285,8 +285,20 @@ def main() -> int:
                 if coverage["area_violation_count"]:
                     errors.append(f"{coverage['area_violation_count']} task positions fall outside the simulation area")
                 if decision_count == 0: errors.append("no destination decisions recorded")
-                if orchestrator_types and orchestrator_types != {"CLOUD"}:
-                    errors.append(f"unexpected orchestrator types: {sorted(orchestrator_types)}")
+                if props.get("enable_orchestrators", "false").lower() == "true":
+                    configured_orchestrator = props.get("deploy_orchestrator", "").upper()
+                    expected_orchestrator_type = {
+                        "CLOUD": "CLOUD",
+                        "EDGE": "EDGE_DATACENTER",
+                        "MIST": "EDGE_DEVICE",
+                    }.get(configured_orchestrator)
+                    if expected_orchestrator_type and orchestrator_types != {expected_orchestrator_type}:
+                        errors.append(
+                            "orchestrator type mismatch: "
+                            f"configured {configured_orchestrator}, observed {sorted(orchestrator_types)}"
+                        )
+                    elif not expected_orchestrator_type:
+                        errors.append(f"unsupported deploy_orchestrator value: {configured_orchestrator!r}")
                 manifest["destination_decision_count"] = decision_count
                 manifest["destination_counts"] = decision_counts
                 manifest["current_uplink_type_counts"] = current_up_counts
