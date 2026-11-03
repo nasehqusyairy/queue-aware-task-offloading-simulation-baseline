@@ -1,0 +1,27 @@
+{
+  "experiment_id": "20261103T182112Z_queue_pressure_seed_stability",
+  "status": "completed",
+  "profile": "paper-aligned-baseline",
+  "devices": 30,
+  "edge_datacenters": 4,
+  "destination_config": "EDGE_DC_ONLY",
+  "duration_seconds": 5,
+  "methods": [
+    "trade-off",
+    "queue-aware"
+  ],
+  "queue_penalty_lambda": 1.0,
+  "seeds": [
+    1,
+    8128,
+    4401,
+    2026,
+    2027
+  ],
+  "planned_runs": 10,
+  "completed_valid_runs": 10,
+  "failed_or_invalid_runs": 0,
+  "paired_configuration_valid": true,
+  "repository_head": "7cd0acabe3255552a79f33dd55dc31612833914b",
+  "working_tree_dirty": true
+}

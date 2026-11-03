@@ -1,0 +1,33 @@
+run_id: 20261103T182226188738269_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401
+profile: paper-aligned-baseline
+method: queue-aware
+devices: 30
+duration_seconds: 5
+architecture: EDGE_ONLY
+destination_config: EDGE_DC_ONLY
+simulator_revision: bcdd239fa301bd7164526dc47685058288c305ef
+status: completed
+generated_tasks: 2175
+sent_tasks: 2175
+completed_tasks: 115
+terminally_failed_tasks: 1214
+rejected_before_pipeline_tasks: 0
+pending_tasks: 846
+successful_tasks: 115
+failed_tasks: 1214
+task_success_rate: 0.052873563218390804
+task_failure_rate: 0.5581609195402298
+task_pending_rate: 0.3889655172413793
+average_cpu_execution_time_seconds: 0.1378
+average_completed_task_total_delay_seconds: 6.728319063545155
+average_completed_task_waiting_time_seconds: 1.1558695652173914
+energy_consumption: 3.0675
+energy_unit: Wh
+energy_scope: computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate
+workload_distribution: {'Cloud': 0, 'Edge': 2175, 'Mist': 0}
+workload_distribution_unit: tasks dispatched to each destination layer
+source: raw/2026-11-04_01-22-29/Sequential_simulation.csv
+layer_successful_completions: {'Cloud': 0, 'Edge': 115, 'Mist': 0}
+queue_aware_metrics: {'source': 'raw/queue_decisions.csv', 'valid': True, 'candidate_observations': 97, 'selected_queue_estimate_count': 78, 'selected_queue_estimate_unavailable_count': 0, 'selected_mean_queue_wait_estimate_seconds': 0.7903205128205127, 'selected_median_queue_wait_estimate_seconds': 0.0, 'selected_mean_waiting_queue_length': 46.94871794871795, 'selected_by_layer': {'EDGE_DATACENTER': {'selected_tasks': 78, 'mean_queue_wait_estimate_seconds': 0.7903205128205127}}}
+validation_errors: []
+metric_validation_errors: []

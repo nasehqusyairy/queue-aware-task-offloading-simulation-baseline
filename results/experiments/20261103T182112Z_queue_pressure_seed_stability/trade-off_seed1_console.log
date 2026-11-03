@@ -1,0 +1,52 @@
+PureEdgeSim build: WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (file:/usr/share/maven/lib/guava.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+OK (compiled classes verified)
+Running trade-off: profile=paper-aligned-baseline devices=30 simulated_seconds=5 target=EDGE_DC_ONLY architecture=EDGE_ONLY
+Run status: completed; exit=0; validation_errors=0
+RUN_DIR=/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/experiments/20261103T182112Z_queue_pressure_seed_stability/runs/20261103T182133209940357_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed1
+{
+  "run_id": "20261103T182133209940357_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed1",
+  "profile": "paper-aligned-baseline",
+  "method": "trade-off",
+  "devices": 30,
+  "duration_seconds": 5,
+  "architecture": "EDGE_ONLY",
+  "destination_config": "EDGE_DC_ONLY",
+  "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+  "status": "completed",
+  "generated_tasks": 2175,
+  "sent_tasks": 2175,
+  "completed_tasks": 122,
+  "terminally_failed_tasks": 1159,
+  "rejected_before_pipeline_tasks": 0,
+  "pending_tasks": 894,
+  "successful_tasks": 122,
+  "failed_tasks": 1159,
+  "task_success_rate": 0.056091954022988506,
+  "task_failure_rate": 0.5328735632183909,
+  "task_pending_rate": 0.4110344827586207,
+  "average_cpu_execution_time_seconds": 0.1444,
+  "average_completed_task_total_delay_seconds": 6.746254098360655,
+  "average_completed_task_waiting_time_seconds": 1.1735655737704924,
+  "energy_consumption": 3.0565,
+  "energy_unit": "Wh",
+  "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+  "workload_distribution": {
+    "Cloud": 0,
+    "Edge": 2175,
+    "Mist": 0
+  },
+  "workload_distribution_unit": "tasks dispatched to each destination layer",
+  "source": "raw/2026-11-04_01-21-37/Sequential_simulation.csv",
+  "layer_successful_completions": {
+    "Cloud": 0,
+    "Edge": 122,
+    "Mist": 0
+  },
+  "queue_aware_metrics": null,
+  "validation_errors": [],
+  "metric_validation_errors": []
+}
+RUN_DIR=/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/experiments/20261103T182112Z_queue_pressure_seed_stability/runs/20261103T182133209940357_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed1

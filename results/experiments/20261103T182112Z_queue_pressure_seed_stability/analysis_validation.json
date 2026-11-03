@@ -1,0 +1,163 @@
+{
+  "planned_runs": 10,
+  "run_statuses": [
+    {
+      "seed": 1,
+      "method": "trade-off",
+      "status": "completed",
+      "exit_code": 0,
+      "validation_errors": "",
+      "run_id": "20261103T182133209940357_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed1"
+    },
+    {
+      "seed": 1,
+      "method": "queue-aware",
+      "status": "completed",
+      "exit_code": 0,
+      "validation_errors": "",
+      "run_id": "20261103T182144588580287_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1"
+    },
+    {
+      "seed": 8128,
+      "method": "trade-off",
+      "status": "completed",
+      "exit_code": 0,
+      "validation_errors": "",
+      "run_id": "20261103T182154943653121_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed8128"
+    },
+    {
+      "seed": 8128,
+      "method": "queue-aware",
+      "status": "completed",
+      "exit_code": 0,
+      "validation_errors": "",
+      "run_id": "20261103T182205209481614_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed8128"
+    },
+    {
+      "seed": 4401,
+      "method": "trade-off",
+      "status": "completed",
+      "exit_code": 0,
+      "validation_errors": "",
+      "run_id": "20261103T182215219019953_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed4401"
+    },
+    {
+      "seed": 4401,
+      "method": "queue-aware",
+      "status": "completed",
+      "exit_code": 0,
+      "validation_errors": "",
+      "run_id": "20261103T182226188738269_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401"
+    },
+    {
+      "seed": 2026,
+      "method": "trade-off",
+      "status": "completed",
+      "exit_code": 0,
+      "validation_errors": "",
+      "run_id": "20261103T182236151921045_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed2026"
+    },
+    {
+      "seed": 2026,
+      "method": "queue-aware",
+      "status": "completed",
+      "exit_code": 0,
+      "validation_errors": "",
+      "run_id": "20261103T182246948772801_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026"
+    },
+    {
+      "seed": 2027,
+      "method": "trade-off",
+      "status": "completed",
+      "exit_code": 0,
+      "validation_errors": "",
+      "run_id": "20261103T182257287005429_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed2027"
+    },
+    {
+      "seed": 2027,
+      "method": "queue-aware",
+      "status": "completed",
+      "exit_code": 0,
+      "validation_errors": "",
+      "run_id": "20261103T182306931192396_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027"
+    }
+  ],
+  "completed_valid_runs": 10,
+  "failed_or_invalid_runs": 0,
+  "complete_pairs": 5,
+  "all_pairs_configuration_valid": true,
+  "queue_nonzero_in_every_seed": true,
+  "queue_candidate_observations_by_seed": [
+    {
+      "seed": 1,
+      "candidate_observations": 111,
+      "queue_min_seconds": 0.0,
+      "queue_max_seconds": 4.180000000000001,
+      "nonzero_candidate_observations": 58,
+      "selected_observations": 77,
+      "selected_nonzero_observations": 36,
+      "selected_mean_queue_seconds": 0.742012987012987,
+      "selected_mean_waiting_queue_length": 47.81818181818182,
+      "policy_decisions": 77,
+      "ranking_changed_decisions": 14,
+      "selected_destination_changed_decisions": 14
+    },
+    {
+      "seed": 8128,
+      "candidate_observations": 101,
+      "queue_min_seconds": 0.0,
+      "queue_max_seconds": 3.7550000000000017,
+      "nonzero_candidate_observations": 55,
+      "selected_observations": 76,
+      "selected_nonzero_observations": 39,
+      "selected_mean_queue_seconds": 0.7533881578947369,
+      "selected_mean_waiting_queue_length": 39.69736842105263,
+      "policy_decisions": 76,
+      "ranking_changed_decisions": 3,
+      "selected_destination_changed_decisions": 3
+    },
+    {
+      "seed": 4401,
+      "candidate_observations": 97,
+      "queue_min_seconds": 0.0,
+      "queue_max_seconds": 4.505000000000001,
+      "nonzero_candidate_observations": 42,
+      "selected_observations": 78,
+      "selected_nonzero_observations": 32,
+      "selected_mean_queue_seconds": 0.7903205128205127,
+      "selected_mean_waiting_queue_length": 46.94871794871795,
+      "policy_decisions": 78,
+      "ranking_changed_decisions": 4,
+      "selected_destination_changed_decisions": 4
+    },
+    {
+      "seed": 2026,
+      "candidate_observations": 93,
+      "queue_min_seconds": 0.0,
+      "queue_max_seconds": 3.9050000000000002,
+      "nonzero_candidate_observations": 55,
+      "selected_observations": 74,
+      "selected_nonzero_observations": 44,
+      "selected_mean_queue_seconds": 0.8367567567567568,
+      "selected_mean_waiting_queue_length": 44.17567567567568,
+      "policy_decisions": 74,
+      "ranking_changed_decisions": 8,
+      "selected_destination_changed_decisions": 8
+    },
+    {
+      "seed": 2027,
+      "candidate_observations": 95,
+      "queue_min_seconds": 0.0,
+      "queue_max_seconds": 3.2100000000000004,
+      "nonzero_candidate_observations": 53,
+      "selected_observations": 79,
+      "selected_nonzero_observations": 46,
+      "selected_mean_queue_seconds": 0.7487025316455698,
+      "selected_mean_waiting_queue_length": 53.31645569620253,
+      "policy_decisions": 79,
+      "ranking_changed_decisions": 2,
+      "selected_destination_changed_decisions": 2
+    }
+  ],
+  "statistics": "paired exact sign-flip permutation on mean differences, two-sided; paired t confidence interval df=4; n=5, exploratory"
+}

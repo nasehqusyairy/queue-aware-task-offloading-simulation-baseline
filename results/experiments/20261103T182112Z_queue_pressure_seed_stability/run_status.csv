@@ -1,0 +1,11 @@
+seed,method,status,exit_code,validation_errors,run_id
+1,trade-off,completed,0,,20261103T182133209940357_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed1
+1,queue-aware,completed,0,,20261103T182144588580287_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1
+8128,trade-off,completed,0,,20261103T182154943653121_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed8128
+8128,queue-aware,completed,0,,20261103T182205209481614_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed8128
+4401,trade-off,completed,0,,20261103T182215219019953_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed4401
+4401,queue-aware,completed,0,,20261103T182226188738269_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401
+2026,trade-off,completed,0,,20261103T182236151921045_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed2026
+2026,queue-aware,completed,0,,20261103T182246948772801_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026
+2027,trade-off,completed,0,,20261103T182257287005429_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed2027
+2027,queue-aware,completed,0,,20261103T182306931192396_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027

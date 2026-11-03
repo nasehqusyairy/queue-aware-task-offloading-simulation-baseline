@@ -1,0 +1,15 @@
+{
+  "experiment_id": "20261103T182112Z_queue_pressure_seed_stability",
+  "parent_diagnostic": "results/experiments/20261103T181126Z_queue-pressure-diagnostic/",
+  "profile": "paper-aligned-baseline",
+  "devices": 30,
+  "edge_datacenters": 4,
+  "destination_config": "EDGE_DC_ONLY",
+  "duration_seconds": 5,
+  "methods": ["trade-off", "queue-aware"],
+  "queue_penalty_lambda": 1.0,
+  "seeds": [1, 8128, 4401, 2026, 2027],
+  "task_event_trace": true,
+  "queue_decision_audit": true,
+  "baseline_configuration_tuning": false
+}
