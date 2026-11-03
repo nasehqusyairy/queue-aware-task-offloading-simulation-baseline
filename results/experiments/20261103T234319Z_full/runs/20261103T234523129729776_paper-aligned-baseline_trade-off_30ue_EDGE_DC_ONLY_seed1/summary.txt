@@ -1,0 +1,33 @@
+run_id: 20261103T234523129729776_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed1
+profile: paper-aligned-baseline
+method: trade-off
+devices: 30
+duration_seconds: 200
+architecture: EDGE_ONLY
+destination_config: EDGE_DC_ONLY
+simulator_revision: bcdd239fa301bd7164526dc47685058288c305ef
+status: completed
+generated_tasks: 87000
+sent_tasks: 87000
+completed_tasks: 5605
+terminally_failed_tasks: 44937
+rejected_before_pipeline_tasks: 0
+pending_tasks: 36458
+successful_tasks: 5605
+failed_tasks: 44937
+task_success_rate: 0.06442528735632184
+task_failure_rate: 0.5165172413793103
+task_pending_rate: 0.4190574712643678
+average_cpu_execution_time_seconds: 0.158
+average_completed_task_total_delay_seconds: 40.33807171481578
+average_completed_task_waiting_time_seconds: 34.76564451382632
+energy_consumption: 122.0795
+energy_unit: Wh
+energy_scope: computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate
+workload_distribution: {'Cloud': 0, 'Edge': 87000, 'Mist': 0}
+workload_distribution_unit: tasks dispatched to each destination layer
+source: raw/2026-11-04_06-45-26/Sequential_simulation.csv
+layer_successful_completions: {'Cloud': 0, 'Edge': 5605, 'Mist': 0}
+queue_aware_metrics: N/A
+validation_errors: []
+metric_validation_errors: []
