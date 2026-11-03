@@ -38,6 +38,16 @@ class PaperSmokeAcceptanceTests(unittest.TestCase):
         self.assertTrue(list((run / "raw").rglob("*.csv")))
         self.assertTrue((run / "raw/destinations.csv").exists())
         self.assertAlmostEqual(manifest["simulated_end_seconds"], 200.0)
+        accounting = manifest["task_accounting"]
+        self.assertEqual(accounting["generated_tasks"], manifest["expected_generated_tasks"])
+        self.assertEqual(accounting["generated_tasks"], accounting["completed_tasks"]
+                         + accounting["terminally_failed_tasks"] + accounting["pending_tasks"])
+        self.assertEqual(accounting["layer_successful_completions"]["Edge"], accounting["completed_tasks"])
+        self.assertEqual(manifest["metrics"]["pending_tasks"], accounting["pending_tasks"])
+        self.assertEqual(manifest["metrics"]["completed_tasks"], accounting["completed_tasks"])
+        self.assertEqual(manifest["metrics"]["terminally_failed_tasks"], accounting["terminally_failed_tasks"])
+        self.assertEqual(manifest["metrics"]["rejected_before_pipeline_tasks"], accounting["rejected_before_pipeline_tasks"])
+        self.assertEqual(manifest["metrics"]["validation_errors"], [])
 
         with (run / "raw/destinations.csv").open(newline="") as stream:
             decisions = [row for row in csv.DictReader(stream) if row["record_type"] == "DECISION"]

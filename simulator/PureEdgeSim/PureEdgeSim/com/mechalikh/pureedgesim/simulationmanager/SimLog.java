@@ -76,6 +76,11 @@ public class SimLog {
 	protected int tasksFailedCloud = 0;
 	protected int tasksFailedEdge = 0;
 	protected int tasksFailedMist = 0;
+	// Hard-horizon accounting supplied by the paper adapter.
+	protected int completedAtCutoff = -1;
+	protected int pendingAtCutoff = -1;
+	protected int pendingCloudAtCutoff = 0, pendingEdgeAtCutoff = 0, pendingMistAtCutoff = 0;
+	protected int rejectedBeforePipelineAtCutoff = -1;
 
 	// Network utilization
 	protected Double totalLanUsage = 0.0;
@@ -116,6 +121,7 @@ public class SimLog {
 					+ "WiFi energy consumption (Wh), LTE energy consumption (Wh), Ethernet energy consumption (Wh),"
 					+ "Dead devices count,Average remaining power (Wh),Average remaining power (%), First edge device death time (s),"
 					+ "List of remaining power (%) (only battery powered devices / 0 = dead),List of the time when each device died (s)");
+			resultsList.set(0, resultsList.get(0) + ",Tasks sent,Tasks completed,Tasks terminally failed,Tasks pending at cutoff,Cloud pending at cutoff,Edge pending at cutoff,Mist pending at cutoff,Tasks rejected before pipeline");
 		}
 	}
 
@@ -124,6 +130,17 @@ public class SimLog {
 		printNetworkRelatedResults();
 		printCPUUtilizationResults();
 		printPowerConsumptionResults(finishedTasks);
+		// These lifecycle columns follow every legacy metric column in the CSV row.
+		if (!resultsList.isEmpty()) {
+			int row = resultsList.size() - 1;
+			resultsList.set(row, resultsList.get(row) + "," + tasksSent + ","
+					+ (completedAtCutoff >= 0 ? completedAtCutoff : tasksSent - tasksFailed) + "," + tasksFailed + ","
+					+ (pendingAtCutoff < 0 ? "" : pendingAtCutoff) + ","
+					+ (pendingAtCutoff < 0 ? "" : pendingCloudAtCutoff) + ","
+					+ (pendingAtCutoff < 0 ? "" : pendingEdgeAtCutoff) + ","
+					+ (pendingAtCutoff < 0 ? "" : pendingMistAtCutoff) + ","
+					+ (rejectedBeforePipelineAtCutoff < 0 ? "" : rejectedBeforePipelineAtCutoff));
+		}
 		StringBuilder s = new StringBuilder("\n");
 		for (String value : log) {
 			s.append(value).append("\n");
@@ -244,11 +261,11 @@ public class SimLog {
 				+ decimalFormat.format(totalExecutionTime / executedTasksCount) + ","
 				+ decimalFormat.format(totalWaitingTime) + ","
 				+ decimalFormat.format(totalWaitingTime / executedTasksCount) + "," + generatedTasksCount + ","
-				+ (tasksSent - tasksFailed) + "," + tasksFailedRessourcesUnavailable + "," + tasksFailedLatency + ","
+				+ (completedAtCutoff >= 0 ? completedAtCutoff : tasksSent - tasksFailed) + "," + tasksFailedRessourcesUnavailable + "," + tasksFailedLatency + ","
 				+ tasksFailedBeacauseDeviceDead + "," + tasksFailedMobility + "," + notGeneratedBecDeviceDead + ","
-				+ tasksExecutedOnCloud + "," + (tasksExecutedOnCloud - tasksFailedCloud) + "," + tasksExecutedOnEdge
-				+ "," + (tasksExecutedOnEdge - tasksFailedEdge) + "," + tasksExecutedOnMist + ","
-				+ (tasksExecutedOnMist - tasksFailedMist) + ",");
+				+ tasksExecutedOnCloud + "," + (tasksExecutedOnCloud - tasksFailedCloud - pendingCloudAtCutoff) + "," + tasksExecutedOnEdge
+				+ "," + (tasksExecutedOnEdge - tasksFailedEdge - pendingEdgeAtCutoff) + "," + tasksExecutedOnMist + ","
+				+ (tasksExecutedOnMist - tasksFailedMist - pendingMistAtCutoff) + ",");
 	}
 
 	public void printNetworkRelatedResults() {
@@ -585,6 +602,17 @@ public class SimLog {
 
 	public void incrementTasksSent() {
 		this.tasksSent++;
+	}
+
+	/** Set final closed-accounting values and pending destination counts at cutoff. */
+	public void setCutoffAccounting(int completed, int pending, int cloudPending, int edgePending, int mistPending,
+			int rejectedBeforePipeline) {
+		this.completedAtCutoff = completed;
+		this.pendingAtCutoff = pending;
+		this.pendingCloudAtCutoff = cloudPending;
+		this.pendingEdgeAtCutoff = edgePending;
+		this.pendingMistAtCutoff = mistPending;
+		this.rejectedBeforePipelineAtCutoff = rejectedBeforePipeline;
 	}
 
 	public void incrementTasksFailed(Task task) {

@@ -27,7 +27,7 @@ Use `./run.sh --help` for options. The default simulated duration is 1 minute; `
 
 ## Outputs and dashboard
 
-The successful run's raw data are in `results/runs/<run-id>/raw/`. Each run contains `manifest.json`, copied configuration, and raw CSV/log output. The analyzer only includes runs marked completed with a simulator CSV; unavailable values remain N/A.
+Each run's raw data are in `results/runs/<run-id>/raw/`. Each run contains `manifest.json`, copied configuration, and raw CSV/log output. Lifecycle accounting distinguishes generated, sent, completed, terminally failed, and pending tasks; pending work at the hard cutoff is not counted as a terminal failure. Successful, failure, and pending rates use generated tasks as the denominator. Layer workload is dispatch count; layer completion counts include only tasks whose results returned to their source UE. The analyzer preserves failed runs and validation messages in aggregates; unavailable values remain N/A.
 
 Recreate aggregate CSV/JSON and dashboard from successful runs:
 

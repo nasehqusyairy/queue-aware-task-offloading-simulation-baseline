@@ -125,7 +125,7 @@ def main() -> int:
                 "task_rate_semantics": "tasks per simulated second per UE assigned to the application profile; usage_percentage allocates UE groups by largest remainder (implementation interpretation)",
                 "application_percentages": app_percentages,
                 "application_rates_per_second": rates,
-                "duration_cutoff_policy": "hard horizon at t=duration_seconds; tasks still sent but not accounted by cutoff are added to unsuccessful-task accounting and recorded as pending_at_cutoff",
+                "duration_cutoff_policy": "hard horizon at t=duration_seconds; unresolved generated tasks remain pending and are excluded from terminal failures",
                 "local_execution_policy": "destination equal to source UE is local execution, separately marked in destination audit",
             })
         write_json(run / "config.json", manifest)
@@ -194,7 +194,7 @@ def main() -> int:
         if profile == "paper-aligned-baseline":
             device_match = re.search(r"PAPER_DEVICE_COUNTS requested=(\d+) actual=(\d+) profiles=([^ ]+) active_task_sources=(\d+) edge_data_centers=(\d+) cloud=(\d+)", result.stdout)
             task_match = re.search(r"PAPER_TASK_GENERATION simulated_seconds=(\d+) active_devices=(\d+) app_user_counts=([^ ]+) generated_tasks=(\d+)", result.stdout)
-            horizon_match = re.search(r"PAPER_HORIZON time_seconds=([0-9.]+) generated=(\d+) sent=(\d+) accounted=(\d+) pending_at_cutoff=(\d+)", result.stdout)
+            horizon_match = re.search(r"PAPER_HORIZON time_seconds=([0-9.]+) generated=(\d+) sent=(\d+) accounted=(\d+) pending_at_cutoff=(\d+) completed=(\d+) terminally_failed=(\d+) accounting_valid=(true|false) cloud_pending=(\d+) edge_pending=(\d+) mist_pending=(\d+) rejected_before_pipeline=(\d+)", result.stdout)
             if not device_match:
                 errors.append("missing actual UE/EDC generation marker")
             else:
@@ -221,6 +221,27 @@ def main() -> int:
                 pending = int(horizon_match.group(5))
                 manifest["simulated_end_seconds"] = end
                 manifest["pending_tasks_at_horizon"] = pending
+                accounting = {
+                    "generated_tasks": int(horizon_match.group(2)),
+                    "sent_tasks": int(horizon_match.group(3)),
+                    "completed_tasks": int(horizon_match.group(6)),
+                    "terminally_failed_tasks": int(horizon_match.group(7)),
+                    "pending_tasks": pending,
+                    "rejected_before_pipeline_tasks": int(horizon_match.group(12)),
+                    "pending_by_layer": {
+                        "Cloud": int(horizon_match.group(9)),
+                        "Edge": int(horizon_match.group(10)),
+                        "Mist": int(horizon_match.group(11)),
+                    },
+                }
+                manifest["task_accounting"] = accounting
+                if horizon_match.group(8) != "true":
+                    errors.append("runtime task accounting invariant failed")
+                if accounting["generated_tasks"] != (accounting["completed_tasks"] + accounting["terminally_failed_tasks"] + accounting["pending_tasks"]):
+                    errors.append("generated tasks do not reconcile with completed, terminally failed, and pending")
+                if accounting["rejected_before_pipeline_tasks"] > accounting["terminally_failed_tasks"]:
+                    errors.append("rejected-before-pipeline count exceeds terminal failures")
+                manifest["task_accounting"]["layer_successful_completions"] = None
                 if abs(end - duration) > 1e-6: errors.append(f"simulation ended at {end}s, expected {duration}s")
                 if int(horizon_match.group(2)) != expected_tasks: errors.append("horizon generated count does not match expected task count")
             destination_path = raw / "destinations.csv"
@@ -315,6 +336,12 @@ def main() -> int:
 
         metrics = parse(run)
         manifest["metrics"] = metrics
+        if profile == "paper-aligned-baseline" and manifest.get("task_accounting"):
+            layer_successes = metrics.get("layer_successful_completions", {})
+            if all(layer_successes.get(layer) is not None for layer in ("Cloud", "Edge", "Mist")):
+                manifest["task_accounting"]["layer_successful_completions"] = layer_successes
+                if sum(layer_successes.values()) != manifest["task_accounting"]["completed_tasks"]:
+                    errors.append("global completed tasks do not reconcile with successful destination-layer counts")
         if profile == "paper-aligned-baseline" and metrics["generated_tasks"] != expected_tasks:
             errors.append(f"CSV generated task count {metrics['generated_tasks']} != expected {expected_tasks}")
         if not manifest["simulator_csvs"]:

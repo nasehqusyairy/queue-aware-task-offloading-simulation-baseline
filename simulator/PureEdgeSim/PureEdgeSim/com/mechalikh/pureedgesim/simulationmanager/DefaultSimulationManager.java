@@ -32,6 +32,7 @@ import com.mechalikh.pureedgesim.simulationengine.OnSimulationStartListener;
 import com.mechalikh.pureedgesim.simulationengine.PureEdgeSim;
 import com.mechalikh.pureedgesim.simulationvisualizer.SimulationVisualizer;
 import com.mechalikh.pureedgesim.taskgenerator.Task;
+import com.mechalikh.pureedgesim.taskgenerator.DeadlinePolicy;
 
 /**
  * The {@code SimulationManager} class represents the default implementation of
@@ -401,7 +402,7 @@ public class DefaultSimulationManager extends SimulationManager implements OnSim
 			return setFailed(task, phase);
 		}
 		// The task is failed due to long delay
-		if (phase == 3 && task.getTotalDelay() >= task.getMaxLatency()) {
+		if (phase == 3 && DeadlinePolicy.isExceeded(task.getTotalDelay(), task.getMaxLatency())) {
 			task.setFailureReason(Task.FailureReason.FAILED_DUE_TO_LATENCY);
 			simLog.incrementTasksFailedLatency(task);
 			return setFailed(task, phase);

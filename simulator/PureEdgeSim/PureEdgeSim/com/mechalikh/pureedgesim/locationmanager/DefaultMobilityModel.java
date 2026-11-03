@@ -84,6 +84,11 @@ public class DefaultMobilityModel extends MobilityModel {
 		// Update the xPosition
 		double X_pos = xPosition + X_distance;
 		double Y_pos = yPosition + Y_distance;
+		// A timestep can cross the map edge after reoriontate() checked the
+		// pre-step coordinate. Keep the actual node location inside the configured
+		// simulation rectangle so connectivity and coverage use valid positions.
+		X_pos = Math.max(0, Math.min(SimulationParameters.simulationMapLength, X_pos));
+		Y_pos = Math.max(0, Math.min(SimulationParameters.simulationMapWidth, Y_pos));
 		return new Location(X_pos, Y_pos);
 	}
 

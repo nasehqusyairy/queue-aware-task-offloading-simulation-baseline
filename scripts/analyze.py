@@ -18,33 +18,72 @@ def _optional_number(value, cast):
 def parse(run):
     metrics = {
         "generated_tasks": None,
+        "sent_tasks": None,
+        "completed_tasks": None,
+        "terminally_failed_tasks": None,
+        "rejected_before_pipeline_tasks": None,
+        "pending_tasks": None,
         "successful_tasks": None,
         "failed_tasks": None,
         "task_success_rate": None,
+        "task_failure_rate": None,
+        "task_pending_rate": None,
         "energy_consumption": None,
         "energy_unit": "Wh",
         "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
         "workload_distribution": {layer: None for layer in LAYERS},
-        "workload_distribution_unit": "tasks executed at each PureEdgeSim layer",
+        "workload_distribution_unit": "tasks dispatched to each destination layer",
         "source": "N/A: simulator CSV not located",
         "validation_errors": [],
     }
     raw = run / "raw"
+    found_metrics_csv = False
     for path in sorted(raw.rglob("*.csv")) if raw.exists() else []:
         try:
             with path.open(newline="", errors="replace") as stream:
                 reader = csv.DictReader(stream)
-                if not reader.fieldnames or "Number of generated tasks" not in reader.fieldnames:
+                if not reader.fieldnames:
                     continue
+                if "Number of generated tasks" not in reader.fieldnames:
+                    continue
+                found_metrics_csv = True
+                required = ("Tasks successfully executed", "Tasks sent", "Tasks completed",
+                            "Tasks terminally failed", "Tasks pending at cutoff", "Tasks rejected before pipeline")
+                missing = [column for column in required if column not in reader.fieldnames]
+                if missing:
+                    metrics["source"] = str(path.relative_to(run))
+                    metrics["validation_errors"].append("missing required simulator columns: " + ", ".join(missing))
+                    return metrics
                 for row in reader:
                     generated = _optional_number(row.get("Number of generated tasks"), int)
                     successful = _optional_number(row.get("Tasks successfully executed"), int)
                     if generated is None or successful is None:
+                        metrics["source"] = str(path.relative_to(run))
+                        metrics["validation_errors"].append("generated or successful task count is missing/empty")
                         continue
+                    sent = _optional_number(row.get("Tasks sent"), int)
+                    completed = _optional_number(row.get("Tasks completed"), int)
+                    failed = _optional_number(row.get("Tasks terminally failed"), int)
+                    pending = _optional_number(row.get("Tasks pending at cutoff"), int)
+                    rejected = _optional_number(row.get("Tasks rejected before pipeline"), int)
                     metrics["generated_tasks"] = generated
-                    metrics["successful_tasks"] = successful
-                    metrics["failed_tasks"] = generated - successful
-                    metrics["task_success_rate"] = successful / generated if generated else None
+                    metrics["sent_tasks"] = sent
+                    metrics["completed_tasks"] = completed if completed is not None else successful
+                    metrics["terminally_failed_tasks"] = failed
+                    metrics["rejected_before_pipeline_tasks"] = rejected
+                    metrics["pending_tasks"] = pending
+                    metrics["successful_tasks"] = metrics["completed_tasks"]
+                    metrics["failed_tasks"] = failed
+                    metrics["task_success_rate"] = metrics["completed_tasks"] / generated if generated else None
+                    metrics["task_failure_rate"] = failed / generated if failed is not None and generated is not None and generated else None
+                    metrics["task_pending_rate"] = pending / generated if pending is not None and generated is not None and generated else None
+                    if None not in (generated, completed, failed, pending):
+                        if generated != completed + failed + pending:
+                            metrics["validation_errors"].append("generated != completed + terminally_failed + pending")
+                        if any(value < 0 for value in (generated, completed, failed, pending)):
+                            metrics["validation_errors"].append("task accounting counters must be non-negative")
+                        if rejected is not None and failed is not None and rejected > failed:
+                            metrics["validation_errors"].append("rejected-before-pipeline count exceeds terminal failures")
                     if successful > generated or successful < 0:
                         metrics["validation_errors"].append("successful task count is outside [0, generated]")
                     metrics["energy_consumption"] = _optional_number(
@@ -54,18 +93,34 @@ def parse(run):
                         layer: _optional_number(row.get(f"Total tasks executed ({layer})"), int)
                         for layer in LAYERS
                     }
+                    metrics["layer_successful_completions"] = {
+                        layer: _optional_number(row.get(f"Tasks successfully executed ({layer})"), int)
+                        for layer in LAYERS
+                    }
+                    layer_values = metrics["layer_successful_completions"].values()
+                    if all(value is not None for value in layer_values) and metrics["completed_tasks"] is not None:
+                        if sum(layer_values) != metrics["completed_tasks"]:
+                            metrics["validation_errors"].append(
+                                "global completed tasks do not reconcile with successful destination-layer counts"
+                            )
                     metrics["source"] = str(path.relative_to(run))
                     return metrics
-        except (OSError, ValueError, csv.Error):
+        except (OSError, ValueError, csv.Error) as exc:
+            if found_metrics_csv:
+                metrics["source"] = str(path.relative_to(run))
+                metrics["validation_errors"].append(f"invalid simulator CSV value: {exc}")
+                return metrics
             continue
+    if not found_metrics_csv:
+        metrics["validation_errors"].append("no simulator CSV with required task-count columns")
     return metrics
 
 
 def _dashboard_html():
     return """<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>PureEdgeSim experiment results</title>
 <style>body{font:15px system-ui,sans-serif;margin:2rem;color:#172033}table{border-collapse:collapse;width:100%;font-size:13px}td,th{border:1px solid #ccd3df;padding:.45rem;text-align:left}th{background:#f1f4f8}pre{white-space:pre-wrap}</style>
-<h1>PureEdgeSim experiment results</h1><p>Missing source values are N/A; zero is a measured value. Workload is total tasks executed per layer.</p><div id=\"status\">Loading…</div><div style=\"overflow:auto\"><table><thead><tr><th>Run</th><th>Status</th><th>Profile</th><th>Method</th><th>UE requested</th><th>Duration (s)</th><th>Target</th><th>Generated</th><th>Successful</th><th>Failed</th><th>Success rate</th><th>Energy (Wh)</th><th>Workload Cloud / Edge / Mist</th></tr></thead><tbody id=\"rows\"></tbody></table></div>
-<script>fetch('./summary.json').then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(data=>{status.textContent=data.length+' run records';for(const x of data){const tr=document.createElement('tr');const vals=[x.run_id,x.status,x.profile,x.method,x.devices,x.duration_seconds,x.destination_config??x.architecture,x.generated_tasks,x.successful_tasks,x.failed_tasks,x.task_success_rate==null?'N/A':(100*x.task_success_rate).toFixed(2)+'%',x.energy_consumption??'N/A',...( ['Cloud','Edge','Mist'].map(k=>x.workload_distribution?.[k]??'N/A') )];for(const v of vals){const td=document.createElement('td');td.textContent=String(v??'N/A');tr.appendChild(td)}rows.appendChild(tr)}}).catch(e=>status.textContent='Could not load summary.json: '+e.message);</script></html>"""
+<h1>PureEdgeSim experiment results</h1><p>Rates use generated tasks as denominator. Missing values are N/A; layer workload is dispatched tasks.</p><div id=\"status\">Loading…</div><div style=\"overflow:auto\"><table><thead><tr><th>Run</th><th>Status</th><th>Profile</th><th>Method</th><th>UE requested</th><th>Duration (s)</th><th>Target</th><th>Generated</th><th>Sent</th><th>Completed</th><th>Terminal failures</th><th>Rejected before pipeline</th><th>Pending</th><th>Success rate</th><th>Energy (Wh)</th><th>Workload Cloud / Edge / Mist</th></tr></thead><tbody id=\"rows\"></tbody></table></div>
+<script>fetch('./summary.json').then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(data=>{status.textContent=data.length+' run records';for(const x of data){const tr=document.createElement('tr');const vals=[x.run_id,x.status,x.profile,x.method,x.devices,x.duration_seconds,x.destination_config??x.architecture,x.generated_tasks,x.sent_tasks,x.completed_tasks,x.terminally_failed_tasks,x.rejected_before_pipeline_tasks,x.pending_tasks,x.task_success_rate==null?'N/A':(100*x.task_success_rate).toFixed(2)+'%',x.energy_consumption??'N/A',...( ['Cloud','Edge','Mist'].map(k=>x.workload_distribution?.[k]??'N/A') )];for(const v of vals){const td=document.createElement('td');td.textContent=String(v??'N/A');tr.appendChild(td)}rows.appendChild(tr)}}).catch(e=>status.textContent='Could not load summary.json: '+e.message);</script></html>"""
 
 
 def _read_config(run):
@@ -108,6 +163,14 @@ def _row_for_run(run):
         "validation_errors": manifest_errors,
         "metric_validation_errors": metric_errors,
     }
+    # Preserve execution-time accounting from the run manifest, if available.
+    accounting = config.get("task_accounting")
+    if isinstance(accounting, dict):
+        for key in ("generated_tasks", "sent_tasks", "completed_tasks", "terminally_failed_tasks", "pending_tasks",
+                    "rejected_before_pipeline_tasks",
+                    "layer_successful_completions"):
+            if accounting.get(key) is not None:
+                row[key] = accounting[key]
     return row
 
 
