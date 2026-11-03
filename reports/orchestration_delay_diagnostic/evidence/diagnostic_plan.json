@@ -1,0 +1,14 @@
+{
+  "status": "planned_not_executed",
+  "reason": "Existing run artifacts do not contain per-task timestamps. A valid trace requires additional event instrumentation at manager/network/compute-node hooks; no code changes or diagnostic simulation were made in this audit.",
+  "baseline_profile": "paper-aligned-baseline",
+  "target": "EDGE_DC_ONLY",
+  "method": "queue-aware (existing placement-level implementation; not task-level)",
+  "devices": 10,
+  "duration_seconds": 1,
+  "seed": 1,
+  "expected_profile_allocations": [2, 3, 5],
+  "expected_app_users": [2, 3, 5],
+  "expected_generated_tasks": 145,
+  "note": "This is a proposed minimal short-horizon run only; current generator still emits each app rate per user per second. It would not produce exactly one task per type. No run was executed and no trace values are claimed."
+}

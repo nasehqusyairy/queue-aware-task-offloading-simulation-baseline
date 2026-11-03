@@ -1,0 +1,5 @@
+Branch at start: main
+Commit SHA at start: 03acb8635144a99b147b3d9e97017052cfaf4978
+Working tree at start: clean (git status --porcelain was empty)
+Run output: unique timestamped directories under results/runs; no historical run directory was overwritten.
+Source code changes during audit: none.

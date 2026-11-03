@@ -9,6 +9,7 @@ import com.mechalikh.pureedgesim.datacentersmanager.ComputingNode;
 import com.mechalikh.pureedgesim.scenariomanager.SimulationParameters;
 import com.mechalikh.pureedgesim.simulationengine.FutureQueue;
 import com.mechalikh.pureedgesim.simulationmanager.SimulationManager;
+import com.mechalikh.pureedgesim.simulationmanager.PaperAlignedSimulationManager;
 import com.mechalikh.pureedgesim.taskgenerator.Application;
 import com.mechalikh.pureedgesim.taskgenerator.DefaultTaskGenerator;
 import com.mechalikh.pureedgesim.taskgenerator.Task;
@@ -83,6 +84,9 @@ public final class PaperAlignedTaskGenerator extends DefaultTaskGenerator {
                         task.setRegistry(cloud);
                         task.setTime(second);
                         taskList.add(task);
+                        if (getSimulationManager() instanceof PaperAlignedSimulationManager traceManager) {
+                            traceManager.recordTaskGenerated(task);
+                        }
                         generated++;
                     }
                 }

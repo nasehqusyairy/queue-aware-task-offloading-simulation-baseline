@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "mode": "quick",
+  "status": "completed",
+  "created_utc": "2026-11-03T17:34:20.265589+00:00",
+  "profile": "paper-aligned-baseline",
+  "destination_config": "EDGE_DC_ONLY",
+  "duration_seconds": 1,
+  "seeds": [
+    1
+  ],
+  "methods": [
+    "trade-off",
+    "queue-aware"
+  ],
+  "workloads": [
+    {
+      "name": "low",
+      "devices": 10
+    },
+    {
+      "name": "medium",
+      "devices": 20
+    },
+    {
+      "name": "high",
+      "devices": 30
+    }
+  ],
+  "total_cells": 6,
+  "completed_cells": 6,
+  "note": "Quick mode is a smoke/diagnostic comparison, not statistically conclusive.",
+  "updated_utc": "2026-11-03T17:35:27.936642+00:00",
+  "last_return_code": 0,
+  "last_error": "Initial validation exposed RUNS_ROOT reset in run.sh; both completed artifacts preserved and relocated into this experiment directory.",
+  "finished_utc": "2026-11-03T17:35:28.172254+00:00"
+}

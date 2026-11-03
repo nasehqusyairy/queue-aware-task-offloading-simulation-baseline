@@ -1,0 +1,22 @@
+{
+  "status": "INCONCLUSIVE",
+  "measurable_outputs_equivalent": true,
+  "strict_per_task_terminal_equivalence": "INCONCLUSIVE",
+  "comparison": "trace-off vs trace-on",
+  "trace_off_run": "/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/runs/20261103T170907504227571_paper-aligned-baseline_queue-aware_10ue_EDGE_DC_ONLY_seed4401",
+  "trace_on_run": "/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/runs/20261103T170916785099633_paper-aligned-baseline_queue-aware_10ue_EDGE_DC_ONLY_seed4401",
+  "absolute_float_tolerance": 1e-12,
+  "exactly_checked": [
+    "run configuration identity",
+    "all metrics.json fields except run_id/source",
+    "all Sequential_simulation.csv cells",
+    "all destination sequence cells",
+    "all queue candidate/score/selection cells when present",
+    "trace file enable/disable behavior"
+  ],
+  "not_comparable": [
+    "per-task terminal status/failure identity: trace-off intentionally emits no per-task terminal log"
+  ],
+  "interpretation": "all available non-trace summaries and decision sequences match, but strict per-task terminal identity cannot be established from trace-off outputs",
+  "errors": []
+}

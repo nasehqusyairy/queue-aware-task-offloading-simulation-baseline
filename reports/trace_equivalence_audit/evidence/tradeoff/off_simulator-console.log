@@ -1,0 +1,75 @@
+Simulation - Loading simulation files...
+EdgeDevicesParser - Checking file: PureEdgeSim/settings/edge_devices.xml 
+EdgeDevicesParser - PureEdgeSim/settings/edge_devices.xml file successfully Loaded!
+DatacentersParser - Checking file: PureEdgeSim/settings/edge_datacenters.xml 
+DatacentersParser - PureEdgeSim/settings/edge_datacenters.xml file successfully Loaded!
+DatacentersParser - Checking file: PureEdgeSim/settings/cloud.xml 
+DatacentersParser - PureEdgeSim/settings/cloud.xml file successfully Loaded!
+ParametersParser - Checking simulation properties file...
+ParametersParser - Properties file successfully Loaded propoerties file!
+ApplicationFileParser - Checking applications file.
+ApplicationFileParser - Applications XML file successfully loaded!
+SimulationThread - Initializing the Network Module...
+SimulationThread - Initializing the Datacenters Manager Module...
+DataCentersManager - Generating computing nodes...
+PAPER_DEVICE_COUNTS requested=10 actual=10 profiles=2,1,1,3,3 active_task_sources=10 edge_data_centers=4 cloud=1
+PAPER_ORCHESTRATOR_ASSIGNMENTS target=CLOUD assigned_user_devices=10 cloud_flag=true
+DataCentersManager - Creating the network topology...
+SimulationThread - Initializing the Task Generator...
+PAPER_TASK_GENERATION simulated_seconds=1 active_devices=10 app_user_counts=2,3,5 generated_tasks=145
+SimulationThread - Initializing the Task Orchestrator...
+SimulationThread - All modules were successfully launched...
+Simulation progress : [ 0  10 # 40 # 60 # 80 # 90 PAPER_HORIZON time_seconds=1.000000000 generated=145 sent=145 accounted=136 pending_at_cutoff=9 completed=6 terminally_failed=130 accounting_valid=true cloud_pending=0 edge_pending=9 mist_pending=0 rejected_before_pipeline=0
+ 100% ]
+2026/11/04 00:08:49 - simulation time       0 (s) : PaperAlignedComputingNodesGenerator - Datacenters and devices were generated
+2026/11/04 00:08:49 - simulation time       0 (s) : PaperAlignedSimulationManager -  Orchestration algorithm= TRADE_OFF -  Architecture= EDGE_ONLY -  number of edge devices= 10
+2026/11/04 00:08:49 - simulation time       0 (s) : PaperAlignedSimulationManager - Simulation: 1  , iteration: 1
+2026/11/04 00:08:49 - simulation time       1 (s) : SimLog - Printing iteration output...
+2026/11/04 00:08:49 - simulation time       1 (s) : ------------------------------------------------------- OUTPUT -------------------------------------------------------
+2026/11/04 00:08:49 - simulation time       1 (s) : 
+2026/11/04 00:08:49 - simulation time       1 (s) : Tasks not sent because device died (low energy)                         :                   0 % (0 tasks)
+2026/11/04 00:08:49 - simulation time       1 (s) : Tasks sent from edge devices                                            :                 100 % (145 among 145 generated tasks)
+2026/11/04 00:08:49 - simulation time       1 (s) : -------------------------------------All values below are based on the sent tasks-------------------------------------
+2026/11/04 00:08:49 - simulation time       1 (s) : Total tasks execution time                                              :               16.25 seconds
+2026/11/04 00:08:49 - simulation time       1 (s) : Average task execution time                                             :              0.1195 seconds
+2026/11/04 00:08:49 - simulation time       1 (s) : Total waiting time (from submitting the tasks to when execution started):                  13 seconds
+2026/11/04 00:08:49 - simulation time       1 (s) : Average task waiting time                                               :              0.0956 seconds
+2026/11/04 00:08:49 - simulation time       1 (s) : Tasks successfully executed                                             :             10.3448 % (15 among 145 sent tasks)
+2026/11/04 00:08:49 - simulation time       1 (s) : Tasks failures
+2026/11/04 00:08:49 - simulation time       1 (s) :                               Not executed due to resource unavailablity:                   0 % (0 tasks)
+2026/11/04 00:08:49 - simulation time       1 (s) :                                    Executed but failed due to high delay:             89.6552 % (130 tasks from 145 successfully sent tasks)
+2026/11/04 00:08:49 - simulation time       1 (s) :                Tasks execution results not returned due to devices death:                   0 % (0 tasks)
+2026/11/04 00:08:49 - simulation time       1 (s) :             Tasks execution results not returned due to devices mobility:                   0 % (0 tasks)
+2026/11/04 00:08:49 - simulation time       1 (s) : Tasks executed on each level                                            :Cloud=             0 tasks (where 0 were successfully executed )
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                           Edge=           145 tasks (where 15 were successfully executed )
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                           Mist=             0 tasks (where 0 were successfully executed )
+2026/11/04 00:08:49 - simulation time       1 (s) : Network usage                                                           :            144.5218 seconds (The total traffic: 359.6 (MBytes) )
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                            Wan=        143.84 seconds (99.5282 % of total usage, WAN used when downloading containers=0 % of WAN usage )
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                            Man=             0 seconds (0 % of total usage, MAN used when downloading containers=0 % of MAN usage )
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                            Lan=        0.6818 seconds (0.4718 % of total usage, LAN used when downloading containers=0 % of LAN usage )
+2026/11/04 00:08:49 - simulation time       1 (s) : Average transfer speed                                                  :             180.949 Mbps  
+2026/11/04 00:08:49 - simulation time       1 (s) : Average CPU utilization                                                 :                  25 %
+2026/11/04 00:08:49 - simulation time       1 (s) : Average CPU utilization per level                                       :Cloud=             0 %
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                           Edge=         56.25 %
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                           Mist=             0 %
+2026/11/04 00:08:49 - simulation time       1 (s) : Energy consumption                                                      :              0.3189 Wh (Average: 0.0213 Wh/data center(or device))
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                         :                        (Average: 0.0023 Wh/task)
+2026/11/04 00:08:49 - simulation time       1 (s) : Energy Consumption per level                                            :Cloud=             0 Wh (Average: 0 Wh/data center)
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                           Edge=        0.2069 Wh (Average: 0.0517 Wh/data center)
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                           Mist=        0.1119 Wh (Average: 0.0112 Wh/edge device)
+2026/11/04 00:08:49 - simulation time       1 (s) : Energy Consumption per network                                          :  WAN=        0.1991 Wh
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                            MAN=             0 Wh 
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                            LAN=         0.074 Wh 
+2026/11/04 00:08:49 - simulation time       1 (s) : Energy Consumption per technology                                       : WiFi=        0.2659 Wh
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                       Cellular=             0 Wh 
+2026/11/04 00:08:49 - simulation time       1 (s) :                                                                       Ethernet=             0 Wh 
+2026/11/04 00:08:49 - simulation time       1 (s) : Dead edge devices due to battery drain                                  :                   0 devices (Among 3 devices with batteries (0 %))
+2026/11/04 00:08:49 - simulation time       1 (s) : Average remaining power (devices with batteries that are still alive)   :             31.2219 Wh (Average: 99.9453 %)
+...
+
+SimulationThread - Iteration finished...
+
+######################################################################################################################################################################
+SimulationThread - Simulation Finished!
+Simulation - Simulation took : 0 minutes, 3 seconds.
+Simulation - results were saved to the folder: PureEdgeSim/output/

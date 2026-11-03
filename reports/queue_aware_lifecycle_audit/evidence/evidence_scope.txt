@@ -1,0 +1,1 @@
+Selected evidence: the nine seed=1, 200-second, EDGE_DC_ONLY matrix runs from the previous audit. Each run contributes its manifest, analyzed metrics, raw Sequential_simulation.csv, and run-specific application/simulation/EDC config. Queue-Aware runs also include raw/queue_decisions.csv. No simulator was rerun for this audit.

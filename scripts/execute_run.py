@@ -6,6 +6,7 @@ import csv
 import hashlib
 import json
 import math
+import os
 import re
 import shutil
 import subprocess
@@ -198,12 +199,16 @@ def main() -> int:
             classpath = f"{class_dir}:{classpath}"
             destination_log = raw / "destinations.csv"
             common_properties = [f"-Dpaper.seed={seed}"] if seed is not None else []
+            trace_events = os.environ.get("PAPER_TASK_EVENT_TRACE", "").strip().lower() in {"1", "true", "yes"}
+            manifest["task_event_trace_enabled"] = trace_events
             command = [
                 "java", *common_properties,
                 f"-Dpaper.profile-counts={','.join(map(str, device_counts))}",
                 f"-Dpaper.app-counts={','.join(map(str, app_counts))}",
                 f"-Dpaper.destination-log={destination_log}",
             ]
+            if trace_events:
+                command.append(f"-Dpaper.task-event-trace={raw / 'task_event_trace.csv'}")
             if method == "queue-aware-trade-off" or method == "queue-aware":
                 queue_audit = raw / "queue_decisions.csv"
                 command.extend([f"-Dpaper.queue-audit-log={queue_audit}",

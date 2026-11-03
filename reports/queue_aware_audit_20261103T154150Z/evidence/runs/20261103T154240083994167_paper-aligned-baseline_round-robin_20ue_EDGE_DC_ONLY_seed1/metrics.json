@@ -1,0 +1,43 @@
+{
+  "run_id": "20261103T154240083994167_paper-aligned-baseline_round-robin_20ue_EDGE_DC_ONLY_seed1",
+  "profile": "paper-aligned-baseline",
+  "method": "round-robin",
+  "devices": 20,
+  "duration_seconds": 200,
+  "architecture": "EDGE_ONLY",
+  "destination_config": "EDGE_DC_ONLY",
+  "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+  "status": "completed",
+  "generated_tasks": 58000,
+  "sent_tasks": 58000,
+  "completed_tasks": 4755,
+  "terminally_failed_tasks": 44151,
+  "rejected_before_pipeline_tasks": 0,
+  "pending_tasks": 9094,
+  "successful_tasks": 4755,
+  "failed_tasks": 44151,
+  "task_success_rate": 0.08198275862068966,
+  "task_failure_rate": 0.7612241379310345,
+  "task_pending_rate": 0.15679310344827585,
+  "average_cpu_execution_time_seconds": 0.1542,
+  "average_completed_task_total_delay_seconds": 24.5228522041574,
+  "average_completed_task_waiting_time_seconds": 18.9561777076761,
+  "energy_consumption": 98.587,
+  "energy_unit": "Wh",
+  "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+  "workload_distribution": {
+    "Cloud": 0,
+    "Edge": 58000,
+    "Mist": 0
+  },
+  "workload_distribution_unit": "tasks dispatched to each destination layer",
+  "source": "raw/2026-11-03_22-42-43/Sequential_simulation.csv",
+  "layer_successful_completions": {
+    "Cloud": 0,
+    "Edge": 4755,
+    "Mist": 0
+  },
+  "queue_aware_metrics": null,
+  "validation_errors": [],
+  "metric_validation_errors": []
+}

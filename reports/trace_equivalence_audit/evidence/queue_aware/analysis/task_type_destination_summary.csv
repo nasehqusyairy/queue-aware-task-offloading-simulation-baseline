@@ -1,0 +1,4 @@
+application_id,task_type,destination_layer,task_count,completed,failed,pending,mean_terminal_total_delay_seconds,mean_orchestration_request_elapsed_seconds,mean_dispatch_to_arrival_seconds,mean_orchestration_request_network_delay_seconds,mean_dispatch_network_delay_seconds,mean_observed_queue_wait_seconds,mean_observed_cpu_execution_seconds,mean_result_return_elapsed_seconds,mean_result_return_network_delay_seconds
+0,Hard Real-time,EDGE_DATACENTER,40,0,40,0,0.5729961538461539,0.06,0.0050000000000000044,0.136,0.14112307692307696,0.012499999999999997,0.012499999999999997,0.12,0.27712307692307697
+1,Soft Real-time,EDGE_DATACENTER,90,0,90,0,3.2396923076923083,0.05999999999999999,0.023333333333333334,1.3199999999999998,1.3294871794871799,0.159375,0.125,0.12000000000000001,0.3235384615384618
+2,Non Real-time,EDGE_DATACENTER,15,6,0,9,5.5766153846153825,0.05999999999999999,0.038000000000000006,2.12,2.1281538461538454,0.375,0.75,0.1200000000000001,0.566230769230768

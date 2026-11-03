@@ -1,0 +1,19 @@
+{
+  "same_seed_queue_aware_runs": [
+    "20261103T154111536956981_paper-aligned-baseline_queue-aware_10ue_EDGE_DC_ONLY_seed8128",
+    "20261103T154138603058420_paper-aligned-baseline_queue-aware_10ue_EDGE_DC_ONLY_seed8128",
+    "20261103T154939655428041_paper-aligned-baseline_queue-aware_10ue_EDGE_DC_ONLY_seed8128"
+  ],
+  "count": 3,
+  "source_task_ue_position_traces_identical": true,
+  "destination_assignment_sequences_identical": true,
+  "selected_metric_values_identical": true,
+  "compared_metric_fields": [
+    "generated_tasks",
+    "completed_tasks",
+    "terminally_failed_tasks",
+    "pending_tasks",
+    "average_completed_task_total_delay_seconds",
+    "energy_consumption"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": "1",
+  "record_count": 1795,
+  "task_count": 145,
+  "event_counts": {
+    "DESTINATION_ARRIVAL": 145,
+    "DESTINATION_DECISION": 145,
+    "DESTINATION_EXECUTION_READY": 145,
+    "EXECUTION_END": 136,
+    "EXECUTION_START": 145,
+    "ORCHESTRATION_REQUEST": 145,
+    "QUEUE_ENTER": 109,
+    "QUEUE_EXIT": 109,
+    "RESULT_RETURN": 136,
+    "TASK_COMPLETED": 6,
+    "TASK_DISPATCH": 145,
+    "TASK_FAILED": 130,
+    "TASK_GENERATED": 145,
+    "TASK_PENDING_AT_HORIZON": 9,
+    "TASK_SUBMISSION": 145
+  },
+  "terminal_task_count": 136,
+  "pending_event_count": 9,
+  "errors": [],
+  "valid": true,
+  "destination_assignment_modes": {
+    "CACHED_PLACEMENT_REUSED": 135,
+    "POLICY_SELECTED": 10
+  },
+  "pending_last_event_counts": {
+    "EXECUTION_START": 9
+  },
+  "destination_decision_sequence_matches": true,
+  "destination_decision_sequence_count": 145,
+  "failure_reason_summary_check": {
+    "FAILED_DUE_TO_LATENCY": {
+      "trace": 130,
+      "summary": 130,
+      "matches": true
+    },
+    "FAILED_BECAUSE_DEVICE_DEAD": {
+      "trace": 0,
+      "summary": 0,
+      "matches": true
+    },
+    "FAILED_DUE_TO_DEVICE_MOBILITY": {
+      "trace": 0,
+      "summary": 0,
+      "matches": true
+    },
+    "resource_category": {
+      "trace": 0,
+      "summary": 0,
+      "matches": true
+    }
+  },
+  "summary_accounting_expected": {
+    "generated_tasks": 145,
+    "completed_tasks": 6,
+    "terminally_failed_tasks": 130,
+    "pending_tasks": 9
+  },
+  "summary_accounting_actual": {
+    "generated_tasks": 145,
+    "completed_tasks": 6,
+    "terminally_failed_tasks": 130,
+    "pending_tasks": 9
+  },
+  "summary_accounting_matches": true
+}

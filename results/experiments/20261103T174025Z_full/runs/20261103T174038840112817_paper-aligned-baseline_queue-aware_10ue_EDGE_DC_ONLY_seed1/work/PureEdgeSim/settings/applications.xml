@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<applications>
+  <!-- PureEdgeSim maps usage_percentage to the fraction of task-producing UE assigned this app profile. -->
+  <application name="Hard real-time">
+    <type>Hard Real-time</type><rate>20</rate><usage_percentage>20</usage_percentage><latency>0.02</latency>
+    <container_size>20</container_size><request_size>20</request_size><results_size>20</results_size><task_length>500</task_length>
+  </application>
+  <application name="Soft real-time">
+    <type>Soft Real-time</type><rate>30</rate><usage_percentage>30</usage_percentage><latency>0.5</latency>
+    <container_size>1500</container_size><request_size>1500</request_size><results_size>50</results_size><task_length>5000</task_length>
+  </application>
+  <application name="Non-real-time">
+    <type>Non Real-time</type><rate>3</rate><usage_percentage>50</usage_percentage><latency>300</latency>
+    <container_size>2200</container_size><request_size>2500</request_size><results_size>200</results_size><task_length>30000</task_length>
+  </application>
+</applications>

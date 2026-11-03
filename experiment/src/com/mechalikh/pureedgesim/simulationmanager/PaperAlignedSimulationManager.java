@@ -29,6 +29,9 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
     private final java.util.Set<Integer> terminalFailureTaskIds = new java.util.HashSet<>();
     private BufferedWriter destinationWriter;
     private BufferedWriter queueAuditWriter;
+    private BufferedWriter taskEventWriter;
+    private final Map<Integer, Task> tracedTasks = new HashMap<>();
+    private final java.util.Set<Integer> tracedTerminalIds = new java.util.HashSet<>();
     private double completedTotalDelaySeconds;
     private double completedWaitingSeconds;
     private int completedLatencySamples;
@@ -54,6 +57,16 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
                 throw new IllegalStateException("cannot create queue decision audit file", e);
             }
         }
+        String tracePath = System.getProperty("paper.task-event-trace");
+        if (tracePath != null && !tracePath.isBlank()) {
+            try {
+                taskEventWriter = Files.newBufferedWriter(Path.of(tracePath), StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+                taskEventWriter.write("schema_version,task_id,event_name,timestamp_seconds,scheduled_release_time_seconds,application_id,task_type,source_id,source_layer,destination_id,destination_layer,status,failure_reason,stage,total_delay_seconds,network_delay_seconds,queue_wait_seconds,cpu_time_seconds,deadline_seconds\n");
+            } catch (IOException e) {
+                throw new IllegalStateException("cannot create task event trace", e);
+            }
+        }
     }
 
     @Override
@@ -75,16 +88,27 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
             String type = orchestrator == null || orchestrator == ComputingNode.NULL
                     ? "UNKNOWN" : orchestrator.getType().name();
             orchestrators.put(task.getId(), type);
+            if (simLog.tasksSent > sentBefore) recordTaskEvent(task, "ORCHESTRATION_REQUEST", "REQUEST_SENT");
             return;
         }
         if (event.getTag() == SEND_TASK_FROM_ORCH_TO_DESTINATION) {
             Task task = (Task) event.getData();
+            boolean placementWasCached = task.getEdgeDevice().isApplicationPlaced();
             super.processEvent(event);
             recordTerminalIfCountChanged(task, terminalCountBefore, failedCountBefore);
             recordDecision(task);
             ComputingNode destination = task.getOffloadingDestination();
+            if (destination == null || destination == ComputingNode.NULL) {
+                if (task.getFailureReason() == Task.FailureReason.NO_OFFLOADING_DESTINATIONS) {
+                    recordTaskEvent(task, "DESTINATION_DECISION", "POLICY_NO_DESTINATION");
+                }
+            } else {
+                recordTaskEvent(task, "DESTINATION_DECISION",
+                        placementWasCached ? "CACHED_PLACEMENT_REUSED" : "POLICY_SELECTED");
+            }
             if (destination != null && destination != ComputingNode.NULL) {
                 dispatchedButUnresolved.put(task.getId(), destination.getType().name());
+                recordTaskEvent(task, "TASK_DISPATCH", "DISPATCH_SCHEDULED");
             }
             return;
         }
@@ -109,6 +133,7 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
                     simulation.clock(), simLog.getGeneratedTasks(), simLog.tasksSent, completed + failed, pending,
                     completed, failed, valid, cloudPending, edgePending, mistPending, rejectedBeforePipeline);
             try {
+                recordPendingAtHorizon();
                 simLog.setCompletedTaskDelayAverages(completedLatencySamples == 0 ? -1
                                 : completedTotalDelaySeconds / completedLatencySamples,
                         completedLatencySamples == 0 ? -1 : completedWaitingSeconds / completedLatencySamples);
@@ -116,8 +141,14 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
             } finally {
                 closeDestinationLog();
                 closeQueueAuditLog();
+                closeTaskEventLog();
             }
             return;
+        }
+        if (event.getTag() == EXECUTE_TASK && event.getData() instanceof Task) {
+            recordTaskEvent((Task) event.getData(), "DESTINATION_EXECUTION_READY", "EXECUTION_READY");
+        } else if (event.getTag() == RESULT_RETURN_FINISHED && event.getData() instanceof Task) {
+            recordTaskEvent((Task) event.getData(), "RESULT_RETURN", "RESULT_AT_SOURCE");
         }
         super.processEvent(event);
         if (event.getTag() == RESULT_RETURN_FINISHED && tasksCount > terminalCountBefore
@@ -128,6 +159,61 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
             completedLatencySamples++;
         }
         if (event.getData() instanceof Task) recordTerminalIfCountChanged((Task) event.getData(), terminalCountBefore, failedCountBefore);
+    }
+
+    /** Called by the task generator; no state is retained when tracing is disabled. */
+    public void recordTaskGenerated(Task task) {
+        if (taskEventWriter == null) return;
+        tracedTasks.put(task.getId(), task);
+        writeTaskEvent(task, "TASK_GENERATED", simulation.clock(), task.getEdgeDevice(),
+                task.getOffloadingDestination(), task.getStatus().name(), "", "GENERATED");
+    }
+
+    /** Read-only event emission for experiment-specific computing-node subclasses. */
+    public void recordTaskEvent(Task task, String eventName, String stage) {
+        if (taskEventWriter == null || task == null) return;
+        ComputingNode source = task.getEdgeDevice();
+        ComputingNode destination = task.getOffloadingDestination();
+        String status = task.getStatus() == null ? "" : task.getStatus().name();
+        String reason = task.getFailureReason() == null ? "" : task.getFailureReason().name();
+        writeTaskEvent(task, eventName, simulation.clock(), source, destination, status, reason, stage);
+    }
+
+    private void recordPendingAtHorizon() {
+        if (taskEventWriter == null) return;
+        for (Task task : tracedTasks.values()) {
+            if (!tracedTerminalIds.contains(task.getId())) {
+                recordTaskEvent(task, "TASK_PENDING_AT_HORIZON", "UNRESOLVED_AT_CUTOFF");
+            }
+        }
+    }
+
+    private void writeTaskEvent(Task task, String eventName, double time, ComputingNode source,
+            ComputingNode destination, String status, String reason, String stage) {
+        try {
+            taskEventWriter.write("1," + task.getId() + "," + eventName + "," + time + "," + task.getTime() + ","
+                    + task.getApplicationID() + "," + csv(task.getType()) + ","
+                    + nodeId(source) + "," + nodeType(source) + "," + nodeId(destination) + ","
+                    + nodeType(destination) + "," + csv(status) + "," + csv(reason) + "," + csv(stage) + ","
+                    + task.getTotalDelay() + "," + task.getActualNetworkTime() + ","
+                    + task.getWatingTime() + "," + task.getActualCpuTime() + "," + task.getMaxLatency() + "\n");
+        } catch (IOException e) {
+            throw new IllegalStateException("cannot write task event trace", e);
+        }
+    }
+
+    private static String nodeId(ComputingNode node) {
+        return node == null || node == ComputingNode.NULL ? "" : Integer.toString(node.getId());
+    }
+
+    private static String nodeType(ComputingNode node) {
+        return node == null || node == ComputingNode.NULL ? "" : node.getType().name();
+    }
+
+    private static String csv(Object value) {
+        if (value == null) return "";
+        String text = value.toString();
+        return "\"" + text.replace("\"", "\"\"") + "\"";
     }
 
     /** Write one candidate's decision-time estimate; absent values remain blank. */
@@ -160,6 +246,11 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
             terminalTaskIds.add(task.getId());
             dispatchedButUnresolved.remove(task.getId());
             if (simLog.tasksFailed > failedBefore) terminalFailureTaskIds.add(task.getId());
+            if (taskEventWriter != null && tracedTerminalIds.add(task.getId())) {
+                boolean failed = simLog.tasksFailed > failedBefore;
+                recordTaskEvent(task, failed ? "TASK_FAILED" : "TASK_COMPLETED",
+                        failed ? "TERMINAL_FAILED" : "TERMINAL_COMPLETED");
+            }
         }
     }
 
@@ -208,6 +299,17 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
             queueAuditWriter = null;
         } catch (IOException e) {
             throw new IllegalStateException("cannot close queue decision audit log", e);
+        }
+    }
+
+    private void closeTaskEventLog() {
+        if (taskEventWriter == null) return;
+        try {
+            taskEventWriter.flush();
+            taskEventWriter.close();
+            taskEventWriter = null;
+        } catch (IOException e) {
+            throw new IllegalStateException("cannot close task event trace", e);
         }
     }
 }

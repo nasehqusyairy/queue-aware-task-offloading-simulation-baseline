@@ -1,0 +1,9 @@
+A. ./run.sh --profile paper-aligned-baseline --method queue-aware --devices 10 --destination-config EDGE_DC_ONLY --seed 8128 --queue-weight 1.0
+B. ./run.sh --profile paper-aligned-baseline --method all --workload-level low --destination-config EDGE_DC_ONLY --seed 8128 --queue-weight 1.0
+C dry-run. python3 scripts/run_queue_aware_matrix.py --dry-run
+C full matrix. python3 scripts/run_queue_aware_matrix.py (seed 1, lambda 1.0, duration 200s)
+Analyze. ./analyze.sh --latest --profile paper-aligned-baseline --output-dir reports/queue_aware_audit_20261103T154150Z/evidence/processed_all_paper_final
+Opt-in Queue-Aware acceptance. RUN_QUEUE_AWARE_SMOKE=1 python3 -m unittest discover -s tests -p test_acceptance_queue_aware.py -v
+Opt-in Trade-Off acceptance. RUN_PAPER_SMOKE=1 python3 -m unittest discover -s tests -p test_acceptance_paper_smoke.py -v
+Default suite. python3 -m unittest discover -s tests -v
+Java score tests. See java_scoring_test.log.

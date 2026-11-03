@@ -1,0 +1,6 @@
+test_three_methods_share_seed_and_keep_accounting_and_queue_audit (test_acceptance_queue_aware.QueueAwareAcceptanceTests.test_three_methods_share_seed_and_keep_accounting_and_queue_audit) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 23.511s
+
+OK

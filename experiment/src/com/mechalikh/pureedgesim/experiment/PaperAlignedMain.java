@@ -11,6 +11,10 @@ public final class PaperAlignedMain {
         simulation.setCustomMobilityModel(SeededMobilityModel.class);
         simulation.setCustomTaskGenerator(PaperAlignedTaskGenerator.class);
         simulation.setCustomComputingNodesGenerator(PaperAlignedComputingNodesGenerator.class);
+        if (System.getProperty("paper.task-event-trace") != null) {
+            simulation.setCustomComputingNode(TaskTracingComputingNode.class);
+            simulation.setCustomNetworkModel(TaskTracingNetworkModel.class);
+        }
         simulation.setCustomEdgeOrchestrator(PaperAlignedOrchestrator.class);
         simulation.setCustomSimulationManager(com.mechalikh.pureedgesim.simulationmanager.PaperAlignedSimulationManager.class);
         simulation.launchSimulation();

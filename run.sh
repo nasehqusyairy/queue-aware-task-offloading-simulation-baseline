@@ -10,9 +10,10 @@ ARCH=EDGE_AND_CLOUD
 SEED=1
 QUEUE_WEIGHT=1.0
 WORKLOAD_LEVEL=
+RUNS_ROOT="${RUNS_ROOT:-$ROOT/results/runs}"
 
 usage() {
-  printf 'Usage: ./run.sh [--profile technical-baseline|paper-aligned-baseline] [--method trade-off|round-robin|queue-aware|all] [--devices N | --workload-level low|medium|high] [--duration-seconds N | --duration-minutes N] [--destination-config NAME] [--architecture NAME] [--seed N] [--queue-weight LAMBDA]\n'
+  printf 'Usage: RUNS_ROOT=DIR ./run.sh [--profile technical-baseline|paper-aligned-baseline] [--method trade-off|round-robin|queue-aware|all] [--devices N | --workload-level low|medium|high] [--duration-seconds N | --duration-minutes N] [--destination-config NAME] [--architecture NAME] [--seed N] [--queue-weight LAMBDA]\n'
   printf 'Paper targets: ALL_DEVICES, EDGE_AND_EDGE_DC, EDGE_AND_CLOUD, EDGE_DC_AND_CLOUD, EDGE_ONLY, EDGE_DC_ONLY\n'
   printf 'Paper profile defaults to 200s when --duration-seconds is omitted. Legacy technical profile defaults to 1 minute.\n'
 }
@@ -75,6 +76,7 @@ command -v java >/dev/null || { echo 'Error: Java is required (install a JDK). '
 command -v mvn >/dev/null || { echo 'Error: Maven is required.' >&2; exit 2; }
 command -v python3 >/dev/null || { echo 'Error: Python 3 is required.' >&2; exit 2; }
 SIM="$ROOT/simulator/PureEdgeSim"
+mkdir -p "$RUNS_ROOT"
 [[ -f "$SIM/pom.xml" && -f "$SIM/LICENSE" ]] || { echo 'Error: vendored PureEdgeSim source or GPL-3.0 license is missing.' >&2; exit 1; }
 if [[ "$PROFILE" == paper-aligned-baseline ]]; then
   if ! ARCH="$(PYTHONPATH="$ROOT/scripts" python3 -c 'import sys; from paper_experiment import target_architecture; print(target_architecture(sys.argv[1]))' "$TARGET")"; then
@@ -104,7 +106,7 @@ if [[ "$METHOD" == all ]]; then
 else METHODS=("$METHOD"); fi
 for m in "${METHODS[@]}"; do
   RUN_ID="$(date -u +%Y%m%dT%H%M%S%N)_${PROFILE}_${m}_${DEVICES}ue_${TARGET}_seed${SEED}"
-  OUT="$ROOT/results/runs/$RUN_ID"
+  OUT="$RUNS_ROOT/$RUN_ID"
   mkdir -p "$OUT/config" "$OUT/raw"
   cp -a "$CONFIG_SOURCE/." "$OUT/config/"
   if [[ "$m" == round-robin ]]; then ALGO=ROUND_ROBIN; else ALGO=TRADE_OFF; fi

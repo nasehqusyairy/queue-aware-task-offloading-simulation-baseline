@@ -1,0 +1,39 @@
+Repository source map for commit 03acb8635144a99b147b3d9e97017052cfaf4978
+
+Generation:
+- experiment/src/com/mechalikh/pureedgesim/experiment/PaperAlignedTaskGenerator.java:50-93 — app/user/second/sequence task creation, deadline/type/length/source, task time.
+- simulator/PureEdgeSim/PureEdgeSim/com/mechalikh/pureedgesim/simulationmanager/DefaultSimulationManager.java:115-145 — generated counter, event batches, horizon.
+
+Submission and cached application placement:
+- DefaultSimulationManager.java:157-203 — SEND_TO_ORCH, SEND_TASK_FROM_ORCH_TO_DESTINATION, EXECUTE_TASK, results and result-return events.
+- DefaultSimulationManager.java:276-338 — result return, cached application placement branch, and sent counter.
+- simulator/PureEdgeSim/PureEdgeSim/com/mechalikh/pureedgesim/taskorchestrator/Orchestrator.java:127-150 — find candidate, set task destination, set UE application placement.
+
+Decision algorithms / eligibility:
+- simulator/PureEdgeSim/PureEdgeSim/com/mechalikh/pureedgesim/taskorchestrator/DefaultOrchestrator.java:42-105 — algorithm dispatch, Trade-Off and Round Robin.
+- experiment/src/com/mechalikh/pureedgesim/experiment/PaperAlignedOrchestrator.java:22-33 — target-layer and reachability eligibility.
+- experiment/src/com/mechalikh/pureedgesim/experiment/QueueAwareTradeOffOrchestrator.java:47-85 — Queue-Aware score and audit at selector invocation.
+- simulator/PureEdgeSim/PureEdgeSim/com/mechalikh/pureedgesim/simulationmanager/SimulationAbstract.java:168-175 — custom SimulationManager extension hook.
+- DefaultSimulationManager.java:294-322 — protected, overridable destination dispatch method and placement gate.
+
+Queue / CPU:
+- simulator/PureEdgeSim/PureEdgeSim/com/mechalikh/pureedgesim/datacentersmanager/DefaultComputingNode.java:222-269 — submit, FIFO fallback, start, nominal service time.
+- DefaultComputingNode.java:275-305 — execution finish, release resources, dequeue FIFO head.
+
+Network / deadline / failures:
+- simulator/PureEdgeSim/PureEdgeSim/com/mechalikh/pureedgesim/network/DefaultNetworkModel.java:76-175, 177-249 — request/task/results routing, transfer and return flow.
+- simulator/PureEdgeSim/PureEdgeSim/com/mechalikh/pureedgesim/network/NetworkLink.java:128-179 — transfer time and latency accounting.
+- simulator/PureEdgeSim/PureEdgeSim/com/mechalikh/pureedgesim/simulationmanager/DefaultSimulationManager.java:360-435 — phase 0-3 failure checks and terminal failure.
+- simulator/PureEdgeSim/PureEdgeSim/com/mechalikh/pureedgesim/taskgenerator/DeadlinePolicy.java:7-18 — inclusive deadline threshold.
+- simulator/PureEdgeSim/PureEdgeSim/com/mechalikh/pureedgesim/taskgenerator/TaskAbstract.java:158-206 — actual CPU, waiting, network-inclusive total delay.
+- simulator/PureEdgeSim/PureEdgeSim/com/mechalikh/pureedgesim/taskgenerator/DefaultTask.java:260-270, 343-363 — failure reason changes status; status enum storage.
+
+Cutoff and metrics:
+- experiment/src/com/mechalikh/pureedgesim/simulationmanager/PaperAlignedSimulationManager.java:59-130, 152-164 — duplicate terminal guard, completed/pending accounting, completed delay samples, IDs retained in memory.
+- simulator/PureEdgeSim/PureEdgeSim/com/mechalikh/pureedgesim/simulationmanager/SimLog.java:108-144, 643-670 — raw CSV counters, reason aggregates, CPU/wait averages.
+- scripts/analyze.py:63-100 — parser uses generated denominator, completed, terminal failures, pending, and metrics fields.
+
+Configuration evidence:
+- configs/paper-aligned/applications.xml — deadlines 0.02, 0.5, 300 seconds; rates 20,30,3; lengths 500,5000,30000 MI.
+- configs/paper-aligned/simulation_parameters.properties — Cloud orchestrator, WAN latency 0.06 s, hard horizon 200 seconds, wait_for_all_tasks=false.
+- configs/paper-aligned/edge_datacenters.xml — 4 EDCs, each 10 cores × 40,000 MIPS.

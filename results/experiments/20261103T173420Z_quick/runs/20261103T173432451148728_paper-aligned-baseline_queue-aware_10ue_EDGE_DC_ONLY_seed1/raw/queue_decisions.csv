@@ -1,0 +1,17 @@
+task_id,decision_time_seconds,candidate_id,candidate_type,baseline_score_seconds,queue_wait_estimate_seconds,waiting_queue_length,active_task_count,queue_estimate_available,queue_penalty_weight,combined_score_seconds,selected
+1,0.06,1,EDGE_DATACENTER,0.015,0.0,0,0,true,1.0,0.015,true
+1,0.06,2,EDGE_DATACENTER,0.015,0.0,0,0,true,1.0,0.015,false
+21,0.06,2,EDGE_DATACENTER,0.015,0.0,0,0,true,1.0,0.015,true
+41,0.06,1,EDGE_DATACENTER,0.3,0.0,0,0,true,1.0,0.3,true
+41,0.06,2,EDGE_DATACENTER,0.3,0.0,0,0,true,1.0,0.3,false
+71,0.06,1,EDGE_DATACENTER,0.45,0.0,0,0,true,1.0,0.45,true
+101,0.06,1,EDGE_DATACENTER,0.6,0.0,0,0,true,1.0,0.6,false
+101,0.06,2,EDGE_DATACENTER,0.3,0.0,0,0,true,1.0,0.3,true
+131,0.06,3,EDGE_DATACENTER,0.9,0.0,0,0,true,1.0,0.9,true
+131,0.06,4,EDGE_DATACENTER,0.9,0.0,0,0,true,1.0,0.9,false
+134,0.06,2,EDGE_DATACENTER,2.6999999999999997,0.0,0,0,true,1.0,2.6999999999999997,true
+137,0.06,1,EDGE_DATACENTER,3.6,0.0,0,0,true,1.0,3.6,false
+137,0.06,3,EDGE_DATACENTER,1.8,0.0,0,0,true,1.0,1.8,true
+140,0.06,1,EDGE_DATACENTER,3.6,0.0,0,0,true,1.0,3.6,true
+143,0.06,1,EDGE_DATACENTER,4.5,0.0,0,0,true,1.0,4.5,false
+143,0.06,3,EDGE_DATACENTER,2.6999999999999997,0.0,0,0,true,1.0,2.6999999999999997,true

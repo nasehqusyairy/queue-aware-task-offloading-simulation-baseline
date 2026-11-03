@@ -1,0 +1,42 @@
+{
+  "run_id": "20261103T170301499316045_paper-aligned-baseline_trade-off_10ue_EDGE_DC_ONLY_seed4401",
+  "profile": "paper-aligned-baseline",
+  "method": "trade-off",
+  "devices": 10,
+  "duration_seconds": 1,
+  "architecture": "EDGE_ONLY",
+  "destination_config": "EDGE_DC_ONLY",
+  "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+  "status": "failed",
+  "generated_tasks": null,
+  "sent_tasks": null,
+  "completed_tasks": null,
+  "terminally_failed_tasks": null,
+  "rejected_before_pipeline_tasks": null,
+  "pending_tasks": null,
+  "successful_tasks": null,
+  "failed_tasks": null,
+  "task_success_rate": null,
+  "task_failure_rate": null,
+  "task_pending_rate": null,
+  "average_cpu_execution_time_seconds": null,
+  "average_completed_task_total_delay_seconds": null,
+  "average_completed_task_waiting_time_seconds": null,
+  "energy_consumption": null,
+  "energy_unit": "Wh",
+  "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+  "workload_distribution": {
+    "Cloud": null,
+    "Edge": null,
+    "Mist": null
+  },
+  "workload_distribution_unit": "tasks dispatched to each destination layer",
+  "source": "N/A: simulator CSV not located",
+  "queue_aware_metrics": null,
+  "validation_errors": [
+    "Maven dependency classpath failed: WARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (file:/usr/share/maven/lib/guava.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper\nWARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release\n[\u001b[1;31mERROR\u001b[m] java.nio.file.FileSystemException: /home/nasyikhqusyairy/.m2/repository/org/jacoco/resolver-status.properties: Read-only file system\n[\u001b[1;31mERROR\u001b[m] \n[\u001b[1;31mERROR\u001b[m] To see the full stack trace of the errors, re-run Maven with the \u001b[1m-e\u001b[m switch.\n[\u001b[1;31mERROR\u001b[m] Re-run Maven using the \u001b[1m-X\u001b[m switch to enable full debug logging.\n"
+  ],
+  "metric_validation_errors": [
+    "no simulator CSV with required task-count columns"
+  ]
+}

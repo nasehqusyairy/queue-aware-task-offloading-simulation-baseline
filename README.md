@@ -42,6 +42,28 @@ python3 -m http.server 8000 --directory results
 
 Open <http://localhost:8000/dashboard.html>. The static dashboard fetches `processed/summary.json` from that same results directory; serving over HTTP avoids browser restrictions on `fetch()` from `file://`.
 
+## One-command paired experiment and PNG results
+
+Run the quick paired comparison across low, medium, and high offered workloads (Trade-Off and Queue-Aware share each workload, seed, duration, and destination configuration):
+
+```bash
+./run_experiment.sh --quick
+```
+
+Quick mode uses seed 1 and a one-second simulation horizon per cell. It validates the end-to-end workflow and provides preliminary observations; it is **not statistically conclusive**. The full matrix is selected by default with `./run_experiment.sh`: three seeds (1, 8128, 4401), three workload levels, both methods, and 200 simulated seconds per run. Review compute cost before starting the full matrix.
+
+Every invocation creates `results/experiments/<UTC timestamp>_<mode>/`, retains each run's raw simulator CSVs/logs/configuration under `runs/`, and updates `aggregate.csv`, `aggregate_summary.csv`, PNG charts, and a static `index.html` after each run. Completion also writes `EXPERIMENT_REPORT.md` with workflow status, run counts, preliminary/statistical status, observed pair differences, and limitations. A failed or interrupted experiment preserves finished runs. Continue the most recent incomplete matrix with `./run_experiment.sh --resume` (or `./run_experiment.sh --quick --resume`); completed cells are skipped and never overwritten. An incomplete cell is retried into a new uniquely named run directory.
+
+Open or regenerate the latest completed experiment without running simulations:
+
+```bash
+./view_results.sh
+```
+
+Pass a specific experiment directory to view an in-progress or older result set: `./view_results.sh results/experiments/<directory>`. Open its `index.html` locally or serve that directory with `python3 -m http.server --directory <directory>`. The workflow needs Java, Maven, Python 3, and Pillow for PNG rendering. Matrix defaults live in `configs/experiment/matrix.json`.
+
+Charts show seed-level task completion rates and available-seed means, completed/failed/pending accounting, computing-node energy, the simulator's average completed-task total delay, and dispatch counts by destination layer. Delay uses the simulator's existing accumulated network + queue + CPU metric; event-clock and accumulated network timing have a known interpretation limitation described in each chart and the trace audit. Workload distribution is available only by destination layer, not per device or node queue; no per-node imbalance is inferred. `aggregate.csv` contains the run-level source data, including validation status. Results should be treated as preliminary until the protocol, configuration, sample size, and statistical analysis have been reviewed.
+
 ## PureEdgeSim provenance and build patch
 
 PureEdgeSim is the official Git submodule at `https://github.com/CharafeddineMechalikh/PureEdgeSim.git`; the selected upstream revision is pinned in the gitlink (also printed in the run header and recorded in each manifest). The upstream source tree places Java files under `PureEdgeSim/`, but its Maven project did not declare this as source root. As observed, default Maven `package` can succeed while compiling zero classes. `patches/pureedgesim-maven-source-root.patch` adds that source root and is applied explicitly by `run.sh`; it does not silently rewrite Java source. The upstream checkout retains its GPL-3.0 `LICENSE`; the patch is available for review in this repository.

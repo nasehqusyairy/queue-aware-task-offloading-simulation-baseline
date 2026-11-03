@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "profile": "paper-aligned-baseline",
+  "destination_config": "EDGE_DC_ONLY",
+  "queue_weight": 1.0,
+  "methods": ["trade-off", "queue-aware"],
+  "workloads": [
+    {"name": "low", "devices": 10},
+    {"name": "medium", "devices": 20},
+    {"name": "high", "devices": 30}
+  ],
+  "quick": {"duration_seconds": 1, "seeds": [1]},
+  "full": {"duration_seconds": 200, "seeds": [1, 8128, 4401]},
+  "interpretation": {
+    "delay_metric": "Average completed-task total delay (s) = simulator reported accumulated network + queue waiting + CPU time.",
+    "limitation": "PureEdgeSim event-clock elapsed may differ from accumulated network delay because per-hop latency accounting and event scheduling do not use identical timing semantics. Do not interpret this value as wall-clock or pure network latency.",
+    "workload_distribution": "Simulator exposes dispatched task counts by destination layer (Cloud, Edge, Mist), but not per-node queue lengths or per-device utilization. Layer-level coefficient of variation is descriptive only and is not a node-level imbalance measure."
+  }
+}

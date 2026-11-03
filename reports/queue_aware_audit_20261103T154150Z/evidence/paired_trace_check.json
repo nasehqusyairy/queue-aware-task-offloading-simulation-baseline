@@ -1,0 +1,37 @@
+[
+  {
+    "group": "low_pair_seed8128",
+    "devices": 10,
+    "source_task_ue_position_traces_identical": true,
+    "tradeoff_and_round_robin_destination_sequences_identical": true,
+    "queue_aware_destination_sequence_matches_tradeoff": true
+  },
+  {
+    "group": "matrix_seed1",
+    "devices": 10,
+    "source_task_ue_position_traces_identical": true,
+    "tradeoff_and_round_robin_destination_sequences_identical": true,
+    "queue_aware_destination_sequence_matches_tradeoff": true
+  },
+  {
+    "group": "matrix_seed1",
+    "devices": 20,
+    "source_task_ue_position_traces_identical": true,
+    "tradeoff_and_round_robin_destination_sequences_identical": true,
+    "queue_aware_destination_sequence_matches_tradeoff": false
+  },
+  {
+    "group": "matrix_seed1",
+    "devices": 30,
+    "source_task_ue_position_traces_identical": true,
+    "tradeoff_and_round_robin_destination_sequences_identical": true,
+    "queue_aware_destination_sequence_matches_tradeoff": false
+  },
+  {
+    "group": "opt_in_acceptance_seed8128",
+    "devices": 10,
+    "source_task_ue_position_traces_identical": true,
+    "tradeoff_and_round_robin_destination_sequences_identical": true,
+    "queue_aware_destination_sequence_matches_tradeoff": true
+  }
+]

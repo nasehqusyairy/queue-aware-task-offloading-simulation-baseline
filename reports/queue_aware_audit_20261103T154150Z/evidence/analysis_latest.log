@@ -1,0 +1,3 @@
+Command: ./analyze.sh --latest --profile paper-aligned-baseline --output-dir reports/queue_aware_audit_20261103T154150Z/evidence/processed_all_paper_final
+Result: Runs included: 38 (including failed/invalid records).
+The analyzer aggregates all paper-aligned profile manifests, including historical runs. Audit-specific metrics are filtered to this audit’s 17 run IDs in run_summary.csv and run_index.json.

@@ -11,7 +11,12 @@ public final class QueueAwareMain {
         Simulation simulation = new Simulation();
         simulation.setCustomMobilityModel(SeededMobilityModel.class);
         simulation.setCustomTaskGenerator(PaperAlignedTaskGenerator.class);
-        simulation.setCustomComputingNode(QueueAwareComputingNode.class);
+        if (System.getProperty("paper.task-event-trace") != null) {
+            simulation.setCustomComputingNode(TaskTracingQueueAwareComputingNode.class);
+            simulation.setCustomNetworkModel(TaskTracingNetworkModel.class);
+        } else {
+            simulation.setCustomComputingNode(QueueAwareComputingNode.class);
+        }
         simulation.setCustomComputingNodesGenerator(PaperAlignedComputingNodesGenerator.class);
         simulation.setCustomEdgeOrchestrator(QueueAwareTradeOffOrchestrator.class);
         simulation.setCustomSimulationManager(PaperAlignedSimulationManager.class);

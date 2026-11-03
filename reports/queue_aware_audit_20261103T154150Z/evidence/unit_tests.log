@@ -1,0 +1,24 @@
+test_200_second_edge_dc_only_smoke_records_real_configuration_and_metrics (test_acceptance_paper_smoke.PaperSmokeAcceptanceTests.test_200_second_edge_dc_only_smoke_records_real_configuration_and_metrics) ... skipped 'set RUN_PAPER_SMOKE=1 for the 200-second simulator acceptance test'
+test_three_methods_share_seed_and_keep_accounting_and_queue_audit (test_acceptance_queue_aware.QueueAwareAcceptanceTests.test_three_methods_share_seed_and_keep_accounting_and_queue_audit) ... skipped 'set RUN_QUEUE_AWARE_SMOKE=1 for the paired Trade-Off/Round-Robin/Queue-Aware acceptance run'
+test_invalid_numeric_values_are_reported (test_analyze.AnalyzeTests.test_invalid_numeric_values_are_reported) ... ok
+test_missing_layer_count_remains_unavailable_not_zero (test_analyze.AnalyzeTests.test_missing_layer_count_remains_unavailable_not_zero) ... ok
+test_missing_lifecycle_columns_are_reported_and_not_zero_filled (test_analyze.AnalyzeTests.test_missing_lifecycle_columns_are_reported_and_not_zero_filled) ... ok
+test_pending_is_separate_and_closed_accounting_reconciles (test_analyze.AnalyzeTests.test_pending_is_separate_and_closed_accounting_reconciles) ... ok
+test_previous_pending_layer_discrepancy_is_rejected (test_analyze.AnalyzeTests.test_previous_pending_layer_discrepancy_is_rejected) ... ok
+test_queue_audit_reports_selected_wait_estimates_and_keeps_missing_values (test_analyze.AnalyzeTests.test_queue_audit_reports_selected_wait_estimates_and_keeps_missing_values) ... ok
+test_row_preserves_manifest_validation_errors_separately_from_metric_errors (test_analyze.AnalyzeTests.test_row_preserves_manifest_validation_errors_separately_from_metric_errors) ... ok
+test_workload_uses_all_tasks_dispatched_by_layer_not_only_successes (test_analyze.AnalyzeTests.test_workload_uses_all_tasks_dispatched_by_layer_not_only_successes) ... ok
+test_zero_generated_tasks_has_unavailable_rates (test_analyze.AnalyzeTests.test_zero_generated_tasks_has_unavailable_rates) ... ok
+test_all_six_paper_targets_map_to_distinct_supported_layer_sets (test_paper_experiment.PaperExperimentTests.test_all_six_paper_targets_map_to_distinct_supported_layer_sets) ... ok
+test_initial_matrix_is_36_unique_combinations (test_paper_experiment.PaperExperimentTests.test_initial_matrix_is_36_unique_combinations) ... ok
+test_largest_remainder_profile_allocation_hits_requested_device_count (test_paper_experiment.PaperExperimentTests.test_largest_remainder_profile_allocation_hits_requested_device_count) ... ok
+test_paper_configuration_contains_five_profiles_three_apps_and_four_edcs (test_paper_experiment.PaperExperimentTests.test_paper_configuration_contains_five_profiles_three_apps_and_four_edcs) ... ok
+test_paper_parameters_use_cloud_orchestrator_200s_and_wifi_spec (test_paper_experiment.PaperExperimentTests.test_paper_parameters_use_cloud_orchestrator_200s_and_wifi_spec) ... ok
+test_quadrant_coverage_covers_full_200_by_200_area_with_radius_71 (test_paper_experiment.PaperExperimentTests.test_quadrant_coverage_covers_full_200_by_200_area_with_radius_71) ... ok
+test_queue_aware_matrix_pairs_three_methods_at_each_load_level (test_paper_experiment.PaperExperimentTests.test_queue_aware_matrix_pairs_three_methods_at_each_load_level) ... ok
+test_task_rates_are_applied_per_second_to_each_assigned_user (test_paper_experiment.PaperExperimentTests.test_task_rates_are_applied_per_second_to_each_assigned_user) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.005s
+
+OK (skipped=2)

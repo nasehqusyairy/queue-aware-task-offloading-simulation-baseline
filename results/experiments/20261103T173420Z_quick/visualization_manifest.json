@@ -1,0 +1,11 @@
+{
+  "charts": [
+    "charts/completion_rate.png",
+    "charts/task_outcomes.png",
+    "charts/energy.png",
+    "charts/delay.png",
+    "charts/destination_workload.png"
+  ],
+  "per_device_queue_data_available": false,
+  "queue_data_note": "Layer destination task counts are available; per-device queue length/utilization is not exposed in aggregate metrics."
+}

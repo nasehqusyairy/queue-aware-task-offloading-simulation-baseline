@@ -1,0 +1,21 @@
+Repository state before implementation:
+- git status --short --branch -> ## main...origin/main; existing reports/ was untracked
+- git rev-parse HEAD -> 03acb8635144a99b147b3d9e97017052cfaf4978
+
+One initial run setup attempt (simulator not launched): standard Maven classpath goal failed because ~/.m2/repository/org/jacoco/resolver-status.properties was read-only. The failed run manifest/metrics are retained as evidence.
+
+Final diagnostic pairs (Maven invoked offline via PATH=/tmp/task-trace-bin:$PATH):
+- trace-off Trade-Off: ./run.sh --profile paper-aligned-baseline --method trade-off --devices 10 --duration-seconds 1 --destination-config EDGE_DC_ONLY --seed 4401
+  run_id=20261103T170846524194007_paper-aligned-baseline_trade-off_10ue_EDGE_DC_ONLY_seed4401
+- trace-on Trade-Off: PAPER_TASK_EVENT_TRACE=1 ./run.sh --profile paper-aligned-baseline --method trade-off --devices 10 --duration-seconds 1 --destination-config EDGE_DC_ONLY --seed 4401
+  run_id=20261103T170855452417767_paper-aligned-baseline_trade-off_10ue_EDGE_DC_ONLY_seed4401
+- trace-off Queue-Aware: ./run.sh --profile paper-aligned-baseline --method queue-aware --devices 10 --duration-seconds 1 --destination-config EDGE_DC_ONLY --seed 4401
+  run_id=20261103T170907504227571_paper-aligned-baseline_queue-aware_10ue_EDGE_DC_ONLY_seed4401
+- trace-on Queue-Aware: PAPER_TASK_EVENT_TRACE=1 ./run.sh --profile paper-aligned-baseline --method queue-aware --devices 10 --duration-seconds 1 --destination-config EDGE_DC_ONLY --seed 4401
+  run_id=20261103T170916785099633_paper-aligned-baseline_queue-aware_10ue_EDGE_DC_ONLY_seed4401
+
+Analysis/validation:
+- python3 scripts/analyze_task_event_trace.py <trace.csv> --expected-manifest <manifest.json> --summary-csv <Sequential_simulation.csv> --destination-csv <destinations.csv> --output-dir <analysis-dir>
+- python3 scripts/compare_trace_equivalence.py <trace-off-run> <trace-on-run> --output <comparison.json>
+- python3 -m py_compile scripts/execute_run.py scripts/analyze_task_event_trace.py scripts/compare_trace_equivalence.py
+- python3 -m pytest -q tests/test_task_event_trace.py tests/test_paper_experiment.py -> 12 passed, 6 subtests passed

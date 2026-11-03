@@ -1,0 +1,3 @@
+Command: javac -cp simulator/PureEdgeSim/target/classes:results/runs/20261103T154939655428041_paper-aligned-baseline_queue-aware_10ue_EDGE_DC_ONLY_seed8128/classes -d /tmp/queue-aware-audit-tests tests/java/QueueAwareScoringTest.java
+Command: java -cp simulator/PureEdgeSim/target/classes:results/runs/20261103T154939655428041_paper-aligned-baseline_queue-aware_10ue_EDGE_DC_ONLY_seed8128/classes:/tmp/queue-aware-audit-tests QueueAwareScoringTest
+Result: javac exit 0; test process exit 0; no test failure output.

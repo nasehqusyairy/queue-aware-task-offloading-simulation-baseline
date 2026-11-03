@@ -16,7 +16,7 @@ import com.mechalikh.pureedgesim.taskgenerator.Task;
  * queue transitions remain in DefaultComputingNode; this class tracks the
  * start time of active tasks to estimate their remaining service time.
  */
-public final class QueueAwareComputingNode extends DefaultComputingNode implements QueueWorkloadView {
+public class QueueAwareComputingNode extends DefaultComputingNode implements QueueWorkloadView {
     private static final class ActiveTask {
         final double lengthMi;
         final double startedAtSeconds;
