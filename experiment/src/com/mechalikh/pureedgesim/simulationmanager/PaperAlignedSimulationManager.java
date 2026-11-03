@@ -52,7 +52,7 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
             try {
                 queueAuditWriter = Files.newBufferedWriter(Path.of(queuePath), StandardCharsets.UTF_8,
                         StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
-                queueAuditWriter.write("task_id,decision_time_seconds,candidate_id,candidate_type,baseline_score_seconds,queue_wait_estimate_seconds,waiting_queue_length,active_task_count,queue_estimate_available,queue_penalty_weight,combined_score_seconds,selected\n");
+                queueAuditWriter.write("task_id,estimate_timestamp_seconds,candidate_id,candidate_type,active_task_count,waiting_queue_length,queue_estimate_available,queue_wait_estimate_seconds,baseline_score_seconds,queue_penalty_weight,queue_penalty_seconds,combined_score_seconds,baseline_rank,combined_rank,ranking_changed,baseline_selected_candidate_id,selected_candidate_id,selected_destination_changed,placement_cache_used,selected\n");
             } catch (IOException e) {
                 throw new IllegalStateException("cannot create queue decision audit file", e);
             }
@@ -218,8 +218,11 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
 
     /** Write one candidate's decision-time estimate; absent values remain blank. */
     public void recordQueueCandidate(int taskId, double timeSeconds, ComputingNode candidate,
-            double baselineScoreSeconds, OptionalDouble queueWaitSeconds, double combinedScoreSeconds,
-            double weight, int waitingQueueLength, int activeTasks, boolean selected) {
+            int activeTasks, int waitingQueueLength, OptionalDouble queueWaitSeconds,
+            double baselineScoreSeconds, double weight, double queuePenaltySeconds,
+            double combinedScoreSeconds, int baselineRank, int combinedRank,
+            boolean rankingChanged, int baselineSelectedCandidateId, int selectedCandidateId,
+            boolean selectedDestinationChanged, boolean placementCacheUsed, boolean selected) {
         if (queueAuditWriter == null) throw new IllegalStateException("paper.queue-audit-log is required for queue-aware runs");
         try {
             String wait = queueWaitSeconds != null && queueWaitSeconds.isPresent()
@@ -227,9 +230,12 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
             String queueLength = waitingQueueLength < 0 ? "" : Integer.toString(waitingQueueLength);
             String active = activeTasks < 0 ? "" : Integer.toString(activeTasks);
             queueAuditWriter.write(taskId + "," + timeSeconds + "," + candidate.getId() + ","
-                    + candidate.getType().name() + "," + baselineScoreSeconds + "," + wait + ","
-                    + queueLength + "," + active + "," + (wait.isEmpty() ? "false" : "true") + ","
-                    + weight + "," + combinedScoreSeconds + "," + selected + "\n");
+                    + candidate.getType().name() + "," + active + "," + queueLength + ","
+                    + (wait.isEmpty() ? "false" : "true") + "," + wait + "," + baselineScoreSeconds + ","
+                    + weight + "," + queuePenaltySeconds + "," + combinedScoreSeconds + ","
+                    + baselineRank + "," + combinedRank + "," + rankingChanged + ","
+                    + baselineSelectedCandidateId + "," + selectedCandidateId + ","
+                    + selectedDestinationChanged + "," + placementCacheUsed + "," + selected + "\n");
         } catch (IOException e) {
             throw new IllegalStateException("cannot write queue decision audit record", e);
         }

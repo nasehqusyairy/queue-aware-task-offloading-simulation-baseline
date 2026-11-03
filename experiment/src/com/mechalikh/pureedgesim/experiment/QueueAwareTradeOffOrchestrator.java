@@ -46,7 +46,9 @@ public final class QueueAwareTradeOffOrchestrator extends PaperAlignedOrchestrat
     @Override
     protected int findComputingNode(String[] architecture, Task task) {
         double[] scores = new double[nodeList.size()];
+        double[] baselineScores = new double[nodeList.size()];
         java.util.Arrays.fill(scores, Double.POSITIVE_INFINITY);
+        java.util.Arrays.fill(baselineScores, Double.POSITIVE_INFINITY);
         List<Candidate> candidates = new ArrayList<>();
         for (int i = 0; i < nodeList.size(); i++) {
             ComputingNode node = nodeList.get(i);
@@ -67,10 +69,18 @@ public final class QueueAwareTradeOffOrchestrator extends PaperAlignedOrchestrat
             }
             double combinedScore = QueueAwareScoring.combinedScore(baseScore, wait, queuePenaltyWeight);
             scores[i] = combinedScore;
+            baselineScores[i] = baseScore;
             candidates.add(new Candidate(i, node, baseScore, wait, combinedScore, waitingQueueLength, activeTasks));
         }
 
         int selected = QueueAwareScoring.firstMinimum(scores);
+        int baselineSelected = QueueAwareScoring.firstMinimum(baselineScores);
+        int[] baselineRanks = ranks(candidates, false);
+        int[] combinedRanks = ranks(candidates, true);
+        boolean rankingChanged = !java.util.Arrays.equals(baselineRanks, combinedRanks);
+        int selectedCandidateId = selected < 0 ? -1 : nodeList.get(selected).getId();
+        int baselineSelectedCandidateId = baselineSelected < 0 ? -1 : nodeList.get(baselineSelected).getId();
+        boolean selectedDestinationChanged = selected != baselineSelected;
         if (selected >= 0) historyMap.put(selected, historyMap.get(selected) + 1);
 
         if (!(simulationManager instanceof PaperAlignedSimulationManager)) {
@@ -78,11 +88,29 @@ public final class QueueAwareTradeOffOrchestrator extends PaperAlignedOrchestrat
         }
         PaperAlignedSimulationManager audit = (PaperAlignedSimulationManager) simulationManager;
         for (Candidate candidate : candidates) {
+            double penalty = candidate.wait != null && candidate.wait.isPresent()
+                    ? queuePenaltyWeight * candidate.wait.getAsDouble() : 0;
             audit.recordQueueCandidate(task.getId(), simulationManager.getSimulation().clock(), candidate.node,
-                    candidate.baseScore, candidate.wait, candidate.combinedScore, queuePenaltyWeight,
-                    candidate.waitingQueueLength, candidate.activeTasks, candidate.index == selected);
+                    candidate.activeTasks, candidate.waitingQueueLength, candidate.wait,
+                    candidate.baseScore, queuePenaltyWeight, penalty, candidate.combinedScore,
+                    baselineRanks[candidate.index], combinedRanks[candidate.index], rankingChanged,
+                    baselineSelectedCandidateId, selectedCandidateId, selectedDestinationChanged, false,
+                    candidate.index == selected);
         }
         return selected;
+    }
+
+    private static int[] ranks(List<Candidate> candidates, boolean combined) {
+        List<Candidate> sorted = new ArrayList<>(candidates);
+        sorted.sort((a, b) -> {
+            double left = combined ? a.combinedScore : a.baseScore;
+            double right = combined ? b.combinedScore : b.baseScore;
+            int scoreOrder = Double.compare(left, right);
+            return scoreOrder != 0 ? scoreOrder : Integer.compare(a.index, b.index);
+        });
+        int[] ranks = new int[sorted.stream().mapToInt(c -> c.index).max().orElse(-1) + 1];
+        for (int i = 0; i < sorted.size(); i++) ranks[sorted.get(i).index] = i + 1;
+        return ranks;
     }
 
     private static double parseQueuePenaltyWeight(String value) {

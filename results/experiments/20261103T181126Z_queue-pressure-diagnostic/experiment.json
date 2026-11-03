@@ -1,0 +1,23 @@
+{
+  "experiment_id": "20261103T181126Z_queue-pressure-diagnostic",
+  "status": "completed",
+  "planned_runs": 2,
+  "successful_runs": 2,
+  "failed_runs": 0,
+  "runs": [
+    {
+      "run_id": "20261103T181138042289995_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed1",
+      "method": "trade-off",
+      "status": "completed",
+      "exit_code": 0,
+      "validation_errors": []
+    },
+    {
+      "run_id": "20261103T181150014525068_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1",
+      "method": "queue-aware",
+      "status": "completed",
+      "exit_code": 0,
+      "validation_errors": []
+    }
+  ]
+}
