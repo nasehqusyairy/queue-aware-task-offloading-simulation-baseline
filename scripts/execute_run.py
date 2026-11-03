@@ -128,6 +128,26 @@ def main() -> int:
         device_profiles, app_profiles, device_counts, app_counts, source_count, expected_tasks = profile_data(
             config, devices, duration
         )
+        home_matrix_encoded = os.environ.get("PAPER_HOME_WORKLOAD_MATRIX", "").strip()
+        home_condition = os.environ.get("PAPER_HOME_WORKLOAD_CONDITION", "").strip()
+        home_matrix = None
+        if home_matrix_encoded:
+            rows = [[int(value.strip()) for value in row.split(",")] for row in home_matrix_encoded.split(";")]
+            if len(rows) != 4 or any(len(row) != len(app_counts) for row in rows):
+                raise ValueError("PAPER_HOME_WORKLOAD_MATRIX must be 4 rows by application profile count")
+            if any(value < 0 for row in rows for value in row):
+                raise ValueError("home workload matrix values must be non-negative")
+            column_sums = [sum(row[col] for row in rows) for col in range(len(app_counts))]
+            if column_sums != app_counts:
+                raise ValueError(f"home workload matrix columns {column_sums} != application users {app_counts}")
+            if not home_condition:
+                raise ValueError("PAPER_HOME_WORKLOAD_CONDITION is required with a home workload matrix")
+            home_matrix = rows
+            manifest["home_workload_condition"] = home_condition
+            manifest["home_workload_matrix_users_by_edc_app"] = rows
+            manifest["home_workload_semantics"] = "virtual ingress demand attribution only; does not constrain execution destination"
+        elif home_condition:
+            raise ValueError("PAPER_HOME_WORKLOAD_MATRIX is required with a workload condition")
         if profile == "paper-aligned-baseline":
             if any(p.findtext("generateTasks", "false").strip().lower() != "true" for p in device_profiles):
                 raise ValueError("paper-aligned profile requires every UE type to be permitted to generate tasks")
@@ -207,8 +227,14 @@ def main() -> int:
                 f"-Dpaper.app-counts={','.join(map(str, app_counts))}",
                 f"-Dpaper.destination-log={destination_log}",
             ]
+            if home_matrix is not None:
+                matrix_arg = ";".join(",".join(map(str, row)) for row in home_matrix)
+                home_audit = raw / "home_workload.csv"
+                command.extend([f"-Dpaper.home-workload-matrix={matrix_arg}",
+                                f"-Dpaper.home-workload-audit={home_audit}"])
             if trace_events:
                 command.append(f"-Dpaper.task-event-trace={raw / 'task_event_trace.csv'}")
+                command.append(f"-Dpaper.node-state-log={raw / 'edc_node_state.csv'}")
             if method == "queue-aware-trade-off" or method == "queue-aware":
                 queue_audit = raw / "queue_decisions.csv"
                 command.extend([f"-Dpaper.queue-audit-log={queue_audit}",
@@ -233,6 +259,8 @@ def main() -> int:
         errors = []
         if result.returncode != 0:
             errors.append(f"simulator exit code {result.returncode}")
+        if home_matrix is not None and not (raw / "home_workload.csv").is_file():
+            errors.append("home workload audit CSV is missing")
         if "SimulationThread - Simulation Finished!" not in result.stdout:
             errors.append("missing simulator completion marker")
         if "Exception in thread" in result.stdout:

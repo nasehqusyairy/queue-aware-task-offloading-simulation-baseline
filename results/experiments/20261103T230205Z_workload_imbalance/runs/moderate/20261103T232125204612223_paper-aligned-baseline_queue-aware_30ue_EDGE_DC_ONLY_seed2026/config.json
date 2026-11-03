@@ -1,0 +1,284 @@
+{
+  "actual_edge_device_count": 30,
+  "algorithm": "QUEUE_AWARE_TRADE_OFF",
+  "application_percentages": [
+    20,
+    30,
+    50
+  ],
+  "application_rates_per_second": [
+    20,
+    30,
+    3
+  ],
+  "application_user_counts": {
+    "Hard real-time": 6,
+    "Non-real-time": 15,
+    "Soft real-time": 9
+  },
+  "architecture": "EDGE_ONLY",
+  "area_violation_count": 0,
+  "candidate_compute_capacity_mips": 1600000.0,
+  "cloud_count": 1,
+  "command": [
+    "java",
+    "-Dpaper.seed=2026",
+    "-Dpaper.profile-counts=6,3,3,8,10",
+    "-Dpaper.app-counts=6,9,15",
+    "-Dpaper.destination-log=/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/experiments/20261103T230205Z_workload_imbalance/runs/moderate/20261103T232125204612223_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026/raw/destinations.csv",
+    "-Dpaper.home-workload-matrix=2,3,7;2,3,4;1,3,1;1,0,3",
+    "-Dpaper.home-workload-audit=/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/experiments/20261103T230205Z_workload_imbalance/runs/moderate/20261103T232125204612223_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026/raw/home_workload.csv",
+    "-Dpaper.task-event-trace=/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/experiments/20261103T230205Z_workload_imbalance/runs/moderate/20261103T232125204612223_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026/raw/task_event_trace.csv",
+    "-Dpaper.node-state-log=/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/experiments/20261103T230205Z_workload_imbalance/runs/moderate/20261103T232125204612223_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026/raw/edc_node_state.csv",
+    "-Dpaper.queue-audit-log=/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/experiments/20261103T230205Z_workload_imbalance/runs/moderate/20261103T232125204612223_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026/raw/queue_decisions.csv",
+    "-Dpaper.queue-penalty-weight=1.0",
+    "-cp",
+    "/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/experiments/20261103T230205Z_workload_imbalance/runs/moderate/20261103T232125204612223_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026/classes:/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/simulator/PureEdgeSim/target/classes:/home/nasyikhqusyairy/.m2/repository/org/jgrapht/jgrapht-core/1.3.1/jgrapht-core-1.3.1.jar:/home/nasyikhqusyairy/.m2/repository/org/jheaps/jheaps/0.10/jheaps-0.10.jar:/home/nasyikhqusyairy/.m2/repository/org/knowm/xchart/xchart/3.8.0/xchart-3.8.0.jar:/home/nasyikhqusyairy/.m2/repository/de/erichseifert/vectorgraphics2d/VectorGraphics2D/0.13/VectorGraphics2D-0.13.jar:/home/nasyikhqusyairy/.m2/repository/de/rototor/pdfbox/graphics2d/0.30/graphics2d-0.30.jar:/home/nasyikhqusyairy/.m2/repository/org/apache/pdfbox/pdfbox/2.0.22/pdfbox-2.0.22.jar:/home/nasyikhqusyairy/.m2/repository/org/apache/pdfbox/fontbox/2.0.22/fontbox-2.0.22.jar:/home/nasyikhqusyairy/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/home/nasyikhqusyairy/.m2/repository/com/madgag/animated-gif-lib/1.4/animated-gif-lib-1.4.jar:/home/nasyikhqusyairy/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.8.2/junit-jupiter-engine-5.8.2.jar:/home/nasyikhqusyairy/.m2/repository/org/junit/platform/junit-platform-engine/1.8.2/junit-platform-engine-1.8.2.jar:/home/nasyikhqusyairy/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/nasyikhqusyairy/.m2/repository/org/junit/platform/junit-platform-commons/1.8.2/junit-platform-commons-1.8.2.jar:/home/nasyikhqusyairy/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.8.2/junit-jupiter-api-5.8.2.jar:/home/nasyikhqusyairy/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/nasyikhqusyairy/.m2/repository/de/biomedical-imaging/edu/wlu/cs/levy/cg/kdtree/1.0.3/kdtree-1.0.3.jar:/home/nasyikhqusyairy/.m2/repository/org/mockito/mockito-core/4.0.0/mockito-core-4.0.0.jar:/home/nasyikhqusyairy/.m2/repository/net/bytebuddy/byte-buddy/1.11.19/byte-buddy-1.11.19.jar:/home/nasyikhqusyairy/.m2/repository/net/bytebuddy/byte-buddy-agent/1.11.19/byte-buddy-agent-1.11.19.jar:/home/nasyikhqusyairy/.m2/repository/org/objenesis/objenesis/3.2/objenesis-3.2.jar:/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/simulator/PureEdgeSim/PureEdgeSim/libs/jFuzzyLogic_v3.0.jar",
+    "com.mechalikh.pureedgesim.experiment.QueueAwareMain"
+  ],
+  "configuration_sha256": {
+    "applications.xml": "7c12490c281445dbfa971ba3361340aecffab537f2e9e4b23bc55c18dd2ca6b2",
+    "cloud.xml": "cc5d4b4623d2268a97b35a09b14fe7dd77727c96ef968a170bc84db1044563da",
+    "edge_datacenters.xml": "70b5a99e00601386a5cce0781dd9c595cbfb575fea15685012c62d71fd95bfd5",
+    "edge_devices.xml": "239861a7a7c2cdc146d4d5d9084e0ea075b1d9397cdbb22435c94259fada3c8f",
+    "simulation_parameters.properties": "93561ee38111a5fd8103e449c47834dd967906302aeb2486cdb88679531080e0"
+  },
+  "coverage_geometry": {
+    "centers": [
+      [
+        50.0,
+        50.0
+      ],
+      [
+        150.0,
+        50.0
+      ],
+      [
+        50.0,
+        150.0
+      ],
+      [
+        150.0,
+        150.0
+      ]
+    ],
+    "max_nearest_distance": 64.69232220584328,
+    "radius": 71.0,
+    "sampled_decision_positions": 2175,
+    "shape": "circular reach tested against nearest EDC center; not a square network radius"
+  },
+  "coverage_violation_count": 0,
+  "current_uplink_type_counts": {
+    "EDGE_DATACENTER": 1135,
+    "EDGE_DEVICE": 1040
+  },
+  "destination_config": "EDGE_DC_ONLY",
+  "destination_counts": {
+    "EDGE_DATACENTER": 2175
+  },
+  "destination_decision_count": 2175,
+  "device_profile_counts": {
+    "type_1": 6,
+    "type_2": 3,
+    "type_3": 3,
+    "type_4": 8,
+    "type_5": 10
+  },
+  "devices": 30,
+  "duration_cutoff_policy": "hard horizon at t=duration_seconds; unresolved generated tasks remain pending and are excluded from terminal failures",
+  "duration_property_minutes": 0.08333333333333333,
+  "duration_seconds": 5,
+  "edge_datacenter_count": 4,
+  "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+  "expected_generated_tasks": 2175,
+  "finished_utc": "2026-11-03T23:21:32.006918+00:00",
+  "home_workload_condition": "moderate",
+  "home_workload_matrix_users_by_edc_app": [
+    [
+      2,
+      3,
+      7
+    ],
+    [
+      2,
+      3,
+      4
+    ],
+    [
+      1,
+      3,
+      1
+    ],
+    [
+      1,
+      0,
+      3
+    ]
+  ],
+  "home_workload_semantics": "virtual ingress demand attribution only; does not constrain execution destination",
+  "java_version": "openjdk version \"25.0.4.1\" 2026-08-18",
+  "local_execution_decisions": 0,
+  "local_execution_policy": "destination equal to source UE is local execution, separately marked in destination audit",
+  "method": "queue-aware",
+  "metrics": {
+    "average_completed_task_total_delay_seconds": 6.658423707440101,
+    "average_completed_task_waiting_time_seconds": 1.0844262295081972,
+    "average_cpu_execution_time_seconds": 0.1516,
+    "completed_tasks": 122,
+    "energy_consumption": 3.064,
+    "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+    "energy_unit": "Wh",
+    "failed_tasks": 1110,
+    "generated_tasks": 2175,
+    "layer_successful_completions": {
+      "Cloud": 0,
+      "Edge": 122,
+      "Mist": 0
+    },
+    "pending_tasks": 943,
+    "queue_aware_metrics": {
+      "candidate_observations": 92,
+      "selected_by_layer": {
+        "EDGE_DATACENTER": {
+          "mean_queue_wait_estimate_seconds": 0.8881081081081081,
+          "selected_tasks": 74
+        }
+      },
+      "selected_mean_queue_wait_estimate_seconds": 0.8881081081081081,
+      "selected_mean_waiting_queue_length": 54.75675675675676,
+      "selected_median_queue_wait_estimate_seconds": 0.28624999999999984,
+      "selected_queue_estimate_count": 74,
+      "selected_queue_estimate_unavailable_count": 0,
+      "source": "raw/queue_decisions.csv",
+      "valid": true
+    },
+    "rejected_before_pipeline_tasks": 0,
+    "sent_tasks": 2175,
+    "source": "raw/2026-11-04_06-21-28/Sequential_simulation.csv",
+    "successful_tasks": 122,
+    "task_failure_rate": 0.5103448275862069,
+    "task_pending_rate": 0.4335632183908046,
+    "task_success_rate": 0.056091954022988506,
+    "terminally_failed_tasks": 1110,
+    "validation_errors": [],
+    "workload_distribution": {
+      "Cloud": 0,
+      "Edge": 2175,
+      "Mist": 0
+    },
+    "workload_distribution_unit": "tasks dispatched to each destination layer"
+  },
+  "none_decisions_with_edge_dc_uplink": 0,
+  "offered_task_rate_per_second": 435,
+  "offered_work_mi_per_second": 2760000,
+  "offloading_decisions": 2175,
+  "orchestrator_types_observed": [
+    "CLOUD"
+  ],
+  "pending_tasks_at_horizon": 943,
+  "process_exit_code": 0,
+  "profile": "paper-aligned-baseline",
+  "queue_penalty_weight": 1.0,
+  "random_seed": 2026,
+  "repository_commit": "d26dc67dd6712c7fc4cb825f4a7f34f1ac0eeeda",
+  "requested_devices": 30,
+  "run_id": "20261103T232125204612223_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026",
+  "schema_version": 2,
+  "simulated_end_seconds": 5.0,
+  "simulator": "PureEdgeSim",
+  "simulator_csvs": [
+    "raw/2026-11-04_06-21-28/Sequential_simulation.csv",
+    "raw/edc_node_state.csv",
+    "raw/home_workload.csv",
+    "raw/queue_decisions.csv",
+    "raw/task_event_trace.csv"
+  ],
+  "simulator_properties": {
+    "auto_close_real_time_charts": "true",
+    "batch_size": "100",
+    "cellular_bandwidth": "100",
+    "cellular_base_station_nanojoules_per_bit_down_link": "20500",
+    "cellular_base_station_nanojoules_per_bit_up_link": "6200",
+    "cellular_device_reception_nanojoules_per_bit": "51.97",
+    "cellular_device_transmission_nanojoules_per_bit": "438.4",
+    "cellular_latency": "0.03",
+    "charts_update_interval": "30",
+    "clear_output_folder": "false",
+    "deep_log_enabled": "false",
+    "deploy_orchestrator": "CLOUD",
+    "display_real_time_charts": "false",
+    "edge_datacenters_coverage": "71",
+    "edge_device_counter_size": "1",
+    "edge_devices_range": "10",
+    "enable_orchestrators": "true",
+    "enable_registry": "false",
+    "ethernet_bandwidth": "1000",
+    "ethernet_latency": "0.002",
+    "ethernet_nanojoules_per_bit": "40000",
+    "length": "200",
+    "man_bandwidth": "1000",
+    "man_latency": "0.01",
+    "man_nanojoules_per_bit": "0",
+    "max_number_of_edge_devices": "30",
+    "min_number_of_edge_devices": "30",
+    "network_update_interval": "1",
+    "one_shared_wan_network": "true",
+    "orchestration_algorithms": "TRADE_OFF",
+    "orchestration_architectures": "EDGE_ONLY",
+    "parallel_simulation": "false",
+    "pause_length": "3",
+    "realistic_network_model": "false",
+    "registry_mode": "CACHE",
+    "save_charts": "false",
+    "save_log_file": "true",
+    "simulation_time": "0.083333333333333329",
+    "update_interval": "1",
+    "wait_for_all_tasks": "false",
+    "wan_bandwidth": "20",
+    "wan_latency": "0.06",
+    "wan_nanojoules_per_bit": "46.7",
+    "width": "200",
+    "wifi_access_point_reception_nanojoules_per_bit": "23.8",
+    "wifi_access_point_transmission_nanojoules_per_bit": "23.8",
+    "wifi_bandwidth": "1300",
+    "wifi_device_reception_nanojoules_per_bit": "137.01",
+    "wifi_device_transmission_nanojoules_per_bit": "283.17",
+    "wifi_latency": "0.005"
+  },
+  "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+  "simulator_source_mode": "vendored source snapshot in the parent repository",
+  "simulator_version": "5.3.0",
+  "started_utc": "2026-11-03T23:21:25.311001+00:00",
+  "status": "completed",
+  "task_accounting": {
+    "completed_tasks": 122,
+    "generated_tasks": 2175,
+    "layer_successful_completions": {
+      "Cloud": 0,
+      "Edge": 122,
+      "Mist": 0
+    },
+    "pending_by_layer": {
+      "Cloud": 0,
+      "Edge": 943,
+      "Mist": 0
+    },
+    "pending_tasks": 943,
+    "rejected_before_pipeline_tasks": 0,
+    "sent_tasks": 2175,
+    "terminally_failed_tasks": 1110
+  },
+  "task_event_trace_enabled": true,
+  "task_generator_app_user_counts": "6,9,15",
+  "task_generator_device_count": 30,
+  "task_generator_generated_tasks": 2175,
+  "task_generator_seconds": 5,
+  "task_rate_semantics": "tasks per simulated second per UE assigned to the application profile; usage_percentage allocates UE groups by largest remainder (implementation interpretation)",
+  "theoretical_offered_load_ratio": 1.725,
+  "ue_decision_source_count": 30,
+  "ue_with_edge_dc_uplink_count": 16,
+  "validation_errors": [],
+  "validity": "paper-aligned baseline run; not Queue-Aware/GNN/DQN",
+  "working_directory": "/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/experiments/20261103T230205Z_workload_imbalance/runs/moderate/20261103T232125204612223_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026/work",
+  "workload_level": "high"
+}

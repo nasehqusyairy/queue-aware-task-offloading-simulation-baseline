@@ -1,0 +1,58 @@
+{
+  "run_id": "20261103T232114688617449_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026",
+  "profile": "paper-aligned-baseline",
+  "method": "queue-aware",
+  "devices": 30,
+  "duration_seconds": 5,
+  "architecture": "EDGE_ONLY",
+  "destination_config": "EDGE_DC_ONLY",
+  "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+  "status": "completed",
+  "generated_tasks": 2175,
+  "sent_tasks": 2175,
+  "completed_tasks": 117,
+  "terminally_failed_tasks": 1176,
+  "rejected_before_pipeline_tasks": 0,
+  "pending_tasks": 882,
+  "successful_tasks": 117,
+  "failed_tasks": 1176,
+  "task_success_rate": 0.05379310344827586,
+  "task_failure_rate": 0.5406896551724137,
+  "task_pending_rate": 0.40551724137931033,
+  "average_cpu_execution_time_seconds": 0.1417,
+  "average_completed_task_total_delay_seconds": 6.574099276791584,
+  "average_completed_task_waiting_time_seconds": 1.0002136752136757,
+  "energy_consumption": 3.0876,
+  "energy_unit": "Wh",
+  "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+  "workload_distribution": {
+    "Cloud": 0,
+    "Edge": 2175,
+    "Mist": 0
+  },
+  "workload_distribution_unit": "tasks dispatched to each destination layer",
+  "source": "raw/2026-11-04_06-21-18/Sequential_simulation.csv",
+  "layer_successful_completions": {
+    "Cloud": 0,
+    "Edge": 117,
+    "Mist": 0
+  },
+  "queue_aware_metrics": {
+    "source": "raw/queue_decisions.csv",
+    "valid": true,
+    "candidate_observations": 94,
+    "selected_queue_estimate_count": 76,
+    "selected_queue_estimate_unavailable_count": 0,
+    "selected_mean_queue_wait_estimate_seconds": 0.8633881578947369,
+    "selected_median_queue_wait_estimate_seconds": 0.41749999999999976,
+    "selected_mean_waiting_queue_length": 52.06578947368421,
+    "selected_by_layer": {
+      "EDGE_DATACENTER": {
+        "selected_tasks": 76,
+        "mean_queue_wait_estimate_seconds": 0.8633881578947369
+      }
+    }
+  },
+  "validation_errors": [],
+  "metric_validation_errors": []
+}

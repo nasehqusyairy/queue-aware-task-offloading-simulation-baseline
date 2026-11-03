@@ -1,0 +1,78 @@
+{
+  "pilot_only": false,
+  "runs_analyzed": 45,
+  "paired_comparisons": 30,
+  "total_task_work_invariant": true,
+  "workload_imbalance_targets_valid": true,
+  "paired_method_configuration_and_input_valid": true,
+  "all_four_edcs_seen_as_queueaware_candidates": true,
+  "per_edc_final_state_present_all_runs": true,
+  "pilot_valid": true,
+  "expected_home_work_shares": {
+    "balanced": [
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "moderate": [
+      0.4,
+      0.3,
+      0.2,
+      0.1
+    ],
+    "severe": [
+      0.7,
+      0.15,
+      0.1,
+      0.05
+    ]
+  },
+  "observed_home_workloads": [
+    {
+      "condition": "balanced",
+      "generated_tasks": 2175,
+      "offered_work_mi_total": 13800000,
+      "edc1_ingress_work_mi": 3450000,
+      "edc2_ingress_work_mi": 3450000,
+      "edc3_ingress_work_mi": 3450000,
+      "edc4_ingress_work_mi": 3450000,
+      "edc1_work_share": 0.25,
+      "edc2_work_share": 0.25,
+      "edc3_work_share": 0.25,
+      "edc4_work_share": 0.25,
+      "workload_cv": 0.0,
+      "home_task_counts": "240|240|615|1080"
+    },
+    {
+      "condition": "moderate",
+      "generated_tasks": 2175,
+      "offered_work_mi_total": 13800000,
+      "edc1_ingress_work_mi": 5500000,
+      "edc2_ingress_work_mi": 4150000,
+      "edc3_ingress_work_mi": 2750000,
+      "edc4_ingress_work_mi": 1400000,
+      "edc1_work_share": 0.39855072463768115,
+      "edc2_work_share": 0.3007246376811594,
+      "edc3_work_share": 0.19927536231884058,
+      "edc4_work_share": 0.10144927536231885,
+      "workload_cv": 0.44398474440696784,
+      "home_task_counts": "755|710|565|145"
+    },
+    {
+      "condition": "severe",
+      "generated_tasks": 2175,
+      "offered_work_mi_total": 13800000,
+      "edc1_ingress_work_mi": 9650000,
+      "edc2_ingress_work_mi": 2100000,
+      "edc3_ingress_work_mi": 1350000,
+      "edc4_ingress_work_mi": 700000,
+      "edc1_work_share": 0.6992753623188406,
+      "edc2_work_share": 0.15217391304347827,
+      "edc3_work_share": 0.09782608695652174,
+      "edc4_work_share": 0.050724637681159424,
+      "workload_cv": 1.0474461595981337,
+      "home_task_counts": "1420|195|45|515"
+    }
+  ]
+}

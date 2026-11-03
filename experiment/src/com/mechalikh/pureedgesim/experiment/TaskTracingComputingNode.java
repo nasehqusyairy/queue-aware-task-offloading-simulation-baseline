@@ -12,6 +12,7 @@ import com.mechalikh.pureedgesim.taskgenerator.Task;
 /** Experiment-only computing node that observes queue and CPU lifecycle events. */
 public final class TaskTracingComputingNode extends DefaultComputingNode {
     private final Set<Integer> queuedTaskIds = new HashSet<>();
+    private final Set<Integer> activeTaskIds = new HashSet<>();
 
     public TaskTracingComputingNode(SimulationManager manager, double mipsPerCore, int cores,
             double storage, double ram) {
@@ -26,6 +27,7 @@ public final class TaskTracingComputingNode extends DefaultComputingNode {
             queuedTaskIds.add(task.getId());
             traceManager().recordTaskEvent(task, "QUEUE_ENTER", "WAITING_FOR_CORE");
         }
+        traceManager().recordNodeState(this, "TASK_SUBMITTED", activeTaskIds.size(), getTasksQueue().size());
     }
 
     @Override
@@ -34,14 +36,21 @@ public final class TaskTracingComputingNode extends DefaultComputingNode {
             traceManager().recordTaskEvent(task, "QUEUE_EXIT", "LEAVING_WAIT_QUEUE");
         }
         super.startExecution(task);
+        activeTaskIds.add(task.getId());
         traceManager().recordTaskEvent(task, "EXECUTION_START", "CPU_RUNNING");
+        traceManager().recordNodeState(this, "EXECUTION_START", activeTaskIds.size(), getTasksQueue().size());
     }
 
     @Override
     protected void executionFinished(Event event) {
         super.executionFinished(event);
-        traceManager().recordTaskEvent((Task) event.getData(), "EXECUTION_END", "CPU_FINISHED");
+        Task task = (Task) event.getData();
+        activeTaskIds.remove(task.getId());
+        traceManager().recordTaskEvent(task, "EXECUTION_END", "CPU_FINISHED");
+        traceManager().recordNodeState(this, "EXECUTION_END", activeTaskIds.size(), getTasksQueue().size());
     }
+
+    public int getActiveTaskCount() { return activeTaskIds.size(); }
 
     private PaperAlignedSimulationManager traceManager() {
         return (PaperAlignedSimulationManager) simulationManager;

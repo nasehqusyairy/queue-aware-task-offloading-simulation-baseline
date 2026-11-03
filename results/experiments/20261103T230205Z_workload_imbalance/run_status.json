@@ -1,0 +1,461 @@
+{
+  "experiment_id": "20261103T230205Z_workload_imbalance",
+  "planned_full_runs": 45,
+  "runs": [
+    {
+      "condition": "balanced",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231420470142713_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed1",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231431067813580_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231442023223800_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231453041387974_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed1",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231502940324669_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231514068640425_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231524269003266_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed1",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231534949844612_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231545069953533_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231732335669866_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231742580455296_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231752263310186_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231802052826089_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231812099967218_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231821949853507_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231832043256825_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231841766038120_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231851920049613_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231901851101065_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231911686233913_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231922083362202_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231931968272130_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231942590698477_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T231952786446243_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232002462691416_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232012543165062_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232023039356808_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232033441870196_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232043500237857_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232054306113415_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232104199549754_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232114688617449_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232125204612223_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232135194299303_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232145431218696_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232156053736808_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232207057477014_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232216697248183_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    },
+    {
+      "condition": "balanced",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232227035211693_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232236956456488_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232247468264284_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    },
+    {
+      "condition": "moderate",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232257228121794_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "trade-off",
+      "queue_weight": null,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232307727063022_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "queue-aware",
+      "queue_weight": 0.5,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232318251020535_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    },
+    {
+      "condition": "severe",
+      "method": "queue-aware",
+      "queue_weight": 1.0,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T232328779276215_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    }
+  ],
+  "status": "completed",
+  "updated_utc": "2026-11-03T23:23:35.776798+00:00",
+  "pilot_valid": true,
+  "successful_runs": 45,
+  "failed_runs": 0
+}

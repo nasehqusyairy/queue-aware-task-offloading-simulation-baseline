@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<edge_devices>
+  <!-- Values follow CMES 2024 Table 2; RAM/storage fields are MB in PureEdgeSim. -->
+  <device arch="x86" os="linux" vmm="xen">
+    <connectivity>wifi</connectivity><mobility>true</mobility><speed>1.8</speed>
+    <minPauseDuration>100</minPauseDuration><maxPauseDuration>400</maxPauseDuration>
+    <minMobilityDuration>60</minMobilityDuration><maxMobilityDuration>100</maxMobilityDuration>
+    <battery>true</battery><percentage>18</percentage><batteryCapacity>18.75</batteryCapacity><initialBatteryLevel>100</initialBatteryLevel>
+    <idleConsumption>0.2</idleConsumption><maxConsumption>5</maxConsumption><isOrchestrator>false</isOrchestrator>
+    <generateTasks>true</generateTasks><cores>8</cores><mips>25000</mips><ram>4000</ram><storage>256</storage>
+  </device>
+  <device arch="x86" os="linux" vmm="xen">
+    <connectivity>wifi</connectivity><mobility>false</mobility><speed>0</speed>
+    <minPauseDuration>0</minPauseDuration><maxPauseDuration>0</maxPauseDuration>
+    <minMobilityDuration>0</minMobilityDuration><maxMobilityDuration>0</maxMobilityDuration>
+    <battery>false</battery><percentage>11</percentage><batteryCapacity>0</batteryCapacity><initialBatteryLevel>0</initialBatteryLevel>
+    <idleConsumption>3.8</idleConsumption><maxConsumption>5.5</maxConsumption><isOrchestrator>false</isOrchestrator>
+    <generateTasks>true</generateTasks><cores>4</cores><mips>16000</mips><ram>4000</ram><storage>128</storage>
+  </device>
+  <device arch="x86" os="linux" vmm="xen">
+    <connectivity>wifi</connectivity><mobility>false</mobility><speed>0</speed>
+    <minPauseDuration>0</minPauseDuration><maxPauseDuration>0</maxPauseDuration>
+    <minMobilityDuration>0</minMobilityDuration><maxMobilityDuration>0</maxMobilityDuration>
+    <battery>true</battery><percentage>11</percentage><batteryCapacity>56.2</batteryCapacity><initialBatteryLevel>100</initialBatteryLevel>
+    <idleConsumption>1.7</idleConsumption><maxConsumption>23.6</maxConsumption><isOrchestrator>false</isOrchestrator>
+    <generateTasks>true</generateTasks><cores>8</cores><mips>110000</mips><ram>8000</ram><storage>256</storage>
+  </device>
+  <device arch="x86" os="linux" vmm="xen">
+    <connectivity>wifi</connectivity><mobility>false</mobility><speed>0</speed>
+    <minPauseDuration>0</minPauseDuration><maxPauseDuration>0</maxPauseDuration>
+    <minMobilityDuration>0</minMobilityDuration><maxMobilityDuration>0</maxMobilityDuration>
+    <battery>false</battery><percentage>28</percentage><batteryCapacity>0</batteryCapacity><initialBatteryLevel>0</initialBatteryLevel>
+    <idleConsumption>0.4011</idleConsumption><maxConsumption>0.436</maxConsumption><isOrchestrator>false</isOrchestrator>
+    <generateTasks>true</generateTasks><cores>0</cores><mips>0</mips><ram>0</ram><storage>0</storage>
+  </device>
+  <device arch="x86" os="linux" vmm="xen">
+    <connectivity>wifi</connectivity><mobility>true</mobility><speed>1.8</speed>
+    <minPauseDuration>100</minPauseDuration><maxPauseDuration>400</maxPauseDuration>
+    <minMobilityDuration>60</minMobilityDuration><maxMobilityDuration>100</maxMobilityDuration>
+    <battery>false</battery><percentage>32</percentage><batteryCapacity>0</batteryCapacity><initialBatteryLevel>0</initialBatteryLevel>
+    <idleConsumption>0.4011</idleConsumption><maxConsumption>0.436</maxConsumption><isOrchestrator>false</isOrchestrator>
+    <generateTasks>true</generateTasks><cores>0</cores><mips>0</mips><ram>0</ram><storage>0</storage>
+  </device>
+</edge_devices>

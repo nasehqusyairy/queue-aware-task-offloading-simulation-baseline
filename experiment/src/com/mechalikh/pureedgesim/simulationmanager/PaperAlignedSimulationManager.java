@@ -18,6 +18,8 @@ import com.mechalikh.pureedgesim.simulationengine.PureEdgeSim;
 import com.mechalikh.pureedgesim.scenariomanager.Scenario;
 import com.mechalikh.pureedgesim.scenariomanager.SimulationParameters;
 import com.mechalikh.pureedgesim.taskgenerator.Task;
+import com.mechalikh.pureedgesim.experiment.QueueAwareComputingNode;
+import com.mechalikh.pureedgesim.experiment.TaskTracingComputingNode;
 
 /** Hard simulation horizon and task-destination audit for paper-aligned runs. */
 public final class PaperAlignedSimulationManager extends DefaultSimulationManager {
@@ -30,6 +32,7 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
     private BufferedWriter destinationWriter;
     private BufferedWriter queueAuditWriter;
     private BufferedWriter taskEventWriter;
+    private BufferedWriter nodeStateWriter;
     private final Map<Integer, Task> tracedTasks = new HashMap<>();
     private final java.util.Set<Integer> tracedTerminalIds = new java.util.HashSet<>();
     private double completedTotalDelaySeconds;
@@ -65,6 +68,16 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
                 taskEventWriter.write("schema_version,task_id,event_name,timestamp_seconds,scheduled_release_time_seconds,application_id,task_type,source_id,source_layer,destination_id,destination_layer,status,failure_reason,stage,total_delay_seconds,network_delay_seconds,queue_wait_seconds,cpu_time_seconds,deadline_seconds\n");
             } catch (IOException e) {
                 throw new IllegalStateException("cannot create task event trace", e);
+            }
+        }
+        String nodeStatePath = System.getProperty("paper.node-state-log");
+        if (nodeStatePath != null && !nodeStatePath.isBlank()) {
+            try {
+                nodeStateWriter = Files.newBufferedWriter(Path.of(nodeStatePath), StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+                nodeStateWriter.write("timestamp_seconds,node_id,node_type,event,active_task_count,waiting_queue_length,current_cpu_utilization_percent,average_cpu_utilization_percent,computing_energy_wh,network_energy_wh,queue_wait_estimate_seconds\n");
+            } catch (IOException e) {
+                throw new IllegalStateException("cannot create node state audit", e);
             }
         }
     }
@@ -113,6 +126,13 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
             return;
         }
         if (event.getTag() == PRINT_LOG) {
+            for (ComputingNode node : getDataCentersManager().getComputingNodesGenerator().getEdgeOnlyList()) {
+                int active = node instanceof QueueAwareComputingNode
+                        ? ((QueueAwareComputingNode) node).getActiveTaskCount()
+                        : (node instanceof TaskTracingComputingNode
+                                ? ((TaskTracingComputingNode) node).getActiveTaskCount() : -1);
+                recordNodeState(node, "HORIZON_FINAL", active, node.getTasksQueue().size());
+            }
             int failed = simLog.tasksFailed;
             int completed = tasksCount - failed;
             int pending = simLog.getGeneratedTasks() - completed - failed;
@@ -142,6 +162,7 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
                 closeDestinationLog();
                 closeQueueAuditLog();
                 closeTaskEventLog();
+                closeNodeStateLog();
             }
             return;
         }
@@ -167,6 +188,21 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
         tracedTasks.put(task.getId(), task);
         writeTaskEvent(task, "TASK_GENERATED", simulation.clock(), task.getEdgeDevice(),
                 task.getOffloadingDestination(), task.getStatus().name(), "", "GENERATED");
+    }
+
+    /** Event-time, direct PureEdgeSim state observation for one EDC. */
+    public void recordNodeState(ComputingNode node, String event, int activeTasks, int waitingTasks) {
+        if (nodeStateWriter == null || node.getType() != SimulationParameters.TYPES.EDGE_DATACENTER) return;
+        try {
+            var energy = node.getEnergyModel();
+            double cpuEnergy = energy == null ? Double.NaN : energy.getCpuEnergyConsumption();
+            double networkEnergy = energy == null ? Double.NaN : energy.getTotalEnergyConsumption() - cpuEnergy;
+            nodeStateWriter.write(simulation.clock() + "," + node.getId() + "," + node.getType().name() + ","
+                    + event + "," + activeTasks + "," + waitingTasks + "," + node.getCurrentCpuUtilization() + ","
+                    + node.getAvgCpuUtilization() + "," + cpuEnergy + "," + networkEnergy + ",\n");
+        } catch (IOException e) {
+            throw new IllegalStateException("cannot write EDC state audit", e);
+        }
     }
 
     /** Read-only event emission for experiment-specific computing-node subclasses. */
@@ -316,6 +352,17 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
             taskEventWriter = null;
         } catch (IOException e) {
             throw new IllegalStateException("cannot close task event trace", e);
+        }
+    }
+
+    private void closeNodeStateLog() {
+        if (nodeStateWriter == null) return;
+        try {
+            nodeStateWriter.flush();
+            nodeStateWriter.close();
+            nodeStateWriter = null;
+        } catch (IOException e) {
+            throw new IllegalStateException("cannot close EDC state audit", e);
         }
     }
 }

@@ -25,6 +25,7 @@ public final class TaskTracingQueueAwareComputingNode extends QueueAwareComputin
             queuedTaskIds.add(task.getId());
             traceManager().recordTaskEvent(task, "QUEUE_ENTER", "WAITING_FOR_CORE");
         }
+        traceManager().recordNodeState(this, "TASK_SUBMITTED", getActiveTaskCount(), getWaitingQueueLength());
     }
 
     @Override
@@ -34,12 +35,15 @@ public final class TaskTracingQueueAwareComputingNode extends QueueAwareComputin
         }
         super.startExecution(task);
         traceManager().recordTaskEvent(task, "EXECUTION_START", "CPU_RUNNING");
+        traceManager().recordNodeState(this, "EXECUTION_START", getActiveTaskCount(), getWaitingQueueLength());
     }
 
     @Override
     protected void executionFinished(Event event) {
         super.executionFinished(event);
-        traceManager().recordTaskEvent((Task) event.getData(), "EXECUTION_END", "CPU_FINISHED");
+        Task task = (Task) event.getData();
+        traceManager().recordTaskEvent(task, "EXECUTION_END", "CPU_FINISHED");
+        traceManager().recordNodeState(this, "EXECUTION_END", getActiveTaskCount(), getWaitingQueueLength());
     }
 
     private PaperAlignedSimulationManager traceManager() {
