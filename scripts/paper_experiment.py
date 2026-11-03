@@ -95,3 +95,25 @@ def initial_matrix() -> list[dict[str, object]]:
         for devices in (10, 20, 30)
         for target in PAPER_TARGETS
     ]
+
+
+def queue_aware_matrix(seed: int = 1, queue_penalty_weight: float = 1.0) -> list[dict[str, object]]:
+    """Paired 3-method x 3-offered-load matrix at fixed EDGE_DC_ONLY architecture."""
+    import math
+    if not math.isfinite(queue_penalty_weight) or queue_penalty_weight < 0:
+        raise ValueError("queue penalty weight must be finite and non-negative")
+    methods = ("trade-off", "round-robin", "queue-aware")
+    workload_levels = (("low", 10), ("medium", 20), ("high", 30))
+    return [
+        {
+            "method": method,
+            "workload_level": level,
+            "devices": devices,
+            "destination_config": "EDGE_DC_ONLY",
+            "duration_seconds": 200,
+            "seed": seed,
+            "queue_penalty_weight": queue_penalty_weight,
+        }
+        for level, devices in workload_levels
+        for method in methods
+    ]

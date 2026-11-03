@@ -8,6 +8,7 @@ public final class PaperAlignedMain {
 
     public static void main(String[] args) {
         Simulation simulation = new Simulation();
+        simulation.setCustomMobilityModel(SeededMobilityModel.class);
         simulation.setCustomTaskGenerator(PaperAlignedTaskGenerator.class);
         simulation.setCustomComputingNodesGenerator(PaperAlignedComputingNodesGenerator.class);
         simulation.setCustomEdgeOrchestrator(PaperAlignedOrchestrator.class);

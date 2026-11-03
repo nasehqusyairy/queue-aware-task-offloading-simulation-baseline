@@ -7,9 +7,12 @@ DEVICES=10
 DURATION_SECONDS=60
 TARGET=EDGE_AND_CLOUD
 ARCH=EDGE_AND_CLOUD
+SEED=1
+QUEUE_WEIGHT=1.0
+WORKLOAD_LEVEL=
 
 usage() {
-  printf 'Usage: ./run.sh [--profile technical-baseline|paper-aligned-baseline] [--method trade-off|round-robin|all] [--devices N] [--duration-seconds N | --duration-minutes N] [--destination-config NAME] [--architecture NAME]\n'
+  printf 'Usage: ./run.sh [--profile technical-baseline|paper-aligned-baseline] [--method trade-off|round-robin|queue-aware|all] [--devices N | --workload-level low|medium|high] [--duration-seconds N | --duration-minutes N] [--destination-config NAME] [--architecture NAME] [--seed N] [--queue-weight LAMBDA]\n'
   printf 'Paper targets: ALL_DEVICES, EDGE_AND_EDGE_DC, EDGE_AND_CLOUD, EDGE_DC_AND_CLOUD, EDGE_ONLY, EDGE_DC_ONLY\n'
   printf 'Paper profile defaults to 200s when --duration-seconds is omitted. Legacy technical profile defaults to 1 minute.\n'
 }
@@ -17,12 +20,16 @@ usage() {
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then usage; exit 0; fi
 DURATION_EXPLICIT=false
 ARCH_EXPLICIT=false
+DEVICES_EXPLICIT=false
 while (($#)); do
   case "$1" in
     --profile) PROFILE="${2:?Missing profile}"; shift 2;;
     --method) METHOD="${2:?Missing method}"; shift 2;;
     --all-baselines) METHOD=all; shift;;
-    --devices) DEVICES="${2:?Missing device count}"; shift 2;;
+    --devices) DEVICES="${2:?Missing device count}"; DEVICES_EXPLICIT=true; shift 2;;
+    --workload-level) WORKLOAD_LEVEL="${2:?Missing workload level}"; shift 2;;
+    --seed) SEED="${2:?Missing random seed}"; shift 2;;
+    --queue-weight) QUEUE_WEIGHT="${2:?Missing queue penalty weight}"; shift 2;;
     --duration-seconds) DURATION_SECONDS="${2:?Missing duration}"; DURATION_EXPLICIT=true; shift 2;;
     --duration-minutes) DURATION_SECONDS=$((${2:?Missing duration} * 60)); DURATION_EXPLICIT=true; shift 2;;
     --destination-config) TARGET="${2:?Missing destination config}"; shift 2;;
@@ -31,7 +38,25 @@ while (($#)); do
   esac
 done
 [[ "$PROFILE" == technical-baseline || "$PROFILE" == paper-aligned-baseline ]] || { echo 'Error: unknown profile' >&2; exit 2; }
-[[ "$METHOD" == trade-off || "$METHOD" == round-robin || "$METHOD" == all ]] || { echo 'Error: method must be trade-off, round-robin, or all' >&2; exit 2; }
+[[ "$METHOD" == trade-off || "$METHOD" == round-robin || "$METHOD" == queue-aware || "$METHOD" == all ]] || { echo 'Error: method must be trade-off, round-robin, queue-aware, or all' >&2; exit 2; }
+if [[ "$METHOD" == queue-aware && "$PROFILE" != paper-aligned-baseline ]]; then
+  echo 'Error: queue-aware requires paper-aligned-baseline' >&2; exit 2
+fi
+if [[ -n "$WORKLOAD_LEVEL" ]]; then
+  [[ "$PROFILE" == paper-aligned-baseline ]] || { echo 'Error: workload levels require paper-aligned-baseline' >&2; exit 2; }
+  [[ "$DEVICES_EXPLICIT" == false ]] || { echo 'Error: use --workload-level or --devices, not both' >&2; exit 2; }
+  case "${WORKLOAD_LEVEL,,}" in
+    low) DEVICES=10;; medium) DEVICES=20;; high) DEVICES=30;;
+    *) echo 'Error: workload level must be low, medium, or high' >&2; exit 2;;
+  esac
+fi
+[[ "$SEED" =~ ^-?[0-9]+$ ]] || { echo 'Error: seed must be an integer' >&2; exit 2; }
+python3 - "$QUEUE_WEIGHT" <<'PY'
+import math, sys
+try: value = float(sys.argv[1])
+except ValueError: raise SystemExit('Error: queue weight must be numeric')
+if not math.isfinite(value) or value < 0: raise SystemExit('Error: queue weight must be finite and non-negative')
+PY
 [[ "$DEVICES" =~ ^[0-9]+$ ]] && ((DEVICES>0)) || { echo 'Error: devices must be a positive integer' >&2; exit 2; }
 [[ "$DURATION_SECONDS" =~ ^[0-9]+$ ]] && ((DURATION_SECONDS>0)) || { echo 'Error: duration must be a positive integer number of seconds' >&2; exit 2; }
 if [[ "$PROFILE" == paper-aligned-baseline && "$DURATION_EXPLICIT" == false ]]; then DURATION_SECONDS=200; fi
@@ -74,9 +99,11 @@ if ! (cd "$SIM" && mvn -q -DskipTests -Dmaven.javadoc.skip=true package); then
 fi
 [[ -f "$SIM/target/classes/com/mechalikh/pureedgesim/MainApplication.class" ]] || { echo 'Error: Maven exited without compiling PureEdgeSim classes.' >&2; exit 1; }
 echo 'OK (compiled classes verified)'
-if [[ "$METHOD" == all ]]; then METHODS=(trade-off round-robin); else METHODS=("$METHOD"); fi
+if [[ "$METHOD" == all ]]; then
+  if [[ "$PROFILE" == paper-aligned-baseline ]]; then METHODS=(trade-off round-robin queue-aware); else METHODS=(trade-off round-robin); fi
+else METHODS=("$METHOD"); fi
 for m in "${METHODS[@]}"; do
-  RUN_ID="$(date -u +%Y%m%dT%H%M%S%N)_${PROFILE}_${m}_${DEVICES}ue_${TARGET}"
+  RUN_ID="$(date -u +%Y%m%dT%H%M%S%N)_${PROFILE}_${m}_${DEVICES}ue_${TARGET}_seed${SEED}"
   OUT="$ROOT/results/runs/$RUN_ID"
   mkdir -p "$OUT/config" "$OUT/raw"
   cp -a "$CONFIG_SOURCE/." "$OUT/config/"
@@ -107,7 +134,7 @@ file.write_text('\n'.join(lines) + '\n')
 PY
   printf 'Running %s: profile=%s devices=%s simulated_seconds=%s target=%s architecture=%s\n' "$m" "$PROFILE" "$DEVICES" "$DURATION_SECONDS" "$TARGET" "$ARCH"
   set +e
-  python3 "$ROOT/scripts/execute_run.py" "$OUT" "$PROFILE" "$m" "$DEVICES" "$DURATION_SECONDS" "$TARGET" "$ARCH" "$ALGO"
+  python3 "$ROOT/scripts/execute_run.py" "$OUT" "$PROFILE" "$m" "$DEVICES" "$DURATION_SECONDS" "$TARGET" "$ARCH" "$ALGO" "$SEED" "$QUEUE_WEIGHT"
   run_status=$?
   python3 "$ROOT/scripts/analyze.py" --run "$OUT"
   analysis_status=$?

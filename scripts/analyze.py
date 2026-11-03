@@ -3,6 +3,8 @@
 import argparse
 import csv
 import json
+import math
+import statistics
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -28,6 +30,9 @@ def parse(run):
         "task_success_rate": None,
         "task_failure_rate": None,
         "task_pending_rate": None,
+        "average_cpu_execution_time_seconds": None,
+        "average_completed_task_total_delay_seconds": None,
+        "average_completed_task_waiting_time_seconds": None,
         "energy_consumption": None,
         "energy_unit": "Wh",
         "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
@@ -89,6 +94,15 @@ def parse(run):
                     metrics["energy_consumption"] = _optional_number(
                         row.get("Energy consumption of computing nodes (Wh)"), float
                     )
+                    metrics["average_cpu_execution_time_seconds"] = _optional_number(
+                        row.get("Average execution delay (s)"), float
+                    )
+                    metrics["average_completed_task_total_delay_seconds"] = _optional_number(
+                        row.get("Average completed-task total delay (s)"), float
+                    )
+                    metrics["average_completed_task_waiting_time_seconds"] = _optional_number(
+                        row.get("Average completed-task waiting time (s)"), float
+                    )
                     metrics["workload_distribution"] = {
                         layer: _optional_number(row.get(f"Total tasks executed ({layer})"), int)
                         for layer in LAYERS
@@ -104,6 +118,7 @@ def parse(run):
                                 "global completed tasks do not reconcile with successful destination-layer counts"
                             )
                     metrics["source"] = str(path.relative_to(run))
+                    metrics["queue_aware_metrics"] = _parse_queue_audit(run, metrics["validation_errors"])
                     return metrics
         except (OSError, ValueError, csv.Error) as exc:
             if found_metrics_csv:
@@ -113,14 +128,68 @@ def parse(run):
             continue
     if not found_metrics_csv:
         metrics["validation_errors"].append("no simulator CSV with required task-count columns")
+    metrics["queue_aware_metrics"] = _parse_queue_audit(run, metrics["validation_errors"])
     return metrics
+
+
+def _parse_queue_audit(run, validation_errors):
+    path = run / "raw" / "queue_decisions.csv"
+    if not path.is_file():
+        return None
+    selected_waits = []
+    selected_lengths = []
+    selected_by_layer = {}
+    candidates = 0
+    unavailable_selected = 0
+    try:
+        with path.open(newline="", errors="replace") as stream:
+            reader = csv.DictReader(stream)
+            required = {"task_id", "candidate_type", "queue_wait_estimate_seconds", "selected"}
+            if not reader.fieldnames or not required.issubset(reader.fieldnames):
+                validation_errors.append("queue decision audit is missing required columns")
+                return {"source": str(path.relative_to(run)), "valid": False}
+            for row in reader:
+                candidates += 1
+                if row.get("selected", "").strip().lower() != "true":
+                    continue
+                layer = row.get("candidate_type") or "UNKNOWN"
+                layer_metrics = selected_by_layer.setdefault(layer, {"selected_tasks": 0, "queue_wait_estimates_seconds": []})
+                layer_metrics["selected_tasks"] += 1
+                raw_wait = row.get("queue_wait_estimate_seconds")
+                if raw_wait is None or raw_wait.strip() == "":
+                    unavailable_selected += 1
+                    continue
+                wait = float(raw_wait)
+                if wait < 0 or not math.isfinite(wait):
+                    raise ValueError("queue wait estimate must be finite and non-negative")
+                selected_waits.append(wait)
+                layer_metrics["queue_wait_estimates_seconds"].append(wait)
+                if row.get("waiting_queue_length", "").strip():
+                    selected_lengths.append(int(row["waiting_queue_length"]))
+    except (OSError, ValueError, csv.Error) as exc:
+        validation_errors.append(f"invalid queue decision audit: {exc}")
+        return {"source": str(path.relative_to(run)), "valid": False}
+    for values in selected_by_layer.values():
+        waits = values.pop("queue_wait_estimates_seconds")
+        values["mean_queue_wait_estimate_seconds"] = statistics.fmean(waits) if waits else None
+    return {
+        "source": str(path.relative_to(run)),
+        "valid": True,
+        "candidate_observations": candidates,
+        "selected_queue_estimate_count": len(selected_waits),
+        "selected_queue_estimate_unavailable_count": unavailable_selected,
+        "selected_mean_queue_wait_estimate_seconds": statistics.fmean(selected_waits) if selected_waits else None,
+        "selected_median_queue_wait_estimate_seconds": statistics.median(selected_waits) if selected_waits else None,
+        "selected_mean_waiting_queue_length": statistics.fmean(selected_lengths) if selected_lengths else None,
+        "selected_by_layer": selected_by_layer,
+    }
 
 
 def _dashboard_html():
     return """<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>PureEdgeSim experiment results</title>
 <style>body{font:15px system-ui,sans-serif;margin:2rem;color:#172033}table{border-collapse:collapse;width:100%;font-size:13px}td,th{border:1px solid #ccd3df;padding:.45rem;text-align:left}th{background:#f1f4f8}pre{white-space:pre-wrap}</style>
-<h1>PureEdgeSim experiment results</h1><p>Rates use generated tasks as denominator. Missing values are N/A; layer workload is dispatched tasks.</p><div id=\"status\">Loading…</div><div style=\"overflow:auto\"><table><thead><tr><th>Run</th><th>Status</th><th>Profile</th><th>Method</th><th>UE requested</th><th>Duration (s)</th><th>Target</th><th>Generated</th><th>Sent</th><th>Completed</th><th>Terminal failures</th><th>Rejected before pipeline</th><th>Pending</th><th>Success rate</th><th>Energy (Wh)</th><th>Workload Cloud / Edge / Mist</th></tr></thead><tbody id=\"rows\"></tbody></table></div>
-<script>fetch('./summary.json').then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(data=>{status.textContent=data.length+' run records';for(const x of data){const tr=document.createElement('tr');const vals=[x.run_id,x.status,x.profile,x.method,x.devices,x.duration_seconds,x.destination_config??x.architecture,x.generated_tasks,x.sent_tasks,x.completed_tasks,x.terminally_failed_tasks,x.rejected_before_pipeline_tasks,x.pending_tasks,x.task_success_rate==null?'N/A':(100*x.task_success_rate).toFixed(2)+'%',x.energy_consumption??'N/A',...( ['Cloud','Edge','Mist'].map(k=>x.workload_distribution?.[k]??'N/A') )];for(const v of vals){const td=document.createElement('td');td.textContent=String(v??'N/A');tr.appendChild(td)}rows.appendChild(tr)}}).catch(e=>status.textContent='Could not load summary.json: '+e.message);</script></html>"""
+<h1>PureEdgeSim experiment results</h1><p>Rates use generated tasks as denominator. Missing values are N/A; layer workload is dispatched tasks.</p><div id=\"status\">Loading…</div><div style=\"overflow:auto\"><table><thead><tr><th>Run</th><th>Status</th><th>Profile</th><th>Method</th><th>UE requested</th><th>Duration (s)</th><th>Target</th><th>Generated</th><th>Sent</th><th>Completed</th><th>Terminal failures</th><th>Rejected before pipeline</th><th>Pending</th><th>Avg total latency (s)</th><th>Avg completed wait (s)</th><th>Selected queue wait estimate (s)</th><th>Success rate</th><th>Energy (Wh)</th><th>Workload Cloud / Edge / Mist</th></tr></thead><tbody id=\"rows\"></tbody></table></div>
+<script>fetch('./summary.json').then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(data=>{status.textContent=data.length+' run records';for(const x of data){const tr=document.createElement('tr');const vals=[x.run_id,x.status,x.profile,x.method,x.devices,x.duration_seconds,x.destination_config??x.architecture,x.generated_tasks,x.sent_tasks,x.completed_tasks,x.terminally_failed_tasks,x.rejected_before_pipeline_tasks,x.pending_tasks,x.average_completed_task_total_delay_seconds,x.average_completed_task_waiting_time_seconds,x.queue_aware_metrics?.selected_mean_queue_wait_estimate_seconds,x.task_success_rate==null?'N/A':(100*x.task_success_rate).toFixed(2)+'%',x.energy_consumption??'N/A',...( ['Cloud','Edge','Mist'].map(k=>x.workload_distribution?.[k]??'N/A') )];for(const v of vals){const td=document.createElement('td');td.textContent=String(v??'N/A');tr.appendChild(td)}rows.appendChild(tr)}}).catch(e=>status.textContent='Could not load summary.json: '+e.message);</script></html>"""
 
 
 def _read_config(run):
@@ -220,7 +289,10 @@ def main(argv=None):
     csv_rows = []
     for row in rows:
         csv_rows.append({**row, "workload_distribution": json.dumps(row["workload_distribution"], sort_keys=True),
-                         "validation_errors": json.dumps(row["validation_errors"])})
+                         "layer_successful_completions": json.dumps(row.get("layer_successful_completions"), sort_keys=True),
+                         "queue_aware_metrics": json.dumps(row.get("queue_aware_metrics"), sort_keys=True),
+                         "validation_errors": json.dumps(row["validation_errors"]),
+                         "metric_validation_errors": json.dumps(row["metric_validation_errors"])})
     with (output / "summary.csv").open("w", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=list(csv_rows[0]))
         writer.writeheader()

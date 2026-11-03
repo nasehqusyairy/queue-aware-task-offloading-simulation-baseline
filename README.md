@@ -1,6 +1,6 @@
 # Queue-Aware Task Offloading — PureEdgeSim technical baselines
 
-This repository runs the built-in PureEdgeSim Trade-Off and Round Robin orchestrators. It is a **technical baseline**, not a reproduction of the cited paper; GNN, DQN, and Queue-Aware are not implemented here.
+This repository runs the built-in PureEdgeSim Trade-Off and Round Robin orchestrators, plus an experimental Queue-Aware extension to Trade-Off. It is a **technical baseline**, not a reproduction of the cited paper; GNN and DQN are not implemented here.
 
 ## Requirements
 
@@ -19,11 +19,15 @@ git clone --recurse-submodules https://github.com/nasehqusyairy/queue-aware-task
 cd queue-aware-task-offloading-simulation-baseline
 ./run.sh --method trade-off --devices 10
 ./run.sh --method round-robin --devices 10
+./run.sh --profile paper-aligned-baseline --method queue-aware --devices 10 \
+  --destination-config EDGE_DC_ONLY --seed 8128 --queue-weight 1.0
 ```
 
 `run.sh` checks for Java, Maven, and Python; verifies the PureEdgeSim source-root configuration; builds PureEdgeSim from source; and stops if setup or simulation validation fails. It does not automatically initialize missing submodules. No simulation output is deleted: each attempt gets a unique `results/runs/<UTC-run-id>/` directory.
 
-Use `./run.sh --help` for options. The default simulated duration is 1 minute; `--duration-minutes N` controls it. Upstream `ParametersParser` converts this property from minutes to seconds. Per-run manifest/config, simulator log, and raw simulator CSVs are retained.
+Use `./run.sh --help` for options. The default simulated duration is 1 minute; `--duration-minutes N` controls it. Upstream `ParametersParser` converts this property from minutes to seconds. Queue-Aware requires the `paper-aligned-baseline` profile and records candidate scores and queue estimates in `raw/queue_decisions.csv`. The default `--queue-weight` is 1.0; zero removes the estimated-wait term. Per-run manifest/config, simulator log, and raw simulator CSVs are retained.
+
+For paired runs at three workload levels, use `scripts/run_queue_aware_matrix.py --dry-run` to inspect the nine-run plan, then run it without `--dry-run`. Levels use 10, 20, and 30 UEs, with the destination target fixed to `EDGE_DC_ONLY`. `--method all` runs Trade-Off, Round Robin, and Queue-Aware with the same seed and conditions. The queue wait is an estimate from currently active and queued work; it does not predict future arrivals or RAM-constrained scheduling. See [the design and source audit](docs/QUEUE_AWARE_DESIGN.md) and [the experiment protocol](docs/experiment-protocol.md) for definitions and limitations.
 
 ## Outputs and dashboard
 
@@ -44,7 +48,7 @@ PureEdgeSim is the official Git submodule at `https://github.com/CharafeddineMec
 
 ## Scope and limitations
 
-This is a technical baseline, not a paper reproduction. The `paper-aligned-baseline` profile configures four Edge Data Centers, a 200-second horizon, and six destination labels, but these settings and the task-rate interpretation still need verification against the full paper methodology. The current task generator interprets application rates as tasks per simulated second per assigned UE; this is an implementation choice, not a verified paper fact. Random seeds are not controlled, so results may vary. GNN, DQN, and Queue-Aware are not implemented.
+This is a technical baseline, not a paper reproduction. The `paper-aligned-baseline` profile configures four Edge Data Centers, a 200-second horizon, and six destination labels, but these settings and the task-rate interpretation still need verification against the full paper methodology. The current task generator interprets application rates as tasks per simulated second per assigned UE; this is an implementation choice, not a verified paper fact. Queue-Aware is an experimental heuristic extension, not a paper-validated algorithm. It adds a weighted queue-wait estimate to the built-in Trade-Off score; do not report performance claims until repeated paired experiments and methodological validation are complete.
 
 Before reporting results, run the 200-second acceptance test and inspect each run's `manifest.json` validation errors. Do not label baseline values as GNN/DQN or Queue-Aware results.
 

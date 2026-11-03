@@ -24,6 +24,7 @@ HEADER = [
     "Tasks sent", "Tasks completed", "Tasks terminally failed", "Tasks pending at cutoff",
     "Cloud pending at cutoff", "Edge pending at cutoff", "Mist pending at cutoff",
     "Tasks rejected before pipeline",
+    "Average completed-task total delay (s)", "Average completed-task waiting time (s)",
 ]
 
 
@@ -164,6 +165,32 @@ class AnalyzeTests(unittest.TestCase):
         metrics = parse(run)
         self.assertTrue(any("invalid simulator CSV value" in error or "missing/empty" in error
                             for error in metrics["validation_errors"]))
+
+    def test_queue_audit_reports_selected_wait_estimates_and_keeps_missing_values(self):
+        run = self.write_run({
+            "Number of generated tasks": "2", "Tasks successfully executed": "1",
+            "Tasks sent": "2", "Tasks completed": "1", "Tasks terminally failed": "0",
+            "Tasks pending at cutoff": "1", "Tasks rejected before pipeline": "0",
+            "Total tasks executed (Cloud)": "0", "Tasks successfully executed (Cloud)": "0",
+            "Total tasks executed (Edge)": "2", "Tasks successfully executed (Edge)": "1",
+            "Total tasks executed (Mist)": "0", "Tasks successfully executed (Mist)": "0",
+            "Energy consumption of computing nodes (Wh)": "",
+        })
+        audit = run / "raw" / "queue_decisions.csv"
+        audit.write_text(
+            "task_id,decision_time_seconds,candidate_id,candidate_type,baseline_score_seconds,queue_wait_estimate_seconds,waiting_queue_length,active_task_count,queue_estimate_available,queue_penalty_weight,combined_score_seconds,selected\n"
+            "1,0,3,EDGE_DATACENTER,2,4,2,1,true,1,6,true\n"
+            "1,0,4,EDGE_DATACENTER,3,1,0,1,true,1,4,false\n"
+            "2,1,3,EDGE_DATACENTER,2,,0,1,false,1,2,true\n"
+        )
+        metrics = parse(run)
+        queue = metrics["queue_aware_metrics"]
+        self.assertEqual(queue["candidate_observations"], 3)
+        self.assertEqual(queue["selected_queue_estimate_count"], 1)
+        self.assertEqual(queue["selected_queue_estimate_unavailable_count"], 1)
+        self.assertEqual(queue["selected_mean_queue_wait_estimate_seconds"], 4.0)
+        self.assertEqual(queue["selected_mean_waiting_queue_length"], 2.0)
+        self.assertIsNone(metrics["average_completed_task_total_delay_seconds"])
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import math
 import re
 import shutil
 import subprocess
@@ -59,12 +60,25 @@ def profile_data(config: Path, devices: int, duration: int):
 
 
 def main() -> int:
-    if len(sys.argv) != 9:
-        print("usage: execute_run.py RUN_DIR PROFILE METHOD DEVICES DURATION_SECONDS TARGET ARCHITECTURE ALGORITHM", file=sys.stderr)
+    if len(sys.argv) not in (9, 11):
+        print("usage: execute_run.py RUN_DIR PROFILE METHOD DEVICES DURATION_SECONDS TARGET ARCHITECTURE ALGORITHM [SEED QUEUE_WEIGHT]", file=sys.stderr)
         return 2
-    run, profile, method, devices_s, duration_s, target, architecture, algorithm = sys.argv[1:]
+    if len(sys.argv) == 11:
+        run, profile, method, devices_s, duration_s, target, architecture, algorithm, seed_s, queue_weight_s = sys.argv[1:]
+        seed = int(seed_s)
+        queue_weight = float(queue_weight_s)
+    else:
+        run, profile, method, devices_s, duration_s, target, architecture, algorithm = sys.argv[1:]
+        seed = None
+        queue_weight = 1.0
     run = Path(run).resolve()
     devices, duration = int(devices_s), int(duration_s)
+    if not math.isfinite(queue_weight) or queue_weight < 0:
+        print("queue weight must be finite and non-negative", file=sys.stderr)
+        return 2
+    if method == "queue-aware" and profile != "paper-aligned-baseline":
+        print("queue-aware requires paper-aligned-baseline", file=sys.stderr)
+        return 2
     config = run / "config"
     raw = run / "raw"
     work = run / "work"
@@ -94,7 +108,7 @@ def main() -> int:
         "simulator_source_mode": provenance["distribution_mode"],
         "repository_commit": root_commit,
         "java_version": java_version[0] if java_version else None,
-        "random_seed": "not controlled; PureEdgeSim uses SecureRandom.getInstanceStrong()",
+        "random_seed": seed if profile == "paper-aligned-baseline" else "not controlled for technical-baseline profile",
         "started_utc": start,
         "finished_utc": None,
         "process_exit_code": None,
@@ -128,6 +142,29 @@ def main() -> int:
                 "duration_cutoff_policy": "hard horizon at t=duration_seconds; unresolved generated tasks remain pending and are excluded from terminal failures",
                 "local_execution_policy": "destination equal to source UE is local execution, separately marked in destination audit",
             })
+            task_lengths = [int(a.findtext("task_length", "0")) for a in app_profiles]
+            offered_work_mi_per_second = sum(users * rate * length for users, rate, length
+                                             in zip(app_counts, rates, task_lengths))
+            cloud_nodes = ET.parse(config / "cloud.xml").getroot().findall(".//datacenter")
+            edc_nodes = ET.parse(config / "edge_datacenters.xml").getroot().findall(".//datacenter")
+            cloud_capacity = sum(int(n.findtext("cores", "0")) * float(n.findtext("mips", "0")) for n in cloud_nodes)
+            edc_capacity = sum(int(n.findtext("cores", "0")) * float(n.findtext("mips", "0")) for n in edc_nodes)
+            mist_capacity = sum(count * int(profile_node.findtext("cores", "0"))
+                                * float(profile_node.findtext("mips", "0"))
+                                for count, profile_node in zip(device_counts, device_profiles))
+            allowed = target_allowed_types(target)
+            candidate_capacity = ((cloud_capacity if "CLOUD" in allowed else 0)
+                                  + (edc_capacity if "EDGE_DATACENTER" in allowed else 0)
+                                  + (mist_capacity if "EDGE_DEVICE" in allowed else 0))
+            manifest.update({
+                "workload_level": ({10: "low", 20: "medium", 30: "high"}.get(devices)
+                                   if target == "EDGE_DC_ONLY" else None),
+                "offered_task_rate_per_second": sum(u * rate for u, rate in zip(app_counts, rates)),
+                "offered_work_mi_per_second": offered_work_mi_per_second,
+                "candidate_compute_capacity_mips": candidate_capacity,
+                "theoretical_offered_load_ratio": (offered_work_mi_per_second / candidate_capacity
+                                                    if candidate_capacity > 0 else None),
+            })
         write_json(run / "config.json", manifest)
         write_json(run / "manifest.json", manifest)
 
@@ -160,12 +197,22 @@ def main() -> int:
                 raise RuntimeError("experiment launcher compilation failed: " + compile_result.stdout[-8000:])
             classpath = f"{class_dir}:{classpath}"
             destination_log = raw / "destinations.csv"
+            common_properties = [f"-Dpaper.seed={seed}"] if seed is not None else []
             command = [
-                "java", f"-Dpaper.profile-counts={','.join(map(str, device_counts))}",
+                "java", *common_properties,
+                f"-Dpaper.profile-counts={','.join(map(str, device_counts))}",
                 f"-Dpaper.app-counts={','.join(map(str, app_counts))}",
-                f"-Dpaper.destination-log={destination_log}", "-cp", classpath,
-                "com.mechalikh.pureedgesim.experiment.PaperAlignedMain",
+                f"-Dpaper.destination-log={destination_log}",
             ]
+            if method == "queue-aware-trade-off" or method == "queue-aware":
+                queue_audit = raw / "queue_decisions.csv"
+                command.extend([f"-Dpaper.queue-audit-log={queue_audit}",
+                                f"-Dpaper.queue-penalty-weight={queue_weight}"])
+                command.extend(["-cp", classpath, "com.mechalikh.pureedgesim.experiment.QueueAwareMain"])
+                manifest["queue_penalty_weight"] = queue_weight
+                manifest["algorithm"] = "QUEUE_AWARE_TRADE_OFF"
+            else:
+                command.extend(["-cp", classpath, "com.mechalikh.pureedgesim.experiment.PaperAlignedMain"])
         else:
             command = ["java", "-cp", classpath, "com.mechalikh.pureedgesim.MainApplication"]
         result = subprocess.run(command, cwd=work, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

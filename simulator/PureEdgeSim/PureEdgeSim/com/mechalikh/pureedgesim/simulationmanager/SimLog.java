@@ -81,6 +81,8 @@ public class SimLog {
 	protected int pendingAtCutoff = -1;
 	protected int pendingCloudAtCutoff = 0, pendingEdgeAtCutoff = 0, pendingMistAtCutoff = 0;
 	protected int rejectedBeforePipelineAtCutoff = -1;
+	protected double completedTaskAverageDelaySeconds = -1;
+	protected double completedTaskAverageWaitingSeconds = -1;
 
 	// Network utilization
 	protected Double totalLanUsage = 0.0;
@@ -121,7 +123,7 @@ public class SimLog {
 					+ "WiFi energy consumption (Wh), LTE energy consumption (Wh), Ethernet energy consumption (Wh),"
 					+ "Dead devices count,Average remaining power (Wh),Average remaining power (%), First edge device death time (s),"
 					+ "List of remaining power (%) (only battery powered devices / 0 = dead),List of the time when each device died (s)");
-			resultsList.set(0, resultsList.get(0) + ",Tasks sent,Tasks completed,Tasks terminally failed,Tasks pending at cutoff,Cloud pending at cutoff,Edge pending at cutoff,Mist pending at cutoff,Tasks rejected before pipeline");
+			resultsList.set(0, resultsList.get(0) + ",Tasks sent,Tasks completed,Tasks terminally failed,Tasks pending at cutoff,Cloud pending at cutoff,Edge pending at cutoff,Mist pending at cutoff,Tasks rejected before pipeline,Average completed-task total delay (s),Average completed-task waiting time (s)");
 		}
 	}
 
@@ -139,7 +141,9 @@ public class SimLog {
 					+ (pendingAtCutoff < 0 ? "" : pendingCloudAtCutoff) + ","
 					+ (pendingAtCutoff < 0 ? "" : pendingEdgeAtCutoff) + ","
 					+ (pendingAtCutoff < 0 ? "" : pendingMistAtCutoff) + ","
-					+ (rejectedBeforePipelineAtCutoff < 0 ? "" : rejectedBeforePipelineAtCutoff));
+					+ (rejectedBeforePipelineAtCutoff < 0 ? "" : rejectedBeforePipelineAtCutoff) + ","
+					+ (completedTaskAverageDelaySeconds < 0 ? "" : completedTaskAverageDelaySeconds) + ","
+					+ (completedTaskAverageWaitingSeconds < 0 ? "" : completedTaskAverageWaitingSeconds));
 		}
 		StringBuilder s = new StringBuilder("\n");
 		for (String value : log) {
@@ -613,6 +617,12 @@ public class SimLog {
 		this.pendingEdgeAtCutoff = edgePending;
 		this.pendingMistAtCutoff = mistPending;
 		this.rejectedBeforePipelineAtCutoff = rejectedBeforePipeline;
+	}
+
+	/** Set end-to-end delay and waiting means over tasks that completed their return path. */
+	public void setCompletedTaskDelayAverages(double delaySeconds, double waitingSeconds) {
+		this.completedTaskAverageDelaySeconds = delaySeconds;
+		this.completedTaskAverageWaitingSeconds = waitingSeconds;
 	}
 
 	public void incrementTasksFailed(Task task) {

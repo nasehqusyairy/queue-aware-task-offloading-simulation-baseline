@@ -3,6 +3,7 @@ package com.mechalikh.pureedgesim.experiment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import com.mechalikh.pureedgesim.datacentersmanager.ComputingNode;
 import com.mechalikh.pureedgesim.scenariomanager.SimulationParameters;
@@ -42,6 +43,8 @@ public final class PaperAlignedTaskGenerator extends DefaultTaskGenerator {
         if (sources.size() != expectedSources) {
             throw new IllegalStateException("task-source count " + sources.size() + " != app assignment count " + expectedSources);
         }
+        String seedProperty = System.getProperty("paper.seed", "");
+        if (!seedProperty.isBlank()) random = new Random(Long.parseLong(seedProperty));
         Collections.shuffle(sources, random);
 
         long generated = 0;

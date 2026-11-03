@@ -9,6 +9,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.EnumMap;
+import java.util.OptionalDouble;
 
 import com.mechalikh.pureedgesim.datacentersmanager.ComputingNode;
 import com.mechalikh.pureedgesim.datacentersmanager.ComputingNode.LinkOrientation;
@@ -27,6 +28,10 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
     private final java.util.Set<Integer> acceptedTaskIds = new java.util.HashSet<>();
     private final java.util.Set<Integer> terminalFailureTaskIds = new java.util.HashSet<>();
     private BufferedWriter destinationWriter;
+    private BufferedWriter queueAuditWriter;
+    private double completedTotalDelaySeconds;
+    private double completedWaitingSeconds;
+    private int completedLatencySamples;
 
     public PaperAlignedSimulationManager(SimLog log, PureEdgeSim engine, int simulationId, int iteration, Scenario scenario) {
         super(log, engine, simulationId, iteration, scenario);
@@ -35,9 +40,19 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
         try {
             destinationWriter = Files.newBufferedWriter(Path.of(path), StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
-            destinationWriter.write("record_type,task_id,destination_type,local_execution,orchestrator_type,source_sensor,source_id,source_name,source_type,source_x,source_y,current_up_type\n");
+            destinationWriter.write("record_type,task_id,destination_type,destination_id,local_execution,orchestrator_type,source_sensor,source_id,source_name,source_type,source_x,source_y,current_up_type\n");
         } catch (IOException e) {
             throw new IllegalStateException("cannot create destination audit file", e);
+        }
+        String queuePath = System.getProperty("paper.queue-audit-log");
+        if (queuePath != null && !queuePath.isBlank()) {
+            try {
+                queueAuditWriter = Files.newBufferedWriter(Path.of(queuePath), StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+                queueAuditWriter.write("task_id,decision_time_seconds,candidate_id,candidate_type,baseline_score_seconds,queue_wait_estimate_seconds,waiting_queue_length,active_task_count,queue_estimate_available,queue_penalty_weight,combined_score_seconds,selected\n");
+            } catch (IOException e) {
+                throw new IllegalStateException("cannot create queue decision audit file", e);
+            }
         }
     }
 
@@ -94,14 +109,44 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
                     simulation.clock(), simLog.getGeneratedTasks(), simLog.tasksSent, completed + failed, pending,
                     completed, failed, valid, cloudPending, edgePending, mistPending, rejectedBeforePipeline);
             try {
+                simLog.setCompletedTaskDelayAverages(completedLatencySamples == 0 ? -1
+                                : completedTotalDelaySeconds / completedLatencySamples,
+                        completedLatencySamples == 0 ? -1 : completedWaitingSeconds / completedLatencySamples);
                 super.processEvent(event);
             } finally {
                 closeDestinationLog();
+                closeQueueAuditLog();
             }
             return;
         }
         super.processEvent(event);
+        if (event.getTag() == RESULT_RETURN_FINISHED && tasksCount > terminalCountBefore
+                && simLog.tasksFailed == failedCountBefore) {
+            Task completed = (Task) event.getData();
+            completedTotalDelaySeconds += completed.getTotalDelay();
+            completedWaitingSeconds += completed.getWatingTime();
+            completedLatencySamples++;
+        }
         if (event.getData() instanceof Task) recordTerminalIfCountChanged((Task) event.getData(), terminalCountBefore, failedCountBefore);
+    }
+
+    /** Write one candidate's decision-time estimate; absent values remain blank. */
+    public void recordQueueCandidate(int taskId, double timeSeconds, ComputingNode candidate,
+            double baselineScoreSeconds, OptionalDouble queueWaitSeconds, double combinedScoreSeconds,
+            double weight, int waitingQueueLength, int activeTasks, boolean selected) {
+        if (queueAuditWriter == null) throw new IllegalStateException("paper.queue-audit-log is required for queue-aware runs");
+        try {
+            String wait = queueWaitSeconds != null && queueWaitSeconds.isPresent()
+                    ? Double.toString(queueWaitSeconds.getAsDouble()) : "";
+            String queueLength = waitingQueueLength < 0 ? "" : Integer.toString(waitingQueueLength);
+            String active = activeTasks < 0 ? "" : Integer.toString(activeTasks);
+            queueAuditWriter.write(taskId + "," + timeSeconds + "," + candidate.getId() + ","
+                    + candidate.getType().name() + "," + baselineScoreSeconds + "," + wait + ","
+                    + queueLength + "," + active + "," + (wait.isEmpty() ? "false" : "true") + ","
+                    + weight + "," + combinedScoreSeconds + "," + selected + "\n");
+        } catch (IOException e) {
+            throw new IllegalStateException("cannot write queue decision audit record", e);
+        }
     }
 
     private int acceptedFailureCount() {
@@ -134,7 +179,9 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
         var location = source.getMobilityModel().getCurrentLocation();
         try {
             String sourceName = source.getName() == null ? "UE-" + source.getId() : source.getName();
-            destinationWriter.write("DECISION," + task.getId() + "," + type + "," + local + "," + orchestrator + ","
+            String destinationId = destination == null || destination == ComputingNode.NULL
+                    ? "" : Integer.toString(destination.getId());
+            destinationWriter.write("DECISION," + task.getId() + "," + type + "," + destinationId + "," + local + "," + orchestrator + ","
                     + source.isSensor() + "," + source.getId() + ",\"" + sourceName.replace("\"", "\"\"") + "\"," + source.getType().name()
                     + "," + location.getXPos() + "," + location.getYPos() + "," + currentUp + "\n");
         } catch (IOException e) {
@@ -150,6 +197,17 @@ public final class PaperAlignedSimulationManager extends DefaultSimulationManage
             destinationWriter = null;
         } catch (IOException e) {
             throw new IllegalStateException("cannot close destination audit log", e);
+        }
+    }
+
+    private void closeQueueAuditLog() {
+        if (queueAuditWriter == null) return;
+        try {
+            queueAuditWriter.flush();
+            queueAuditWriter.close();
+            queueAuditWriter = null;
+        } catch (IOException e) {
+            throw new IllegalStateException("cannot close queue decision audit log", e);
         }
     }
 }

@@ -13,7 +13,7 @@ import com.mechalikh.pureedgesim.taskorchestrator.DefaultOrchestrator;
  * single current UP_LINK destination; with a Cloud orchestrator and multiple
  * links that pointer can be a peer UE and hide reachable EDCs.
  */
-public final class PaperAlignedOrchestrator extends DefaultOrchestrator {
+public class PaperAlignedOrchestrator extends DefaultOrchestrator {
     public PaperAlignedOrchestrator(SimulationManager simulationManager) {
         super(simulationManager);
     }

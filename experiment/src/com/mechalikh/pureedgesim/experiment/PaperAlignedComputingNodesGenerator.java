@@ -48,6 +48,14 @@ public final class PaperAlignedComputingNodesGenerator extends DefaultComputingN
                 actual.add(0);
                 for (int n = 0; n < count; n++) {
                     ComputingNode node = createComputingNode(profile, SimulationParameters.TYPES.EDGE_DEVICE);
+                    String seedProperty = System.getProperty("paper.seed", "");
+                    if (!seedProperty.isBlank()) {
+                        if (!(node.getMobilityModel() instanceof SeededMobilityModel)) {
+                            throw new IllegalStateException("paper.seed requires SeededMobilityModel");
+                        }
+                        ((SeededMobilityModel) node.getMobilityModel()).configureSeed(
+                                Long.parseLong(seedProperty), node.getId());
+                    }
                     // Upstream setAsOrchestrator(false) still sets the node's orchestrator reference to itself.
                     // Override that reference explicitly when the study deploys its orchestrator at Cloud.
                     if (SimulationParameters.enableOrchestrators

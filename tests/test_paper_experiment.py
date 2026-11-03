@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from paper_experiment import allocate_profile_counts, coverage_summary, expected_task_count, initial_matrix, target_allowed_types, target_architecture
+from paper_experiment import allocate_profile_counts, coverage_summary, expected_task_count, initial_matrix, queue_aware_matrix, target_allowed_types, target_architecture
 
 
 class PaperExperimentTests(unittest.TestCase):
@@ -26,6 +26,14 @@ class PaperExperimentTests(unittest.TestCase):
         matrix = initial_matrix()
         self.assertEqual(len(matrix), 36)
         self.assertEqual(len({(x["method"], x["devices"], x["destination_config"]) for x in matrix}), 36)
+
+    def test_queue_aware_matrix_pairs_three_methods_at_each_load_level(self):
+        matrix = queue_aware_matrix(seed=42, queue_penalty_weight=0.75)
+        self.assertEqual(len(matrix), 9)
+        self.assertEqual({row["workload_level"] for row in matrix}, {"low", "medium", "high"})
+        self.assertEqual({row["method"] for row in matrix}, {"trade-off", "round-robin", "queue-aware"})
+        self.assertTrue(all(row["destination_config"] == "EDGE_DC_ONLY" for row in matrix))
+        self.assertTrue(all(row["seed"] == 42 and row["queue_penalty_weight"] == 0.75 for row in matrix))
 
     def test_quadrant_coverage_covers_full_200_by_200_area_with_radius_71(self):
         points = [(0, 0), (100, 0), (0, 100), (200, 200)]
