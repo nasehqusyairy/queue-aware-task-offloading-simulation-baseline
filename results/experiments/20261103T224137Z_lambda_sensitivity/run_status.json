@@ -1,0 +1,236 @@
+{
+  "experiment_id": "20261103T224137Z_lambda_sensitivity",
+  "planned_runs": 25,
+  "pilot_pass": true,
+  "runs": [
+    {
+      "method": "trade-off",
+      "lambda": null,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224158287667701_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed1"
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 0.0,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224212979448595_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1"
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 0.5,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224431566700257_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 1.0,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224442272864354_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 2.0,
+      "seed": 1,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224452656797495_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed1",
+      "validation_errors": []
+    },
+    {
+      "method": "trade-off",
+      "lambda": null,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224502385507206_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 0,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224512722169795_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 0.5,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224523922879747_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 1.0,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224534505770162_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 2.0,
+      "seed": 8128,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224544396245328_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed8128",
+      "validation_errors": []
+    },
+    {
+      "method": "trade-off",
+      "lambda": null,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224553940174442_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 0,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224604121840764_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 0.5,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224614646432917_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 1.0,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224625364872364_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 2.0,
+      "seed": 4401,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224634792717681_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed4401",
+      "validation_errors": []
+    },
+    {
+      "method": "trade-off",
+      "lambda": null,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224645156408636_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 0,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224654893332791_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 0.5,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224704420521336_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 1.0,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224713911632118_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 2.0,
+      "seed": 2026,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224724272141743_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2026",
+      "validation_errors": []
+    },
+    {
+      "method": "trade-off",
+      "lambda": null,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224733754093675_paper-aligned-baseline_trade-off_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 0,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224743355646931_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 0.5,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224753487713684_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 1.0,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224803285693070_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    },
+    {
+      "method": "queue-aware",
+      "lambda": 2.0,
+      "seed": 2027,
+      "status": "completed",
+      "exit_code": 0,
+      "run_id": "20261103T224813555552956_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027",
+      "validation_errors": []
+    }
+  ],
+  "started_utc": "2026-11-03T22:44:28.736875+00:00",
+  "successful_runs": 25,
+  "updated_utc": "2026-11-03T22:48:20.276945+00:00",
+  "failed_runs": 0,
+  "status": "completed",
+  "finished_utc": "2026-11-03T22:48:20.277211+00:00"
+}

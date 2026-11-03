@@ -1,0 +1,68 @@
+{
+  "planned_runs": 25,
+  "successful_runs": 25,
+  "failed_runs": 0,
+  "complete_paired_seed_sets": 5,
+  "configuration_pairs_valid": true,
+  "lambda0_equivalent_all_seeds": true,
+  "lambda0_checks": [
+    {
+      "seed": 1,
+      "same_all_task_destinations": true,
+      "same_metrics": true,
+      "zero_penalty": true,
+      "same_candidate_ranks": true,
+      "same_winner_per_decision": true,
+      "queue_estimates_recorded": true,
+      "queue_nonzero_observations": 56,
+      "queue_observations": 109
+    },
+    {
+      "seed": 8128,
+      "same_all_task_destinations": true,
+      "same_metrics": true,
+      "zero_penalty": true,
+      "same_candidate_ranks": true,
+      "same_winner_per_decision": true,
+      "queue_estimates_recorded": true,
+      "queue_nonzero_observations": 54,
+      "queue_observations": 100
+    },
+    {
+      "seed": 4401,
+      "same_all_task_destinations": true,
+      "same_metrics": true,
+      "zero_penalty": true,
+      "same_candidate_ranks": true,
+      "same_winner_per_decision": true,
+      "queue_estimates_recorded": true,
+      "queue_nonzero_observations": 38,
+      "queue_observations": 93
+    },
+    {
+      "seed": 2026,
+      "same_all_task_destinations": true,
+      "same_metrics": true,
+      "zero_penalty": true,
+      "same_candidate_ranks": true,
+      "same_winner_per_decision": true,
+      "queue_estimates_recorded": true,
+      "queue_nonzero_observations": 57,
+      "queue_observations": 95
+    },
+    {
+      "seed": 2027,
+      "same_all_task_destinations": true,
+      "same_metrics": true,
+      "zero_penalty": true,
+      "same_candidate_ranks": true,
+      "same_winner_per_decision": true,
+      "queue_estimates_recorded": true,
+      "queue_nonzero_observations": 53,
+      "queue_observations": 95
+    }
+  ],
+  "queue_nonzero_all_lambda_seed_cells": true,
+  "queue_estimates_recorded_at_lambda0": true,
+  "statistics": "paired t 95% CI df=4 and exact two-sided paired sign-flip test via all 32 sign assignments, n=5; exploratory"
+}

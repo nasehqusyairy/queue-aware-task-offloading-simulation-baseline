@@ -1,0 +1,17 @@
+{
+  "experiment_id": "20261103T224137Z_lambda_sensitivity",
+  "parent_experiment": "results/experiments/20261103T182112Z_queue_pressure_seed_stability/",
+  "profile": "paper-aligned-baseline",
+  "devices": 30,
+  "edge_datacenters": 4,
+  "destination_config": "EDGE_DC_ONLY",
+  "duration_seconds": 5,
+  "seeds": [1, 8128, 4401, 2026, 2027],
+  "methods": ["trade-off", "queue-aware"],
+  "queue_penalty_weights": [0, 0.5, 1.0, 2.0],
+  "pilot": {"seed": 1, "methods": ["trade-off", "queue-aware"], "queue_penalty_weight": 0},
+  "task_event_trace": true,
+  "queue_decision_audit": true,
+  "estimator_or_formula_changed": false,
+  "baseline_configuration_tuned": false
+}

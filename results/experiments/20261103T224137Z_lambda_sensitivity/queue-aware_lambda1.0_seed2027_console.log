@@ -1,0 +1,67 @@
+PureEdgeSim build: WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (file:/usr/share/maven/lib/guava.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+OK (compiled classes verified)
+Running queue-aware: profile=paper-aligned-baseline devices=30 simulated_seconds=5 target=EDGE_DC_ONLY architecture=EDGE_ONLY
+Run status: completed; exit=0; validation_errors=0
+RUN_DIR=/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/experiments/20261103T224137Z_lambda_sensitivity/runs/20261103T224803285693070_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027
+{
+  "run_id": "20261103T224803285693070_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027",
+  "profile": "paper-aligned-baseline",
+  "method": "queue-aware",
+  "devices": 30,
+  "duration_seconds": 5,
+  "architecture": "EDGE_ONLY",
+  "destination_config": "EDGE_DC_ONLY",
+  "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+  "status": "completed",
+  "generated_tasks": 2175,
+  "sent_tasks": 2175,
+  "completed_tasks": 99,
+  "terminally_failed_tasks": 1307,
+  "rejected_before_pipeline_tasks": 0,
+  "pending_tasks": 769,
+  "successful_tasks": 99,
+  "failed_tasks": 1307,
+  "task_success_rate": 0.04551724137931035,
+  "task_failure_rate": 0.600919540229885,
+  "task_pending_rate": 0.3535632183908046,
+  "average_cpu_execution_time_seconds": 0.1321,
+  "average_completed_task_total_delay_seconds": 6.979408702408696,
+  "average_completed_task_waiting_time_seconds": 1.4108585858585871,
+  "energy_consumption": 3.082,
+  "energy_unit": "Wh",
+  "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+  "workload_distribution": {
+    "Cloud": 0,
+    "Edge": 2175,
+    "Mist": 0
+  },
+  "workload_distribution_unit": "tasks dispatched to each destination layer",
+  "source": "raw/2026-11-04_05-48-06/Sequential_simulation.csv",
+  "layer_successful_completions": {
+    "Cloud": 0,
+    "Edge": 99,
+    "Mist": 0
+  },
+  "queue_aware_metrics": {
+    "source": "raw/queue_decisions.csv",
+    "valid": true,
+    "candidate_observations": 95,
+    "selected_queue_estimate_count": 79,
+    "selected_queue_estimate_unavailable_count": 0,
+    "selected_mean_queue_wait_estimate_seconds": 0.7487025316455698,
+    "selected_median_queue_wait_estimate_seconds": 0.22999999999999998,
+    "selected_mean_waiting_queue_length": 53.31645569620253,
+    "selected_by_layer": {
+      "EDGE_DATACENTER": {
+        "selected_tasks": 79,
+        "mean_queue_wait_estimate_seconds": 0.7487025316455698
+      }
+    }
+  },
+  "validation_errors": [],
+  "metric_validation_errors": []
+}
+RUN_DIR=/home/nasyikhqusyairy/Projects/repositories/queue-aware-task-offloading-simulation-baseline/results/experiments/20261103T224137Z_lambda_sensitivity/runs/20261103T224803285693070_paper-aligned-baseline_queue-aware_30ue_EDGE_DC_ONLY_seed2027

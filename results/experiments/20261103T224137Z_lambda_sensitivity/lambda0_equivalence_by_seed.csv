@@ -1,0 +1,6 @@
+seed,same_all_task_destinations,same_metrics,zero_penalty,same_candidate_ranks,same_winner_per_decision,queue_estimates_recorded,queue_nonzero_observations,queue_observations
+1,True,True,True,True,True,True,56,109
+8128,True,True,True,True,True,True,54,100
+4401,True,True,True,True,True,True,38,93
+2026,True,True,True,True,True,True,57,95
+2027,True,True,True,True,True,True,53,95
