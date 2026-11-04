@@ -1,0 +1,43 @@
+{
+  "run_id": "20261104T021337789897579_paper-aligned-baseline_per-task-test_10ue_EDGE_DC_ONLY_seed1",
+  "profile": "paper-aligned-baseline",
+  "method": "per-task-test",
+  "devices": 10,
+  "duration_seconds": 5,
+  "architecture": "EDGE_ONLY",
+  "destination_config": "EDGE_DC_ONLY",
+  "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+  "status": "completed",
+  "generated_tasks": 64,
+  "sent_tasks": 64,
+  "completed_tasks": 64,
+  "terminally_failed_tasks": 0,
+  "rejected_before_pipeline_tasks": 0,
+  "pending_tasks": 0,
+  "successful_tasks": 64,
+  "failed_tasks": 0,
+  "task_success_rate": 1.0,
+  "task_failure_rate": 0.0,
+  "task_pending_rate": 0.0,
+  "average_cpu_execution_time_seconds": 0.75,
+  "average_completed_task_total_delay_seconds": 5.766165384615381,
+  "average_completed_task_waiting_time_seconds": 0.16874999999999996,
+  "energy_consumption": 0.986,
+  "energy_unit": "Wh",
+  "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+  "workload_distribution": {
+    "Cloud": 0,
+    "Edge": 64,
+    "Mist": 0
+  },
+  "workload_distribution_unit": "tasks dispatched to each destination layer",
+  "source": "raw/2026-11-04_09-13-42/Sequential_simulation.csv",
+  "layer_successful_completions": {
+    "Cloud": 0,
+    "Edge": 64,
+    "Mist": 0
+  },
+  "queue_aware_metrics": null,
+  "validation_errors": [],
+  "metric_validation_errors": []
+}

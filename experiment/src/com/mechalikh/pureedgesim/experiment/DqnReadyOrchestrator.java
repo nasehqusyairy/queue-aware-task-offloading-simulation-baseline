@@ -36,6 +36,8 @@ public final class DqnReadyOrchestrator extends PaperAlignedOrchestrator {
             ids.add(candidate.getId());
         }
         OffloadingObservation observation = encoder.encode(task, ordered, mask);
+        DqnReadySimulationManager manager=(DqnReadySimulationManager)simulationManager;
+        manager.preparePolicyDecision(task,ordered,mask); // immutable snapshot is frozen before the policy can choose
         int action = policy.selectAction(observation, ids, mask);
         int selectedNodeId = -1;
         if (DqnActionSpace.anyEligible(mask)) {

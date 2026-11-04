@@ -13,6 +13,7 @@ public final class PerTaskTestMain {
         simulation.setCustomTaskGenerator(PerTaskValidationTaskGenerator.class);
         simulation.setCustomComputingNodesGenerator(PaperAlignedComputingNodesGenerator.class);
         simulation.setCustomComputingNode(DqnReadyComputingNode.class);
+        simulation.setCustomNetworkModel(TaskTracingNetworkModel.class);
         simulation.setCustomEdgeOrchestrator(DqnReadyOrchestrator.class);
         simulation.setCustomSimulationManager(DqnReadySimulationManager.class);
         simulation.launchSimulation();

@@ -13,6 +13,8 @@ public final class TaskTracingNetworkModel extends DefaultNetworkModel {
 
     @Override
     protected void transferFinished(TransferProgress transfer) {
+        if(simulationManager instanceof com.mechalikh.pureedgesim.simulationmanager.DqnReadySimulationManager manager)
+            manager.recordNetworkTransferFinished(transfer.getTask(),transfer.getTransferType().name(),transfer.getRemainingFileSize());
         if (transfer.getTransferType() == TransferProgress.Type.TASK
                 && transfer.getVertexList().size() == 1) {
             ((PaperAlignedSimulationManager) simulationManager).recordTaskEvent(

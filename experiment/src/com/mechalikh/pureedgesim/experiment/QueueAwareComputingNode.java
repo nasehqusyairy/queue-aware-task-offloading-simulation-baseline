@@ -75,7 +75,17 @@ public class QueueAwareComputingNode extends DefaultComputingNode implements Que
         return getTasksQueue().size();
     }
 
-    public int getActiveTaskCount() {
-        return activeTasks.size();
+    public int getActiveTaskCount() { return activeTasks.size(); }
+
+    public int getAvailableCpuCores() { return availableCores; }
+
+    public double getActiveRemainingServiceSeconds() {
+        double now=getSimulation().clock(), remaining=0;
+        for (ActiveTask active: activeTasks.values()) {
+            double value=active.lengthMi/mipsPerCore-(now-active.startedAtSeconds);
+            if (!Double.isFinite(value) || value < 0) return Double.NaN;
+            remaining += value;
+        }
+        return remaining;
     }
 }

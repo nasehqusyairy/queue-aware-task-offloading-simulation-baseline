@@ -235,6 +235,25 @@ def main() -> int:
             trace_events = (os.environ.get("PAPER_TASK_EVENT_TRACE", "").strip().lower() in {"1", "true", "yes"}
                             or method in {"per-task-test", "dqn"})
             manifest["task_event_trace_enabled"] = trace_events
+            if os.environ.get("PAPER_DECISION_EVENT_TRACE", "").strip().lower() in {"1", "true", "yes"}:
+                observation_log=raw / "decision_event_snapshots.csv"
+                decision_event_log=raw / "decision_event_decisions.csv"
+                interval_log=raw / "decision_event_transitions.csv"
+                for key in ("PAPER_DECISION_EVENT_COMPLETION_WEIGHT","PAPER_DECISION_EVENT_FAILURE_WEIGHT","PAPER_DECISION_EVENT_DELAY_WEIGHT","PAPER_DECISION_EVENT_RHO"):
+                    if key not in os.environ: raise ValueError(f"{key} is required when PAPER_DECISION_EVENT_TRACE=1")
+                common_properties.extend([
+                    f"-Dpaper.decision-event-snapshot-log={observation_log}",
+                    f"-Dpaper.decision-event-decision-log={decision_event_log}",
+                    f"-Dpaper.decision-event-transition-log={interval_log}",
+                    f"-Dpaper.decision-event-completion-weight={os.environ['PAPER_DECISION_EVENT_COMPLETION_WEIGHT']}",
+                    f"-Dpaper.decision-event-failure-weight={os.environ['PAPER_DECISION_EVENT_FAILURE_WEIGHT']}",
+                    f"-Dpaper.decision-event-delay-weight={os.environ['PAPER_DECISION_EVENT_DELAY_WEIGHT']}",
+                    f"-Dpaper.decision-event-rho={os.environ['PAPER_DECISION_EVENT_RHO']}",
+                ])
+                drain_cap=os.environ.get("PAPER_DECISION_EVENT_DRAIN_SECONDS")
+                if drain_cap is not None: common_properties.append(f"-Dpaper.decision-event-drain-seconds={drain_cap}")
+                manifest["decision_event_instrumentation"]={"snapshots":str(observation_log),"decisions":str(decision_event_log),"intervals":str(interval_log),"drain_cap_seconds":drain_cap}
+                write_json(run / "manifest.json",manifest)
             command = [
                 "java", *common_properties,
                 f"-Dpaper.profile-counts={','.join(map(str, device_counts))}",
@@ -438,7 +457,20 @@ def main() -> int:
                 if accounting["rejected_before_pipeline_tasks"] > accounting["terminally_failed_tasks"]:
                     errors.append("rejected-before-pipeline count exceeds terminal failures")
                 manifest["task_accounting"]["layer_successful_completions"] = None
-                if abs(end - duration) > 1e-6: errors.append(f"simulation ended at {end}s, expected {duration}s")
+                drain_info = manifest.get("decision_event_instrumentation") or {}
+                drain_cap = drain_info.get("drain_cap_seconds")
+                if drain_cap is None:
+                    if abs(end - duration) > 1e-6: errors.append(f"simulation ended at {end}s, expected {duration}s")
+                else:
+                    cap = float(drain_cap)
+                    cutoff_match = re.search(r"DECISION_EVENT_ARRIVAL_CUTOFF time_seconds=([0-9.]+) drain_cap_seconds=([0-9.]+)", result.stdout)
+                    drain_match = re.search(r"DECISION_EVENT_DRAIN_END time_seconds=([0-9.]+) elapsed_seconds=([0-9.]+) unresolved_censored=(\d+) drained=(true|false)", result.stdout)
+                    if not cutoff_match or abs(float(cutoff_match.group(1))-duration)>1e-6:
+                        errors.append("decision-event drain arrival cutoff does not match configured duration")
+                    if not drain_match:
+                        errors.append("missing decision-event drain completion marker")
+                    elif abs(float(drain_match.group(1))-end)>1e-6 or float(drain_match.group(2))>cap+1e-6:
+                        errors.append("decision-event drain end is inconsistent with simulator end or configured cap")
                 if int(horizon_match.group(2)) != expected_tasks: errors.append("horizon generated count does not match expected task count")
             destination_path = raw / "destinations.csv"
             decision_counts = {}
