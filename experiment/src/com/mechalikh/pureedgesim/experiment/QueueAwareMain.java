@@ -10,7 +10,8 @@ public final class QueueAwareMain {
     public static void main(String[] args) {
         Simulation simulation = new Simulation();
         simulation.setCustomMobilityModel(SeededMobilityModel.class);
-        simulation.setCustomTaskGenerator(PaperAlignedTaskGenerator.class);
+        simulation.setCustomTaskGenerator(Boolean.getBoolean("paper.per-task-validation-workload")
+                ? PerTaskValidationTaskGenerator.class : PaperAlignedTaskGenerator.class);
         if (System.getProperty("paper.task-event-trace") != null) {
             simulation.setCustomComputingNode(TaskTracingQueueAwareComputingNode.class);
             simulation.setCustomNetworkModel(TaskTracingNetworkModel.class);

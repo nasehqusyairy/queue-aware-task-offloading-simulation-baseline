@@ -8,5 +8,13 @@ public interface OffloadingPolicy {
 
     default void observe(OffloadingTransition transition) {}
 
+    default String decisionMetadata() { return "POLICY"; }
+
+    default double terminalReward(boolean success, double totalDelaySeconds) {
+        throw new UnsupportedOperationException("this policy does not define a training reward");
+    }
+
+    default boolean updatesFromTransitions() { return false; }
+
     default void endEpisode() {}
 }

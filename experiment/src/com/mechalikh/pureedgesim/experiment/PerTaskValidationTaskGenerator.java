@@ -4,7 +4,7 @@ import com.mechalikh.pureedgesim.datacentersmanager.ComputingNode;
 import com.mechalikh.pureedgesim.datacentersmanager.ComputingNode.LinkOrientation;
 import com.mechalikh.pureedgesim.scenariomanager.SimulationParameters;
 import com.mechalikh.pureedgesim.simulationengine.FutureQueue;
-import com.mechalikh.pureedgesim.simulationmanager.DqnReadySimulationManager;
+import com.mechalikh.pureedgesim.simulationmanager.PaperAlignedSimulationManager;
 import com.mechalikh.pureedgesim.simulationmanager.SimulationManager;
 import com.mechalikh.pureedgesim.taskgenerator.Application;
 import com.mechalikh.pureedgesim.taskgenerator.DefaultTaskGenerator;
@@ -48,7 +48,7 @@ public final class PerTaskValidationTaskGenerator extends DefaultTaskGenerator {
                 task.setOrchestrator(cloud);
             }
             taskList.add(task);
-            if (getSimulationManager() instanceof DqnReadySimulationManager audit) audit.recordTaskGenerated(task);
+            if (getSimulationManager() instanceof PaperAlignedSimulationManager audit) audit.recordTaskGenerated(task);
         }
         System.out.printf("PAPER_TASK_GENERATION simulated_seconds=%d active_devices=1 app_user_counts=validation generated_tasks=%d%n",
                 (int) Math.round(SimulationParameters.simulationDuration), TASK_COUNT);

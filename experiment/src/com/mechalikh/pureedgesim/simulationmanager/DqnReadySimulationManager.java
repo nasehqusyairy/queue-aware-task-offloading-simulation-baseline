@@ -16,6 +16,11 @@ import com.mechalikh.pureedgesim.simulationengine.PureEdgeSim;
 import com.mechalikh.pureedgesim.scenariomanager.Scenario;
 import com.mechalikh.pureedgesim.taskgenerator.Task;
 import com.mechalikh.pureedgesim.experiment.OffloadingObservation;
+import com.mechalikh.pureedgesim.experiment.OffloadingPolicy;
+import com.mechalikh.pureedgesim.experiment.OffloadingTransition;
+import com.mechalikh.pureedgesim.experiment.DqnStateEncoder;
+import com.mechalikh.pureedgesim.experiment.DqnState;
+import com.mechalikh.pureedgesim.experiment.DelayedTransitionLedger;
 
 /** Isolated manager that requests a fresh policy destination at every task dispatch. */
 public final class DqnReadySimulationManager extends PaperAlignedSimulationManager {
@@ -43,11 +48,23 @@ public final class DqnReadySimulationManager extends PaperAlignedSimulationManag
     private final java.util.Set<Integer> finalizedDecisionIds = new java.util.HashSet<>();
     private BufferedWriter decisionWriter;
     private BufferedWriter ledgerWriter;
+    private BufferedWriter transitionWriter;
+    private OffloadingPolicy policy;
+    private final DelayedTransitionLedger transitionLedger = new DelayedTransitionLedger();
+    private final DqnStateEncoder stateEncoder = new DqnStateEncoder();
 
     public DqnReadySimulationManager(SimLog log, PureEdgeSim engine, int simulationId, int iteration, Scenario scenario) {
         super(log, engine, simulationId, iteration, scenario);
         decisionWriter = open("paper.per-task-decision-log", "task_id,simulation_timestamp_seconds,source_ue_id,selected_action,selected_edc_id,candidate_edc_ids,action_mask,task_mi,task_mi_normalized,input_size_bits,input_size_normalized,deadline_seconds,deadline_normalized,queue_length_per_edc,queue_length_normalized_per_edc,active_tasks_per_edc,active_tasks_normalized_per_edc,estimated_queue_wait_seconds_per_edc,estimated_queue_wait_normalized_per_edc,mips_per_core_per_edc,mips_per_core_normalized_per_edc,cpu_cores_per_edc,cpu_cores_normalized_per_edc,cpu_utilization_percent_per_edc,cpu_utilization_normalized_per_edc,resource_available_per_edc,cache_bypassed,cached_placement_existed,cached_placement_destination_id,decision_source,actual_applied_destination_id,decision_status");
         ledgerWriter = open("paper.per-task-ledger-log", "task_id,event_name,timestamp_seconds,source_ue_id,destination_id,status,failure_reason,total_delay_seconds,network_delay_seconds,queue_wait_seconds,cpu_execution_seconds,stage");
+        String transitionPath = System.getProperty("paper.dqn-transition-log");
+        if (transitionPath != null && !transitionPath.isBlank())
+            transitionWriter = open("paper.dqn-transition-log", "task_id,event_name,timestamp_seconds,reward,transition_status,replay_inserted");
+    }
+
+    public void registerPolicy(OffloadingPolicy value) {
+        if (policy != null) throw new IllegalStateException("policy registered twice");
+        policy = value;
     }
 
     @Override
@@ -65,10 +82,16 @@ public final class DqnReadySimulationManager extends PaperAlignedSimulationManag
 
     /** Called exactly once per orchestrator invocation; duplicate task decisions fail closed. */
     public void recordPolicyDecision(Task task, OffloadingObservation observation, List<Integer> candidateIds,
-            boolean[] actionMask, int action, int selectedEdcId) {
+            boolean[] actionMask, int action, int selectedEdcId, String decisionSource) {
         Decision previous = decisions.putIfAbsent(task.getId(),
                 new Decision(observation, candidateIds, actionMask, action, selectedEdcId));
         if (previous != null) throw new IllegalStateException("duplicate per-task policy decision for task " + task.getId());
+        if (policy instanceof com.mechalikh.pureedgesim.experiment.DqnOffloadingPolicy) {
+            DqnState state = stateEncoder.encode(observation, actionMask);
+            for (OffloadingTransition ready : transitionLedger.onDecision(task.getId(), state, action)) {
+                deliverTransition(ready);
+            }
+        }
     }
 
     @Override
@@ -81,6 +104,16 @@ public final class DqnReadySimulationManager extends PaperAlignedSimulationManag
     public void recordTaskEvent(Task task, String eventName, String stage) {
         super.recordTaskEvent(task, eventName, stage);
         ledger(task, eventName, stage);
+        if (policy instanceof com.mechalikh.pureedgesim.experiment.DqnOffloadingPolicy && "TASK_PENDING_AT_HORIZON".equals(eventName))
+            transitionEvent(task.getId(), "HORIZON_PENDING_NO_REWARD", null, transitionLedger.status(task.getId()), false);
+        if (policy instanceof com.mechalikh.pureedgesim.experiment.DqnOffloadingPolicy && ("TASK_COMPLETED".equals(eventName) || "TASK_FAILED".equals(eventName))) {
+            boolean success = "TASK_COMPLETED".equals(eventName);
+            double reward = policy.terminalReward(success, task.getTotalDelay());
+            for (OffloadingTransition ready : transitionLedger.onTerminal(task.getId(), reward)) {
+                deliverTransition(ready);
+            }
+            transitionEvent(task.getId(), "TERMINAL_REWARD", reward, success ? "COMPLETED" : "FAILED", false);
+        }
     }
 
     @Override
@@ -89,6 +122,13 @@ public final class DqnReadySimulationManager extends PaperAlignedSimulationManag
         Task decisionTask = decisionEvent ? (Task) event.getData() : null;
         super.processEvent(event);
         if (decisionEvent) finalizeDecision(decisionTask);
+        if (event.getTag() == PRINT_LOG && policy instanceof com.mechalikh.pureedgesim.experiment.DqnOffloadingPolicy) {
+            for (OffloadingTransition ready : transitionLedger.finishEpisode()) {
+                deliverTransition(ready);
+            }
+            transitionEvent(-1, "HORIZON_PENDING_WITHOUT_REWARD", null,
+                    "count=" + transitionLedger.outstandingWithoutRewardCount(), false);
+        }
         if (event.getTag() == PRINT_LOG && edgeOrchestrator instanceof com.mechalikh.pureedgesim.experiment.DqnReadyOrchestrator dqnReady) {
             dqnReady.endEpisode();
         }
@@ -129,7 +169,7 @@ public final class DqnReadySimulationManager extends PaperAlignedSimulationManag
                 csv(candidateValues(o, "resource")), Boolean.toString(true),
                 Boolean.toString(cachedBeforeDispatch.getOrDefault(task.getId(), false)),
                 cachedDestinationBeforeDispatch.getOrDefault(task.getId(), -1) < 0 ? "" : csv(cachedDestinationBeforeDispatch.get(task.getId())),
-                "DETERMINISTIC_TEST_POLICY",
+                d == null ? "NO_POLICY_CALL" : System.getProperty("paper.per-task-policy", "deterministic-task-modulo"),
                 actualId < 0 ? "" : csv(actualId), status));
     }
 
@@ -201,8 +241,17 @@ public final class DqnReadySimulationManager extends PaperAlignedSimulationManag
         catch (IOException e) { throw new IllegalStateException("cannot write per-task audit", e); }
     }
     private void closeOwnLogs() {
-        close(decisionWriter); close(ledgerWriter);
-        decisionWriter = null; ledgerWriter = null;
+        close(decisionWriter); close(ledgerWriter); close(transitionWriter);
+        decisionWriter = null; ledgerWriter = null; transitionWriter = null;
+    }
+    private void transitionEvent(int taskId,String event,Double reward,String status,boolean inserted) {
+        if (transitionWriter == null) return;
+        write(transitionWriter,String.join(",",csv(taskId),csv(event),csv(simulation.clock()),csv(reward),csv(status),Boolean.toString(inserted)));
+    }
+    private void deliverTransition(OffloadingTransition transition) {
+        boolean replayInsertion=policy.updatesFromTransitions();
+        policy.observe(transition);
+        transitionEvent(transition.taskId,replayInsertion?"REPLAY_INSERTED":"TRANSITION_READY",transition.reward,"READY",replayInsertion);
     }
     private static void close(BufferedWriter out) {
         if (out == null) return;

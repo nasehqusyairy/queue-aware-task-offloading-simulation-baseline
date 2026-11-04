@@ -1,0 +1,949 @@
+{
+  "experiment_id": "20261104T010929Z_dqn_pilot",
+  "created_utc": "2026-11-04T01:09:29.960841+00:00",
+  "profile": "paper-aligned-baseline",
+  "devices": 10,
+  "edcs": 4,
+  "target": "EDGE_DC_ONLY",
+  "duration_seconds": 5,
+  "workload": "per-task-validation-64-tasks-single-source",
+  "training_seeds": [
+    11,
+    29,
+    47
+  ],
+  "evaluation_seeds": [
+    8128,
+    4401
+  ],
+  "methods": [
+    "trade-off",
+    "queue-aware",
+    "dqn"
+  ],
+  "status": "completed",
+  "runs": [
+    {
+      "method": "dqn",
+      "mode": "train",
+      "seed": 11,
+      "return_code": 0,
+      "run_dir": "runs/20261104T010932847000254_paper-aligned-baseline_dqn_10ue_EDGE_DC_ONLY_seed11",
+      "status": "completed",
+      "validation_errors": [],
+      "task_accounting": {
+        "completed_tasks": 64,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "pending_by_layer": {
+          "Cloud": 0,
+          "Edge": 0,
+          "Mist": 0
+        },
+        "pending_tasks": 0,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "terminally_failed_tasks": 0
+      },
+      "metrics": {
+        "average_completed_task_total_delay_seconds": 5.761302884615382,
+        "average_completed_task_waiting_time_seconds": 0.18468750000000006,
+        "average_cpu_execution_time_seconds": 0.75,
+        "completed_tasks": 64,
+        "energy_consumption": 0.8726,
+        "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+        "energy_unit": "Wh",
+        "failed_tasks": 0,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "pending_tasks": 0,
+        "queue_aware_metrics": null,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "source": "raw/2026-11-04_08-09-36/Sequential_simulation.csv",
+        "successful_tasks": 64,
+        "task_failure_rate": 0.0,
+        "task_pending_rate": 0.0,
+        "task_success_rate": 1.0,
+        "terminally_failed_tasks": 0,
+        "validation_errors": [],
+        "workload_distribution": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "workload_distribution_unit": "tasks dispatched to each destination layer"
+      },
+      "destination_counts": {
+        "EDGE_DATACENTER": 64
+      },
+      "per_task_lifecycle_accounting": {
+        "accounting_valid": true,
+        "completed": 64,
+        "failed": 0,
+        "generated": 64,
+        "pending": 0,
+        "terminal_task_ids": 64
+      },
+      "decision_count": 64,
+      "pair_signature": {
+        "devices": 10,
+        "duration_seconds": 5,
+        "destination_config": "EDGE_DC_ONLY",
+        "random_seed": 11,
+        "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+        "configuration_sha256": {
+          "applications.xml": "7c12490c281445dbfa971ba3361340aecffab537f2e9e4b23bc55c18dd2ca6b2",
+          "cloud.xml": "cc5d4b4623d2268a97b35a09b14fe7dd77727c96ef968a170bc84db1044563da",
+          "edge_datacenters.xml": "70b5a99e00601386a5cce0781dd9c595cbfb575fea15685012c62d71fd95bfd5",
+          "edge_devices.xml": "239861a7a7c2cdc146d4d5d9084e0ea075b1d9397cdbb22435c94259fada3c8f",
+          "simulation_parameters.properties": "39c24d11089a5a450ddb20e2b4bf5592ca26e070c9ecca7ea17410c9e981ddc8"
+        },
+        "workload_override": {
+          "application_index": 2,
+          "arrival_gap_seconds": 0.03,
+          "changes_baseline_configuration": false,
+          "kind": "deterministic_per_task_validation",
+          "source_ue_count": 1,
+          "task_count": 64
+        }
+      },
+      "dqn_stats": {
+        "mode": "train",
+        "decisions": 64,
+        "replay_size": 64,
+        "updates": 33,
+        "loss": 0.00709139055594,
+        "epsilon": 0.9696
+      },
+      "episode_reward": 56.62553230769231,
+      "episode": 1
+    },
+    {
+      "method": "dqn",
+      "mode": "train",
+      "seed": 29,
+      "return_code": 0,
+      "run_dir": "runs/20261104T010942773465298_paper-aligned-baseline_dqn_10ue_EDGE_DC_ONLY_seed29",
+      "status": "completed",
+      "validation_errors": [],
+      "task_accounting": {
+        "completed_tasks": 64,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "pending_by_layer": {
+          "Cloud": 0,
+          "Edge": 0,
+          "Mist": 0
+        },
+        "pending_tasks": 0,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "terminally_failed_tasks": 0
+      },
+      "metrics": {
+        "average_completed_task_total_delay_seconds": 5.848959134615385,
+        "average_completed_task_waiting_time_seconds": 0.27234375,
+        "average_cpu_execution_time_seconds": 0.75,
+        "completed_tasks": 64,
+        "energy_consumption": 0.8726,
+        "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+        "energy_unit": "Wh",
+        "failed_tasks": 0,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "pending_tasks": 0,
+        "queue_aware_metrics": null,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "source": "raw/2026-11-04_08-09-46/Sequential_simulation.csv",
+        "successful_tasks": 64,
+        "task_failure_rate": 0.0,
+        "task_pending_rate": 0.0,
+        "task_success_rate": 1.0,
+        "terminally_failed_tasks": 0,
+        "validation_errors": [],
+        "workload_distribution": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "workload_distribution_unit": "tasks dispatched to each destination layer"
+      },
+      "destination_counts": {
+        "EDGE_DATACENTER": 64
+      },
+      "per_task_lifecycle_accounting": {
+        "accounting_valid": true,
+        "completed": 64,
+        "failed": 0,
+        "generated": 64,
+        "pending": 0,
+        "terminal_task_ids": 64
+      },
+      "decision_count": 64,
+      "pair_signature": {
+        "devices": 10,
+        "duration_seconds": 5,
+        "destination_config": "EDGE_DC_ONLY",
+        "random_seed": 29,
+        "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+        "configuration_sha256": {
+          "applications.xml": "7c12490c281445dbfa971ba3361340aecffab537f2e9e4b23bc55c18dd2ca6b2",
+          "cloud.xml": "cc5d4b4623d2268a97b35a09b14fe7dd77727c96ef968a170bc84db1044563da",
+          "edge_datacenters.xml": "70b5a99e00601386a5cce0781dd9c595cbfb575fea15685012c62d71fd95bfd5",
+          "edge_devices.xml": "239861a7a7c2cdc146d4d5d9084e0ea075b1d9397cdbb22435c94259fada3c8f",
+          "simulation_parameters.properties": "39c24d11089a5a450ddb20e2b4bf5592ca26e070c9ecca7ea17410c9e981ddc8"
+        },
+        "workload_override": {
+          "application_index": 2,
+          "arrival_gap_seconds": 0.03,
+          "changes_baseline_configuration": false,
+          "kind": "deterministic_per_task_validation",
+          "source_ue_count": 1,
+          "task_count": 64
+        }
+      },
+      "dqn_stats": {
+        "mode": "train",
+        "decisions": 64,
+        "replay_size": 128,
+        "updates": 97,
+        "loss": 0.554111905862,
+        "epsilon": 0.9392
+      },
+      "episode_reward": 56.51333230769231,
+      "episode": 2
+    },
+    {
+      "method": "dqn",
+      "mode": "train",
+      "seed": 47,
+      "return_code": 0,
+      "run_dir": "runs/20261104T010953381224018_paper-aligned-baseline_dqn_10ue_EDGE_DC_ONLY_seed47",
+      "status": "completed",
+      "validation_errors": [],
+      "task_accounting": {
+        "completed_tasks": 64,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "pending_by_layer": {
+          "Cloud": 0,
+          "Edge": 0,
+          "Mist": 0
+        },
+        "pending_tasks": 0,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "terminally_failed_tasks": 0
+      },
+      "metrics": {
+        "average_completed_task_total_delay_seconds": 5.774896634615376,
+        "average_completed_task_waiting_time_seconds": 0.19828125000000008,
+        "average_cpu_execution_time_seconds": 0.75,
+        "completed_tasks": 64,
+        "energy_consumption": 0.8726,
+        "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+        "energy_unit": "Wh",
+        "failed_tasks": 0,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "pending_tasks": 0,
+        "queue_aware_metrics": null,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "source": "raw/2026-11-04_08-09-57/Sequential_simulation.csv",
+        "successful_tasks": 64,
+        "task_failure_rate": 0.0,
+        "task_pending_rate": 0.0,
+        "task_success_rate": 1.0,
+        "terminally_failed_tasks": 0,
+        "validation_errors": [],
+        "workload_distribution": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "workload_distribution_unit": "tasks dispatched to each destination layer"
+      },
+      "destination_counts": {
+        "EDGE_DATACENTER": 64
+      },
+      "per_task_lifecycle_accounting": {
+        "accounting_valid": true,
+        "completed": 64,
+        "failed": 0,
+        "generated": 64,
+        "pending": 0,
+        "terminal_task_ids": 64
+      },
+      "decision_count": 64,
+      "pair_signature": {
+        "devices": 10,
+        "duration_seconds": 5,
+        "destination_config": "EDGE_DC_ONLY",
+        "random_seed": 47,
+        "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+        "configuration_sha256": {
+          "applications.xml": "7c12490c281445dbfa971ba3361340aecffab537f2e9e4b23bc55c18dd2ca6b2",
+          "cloud.xml": "cc5d4b4623d2268a97b35a09b14fe7dd77727c96ef968a170bc84db1044563da",
+          "edge_datacenters.xml": "70b5a99e00601386a5cce0781dd9c595cbfb575fea15685012c62d71fd95bfd5",
+          "edge_devices.xml": "239861a7a7c2cdc146d4d5d9084e0ea075b1d9397cdbb22435c94259fada3c8f",
+          "simulation_parameters.properties": "39c24d11089a5a450ddb20e2b4bf5592ca26e070c9ecca7ea17410c9e981ddc8"
+        },
+        "workload_override": {
+          "application_index": 2,
+          "arrival_gap_seconds": 0.03,
+          "changes_baseline_configuration": false,
+          "kind": "deterministic_per_task_validation",
+          "source_ue_count": 1,
+          "task_count": 64
+        }
+      },
+      "dqn_stats": {
+        "mode": "train",
+        "decisions": 64,
+        "replay_size": 192,
+        "updates": 161,
+        "loss": 0.163017556994,
+        "epsilon": 0.9088
+      },
+      "episode_reward": 56.60813230769231,
+      "episode": 3
+    },
+    {
+      "method": "trade-off",
+      "mode": null,
+      "seed": 8128,
+      "return_code": 0,
+      "run_dir": "runs/20261104T011003833857941_paper-aligned-baseline_trade-off_10ue_EDGE_DC_ONLY_seed8128",
+      "status": "completed",
+      "validation_errors": [],
+      "task_accounting": {
+        "completed_tasks": 59,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 59,
+          "Mist": 0
+        },
+        "pending_by_layer": {
+          "Cloud": 0,
+          "Edge": 5,
+          "Mist": 0
+        },
+        "pending_tasks": 5,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "terminally_failed_tasks": 0
+      },
+      "metrics": {
+        "average_completed_task_total_delay_seconds": 6.655932203389835,
+        "average_completed_task_waiting_time_seconds": 1.1059322033898302,
+        "average_cpu_execution_time_seconds": 0.75,
+        "completed_tasks": 59,
+        "energy_consumption": 0.8719,
+        "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+        "energy_unit": "Wh",
+        "failed_tasks": 0,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 59,
+          "Mist": 0
+        },
+        "pending_tasks": 5,
+        "queue_aware_metrics": null,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "source": "raw/2026-11-04_08-10-07/Sequential_simulation.csv",
+        "successful_tasks": 59,
+        "task_failure_rate": 0.0,
+        "task_pending_rate": 0.078125,
+        "task_success_rate": 0.921875,
+        "terminally_failed_tasks": 0,
+        "validation_errors": [],
+        "workload_distribution": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "workload_distribution_unit": "tasks dispatched to each destination layer"
+      },
+      "destination_counts": {
+        "EDGE_DATACENTER": 64
+      },
+      "per_task_lifecycle_accounting": null,
+      "decision_count": null,
+      "pair_signature": {
+        "devices": 10,
+        "duration_seconds": 5,
+        "destination_config": "EDGE_DC_ONLY",
+        "random_seed": 8128,
+        "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+        "configuration_sha256": {
+          "applications.xml": "7c12490c281445dbfa971ba3361340aecffab537f2e9e4b23bc55c18dd2ca6b2",
+          "cloud.xml": "cc5d4b4623d2268a97b35a09b14fe7dd77727c96ef968a170bc84db1044563da",
+          "edge_datacenters.xml": "70b5a99e00601386a5cce0781dd9c595cbfb575fea15685012c62d71fd95bfd5",
+          "edge_devices.xml": "239861a7a7c2cdc146d4d5d9084e0ea075b1d9397cdbb22435c94259fada3c8f",
+          "simulation_parameters.properties": "39c24d11089a5a450ddb20e2b4bf5592ca26e070c9ecca7ea17410c9e981ddc8"
+        },
+        "workload_override": {
+          "application_index": 2,
+          "arrival_gap_seconds": 0.03,
+          "changes_baseline_configuration": false,
+          "kind": "deterministic_per_task_validation",
+          "source_ue_count": 1,
+          "task_count": 64
+        }
+      }
+    },
+    {
+      "method": "queue-aware",
+      "mode": null,
+      "seed": 8128,
+      "return_code": 0,
+      "run_dir": "runs/20261104T011013837229374_paper-aligned-baseline_queue-aware_10ue_EDGE_DC_ONLY_seed8128",
+      "status": "completed",
+      "validation_errors": [],
+      "task_accounting": {
+        "completed_tasks": 59,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 59,
+          "Mist": 0
+        },
+        "pending_by_layer": {
+          "Cloud": 0,
+          "Edge": 5,
+          "Mist": 0
+        },
+        "pending_tasks": 5,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "terminally_failed_tasks": 0
+      },
+      "metrics": {
+        "average_completed_task_total_delay_seconds": 6.655932203389835,
+        "average_completed_task_waiting_time_seconds": 1.1059322033898302,
+        "average_cpu_execution_time_seconds": 0.75,
+        "completed_tasks": 59,
+        "energy_consumption": 0.8719,
+        "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+        "energy_unit": "Wh",
+        "failed_tasks": 0,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 59,
+          "Mist": 0
+        },
+        "pending_tasks": 5,
+        "queue_aware_metrics": {
+          "candidate_observations": 2,
+          "selected_by_layer": {
+            "EDGE_DATACENTER": {
+              "mean_queue_wait_estimate_seconds": 0.0,
+              "selected_tasks": 1
+            }
+          },
+          "selected_mean_queue_wait_estimate_seconds": 0.0,
+          "selected_mean_waiting_queue_length": 0.0,
+          "selected_median_queue_wait_estimate_seconds": 0.0,
+          "selected_queue_estimate_count": 1,
+          "selected_queue_estimate_unavailable_count": 0,
+          "source": "raw/queue_decisions.csv",
+          "valid": true
+        },
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "source": "raw/2026-11-04_08-10-17/Sequential_simulation.csv",
+        "successful_tasks": 59,
+        "task_failure_rate": 0.0,
+        "task_pending_rate": 0.078125,
+        "task_success_rate": 0.921875,
+        "terminally_failed_tasks": 0,
+        "validation_errors": [],
+        "workload_distribution": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "workload_distribution_unit": "tasks dispatched to each destination layer"
+      },
+      "destination_counts": {
+        "EDGE_DATACENTER": 64
+      },
+      "per_task_lifecycle_accounting": null,
+      "decision_count": null,
+      "pair_signature": {
+        "devices": 10,
+        "duration_seconds": 5,
+        "destination_config": "EDGE_DC_ONLY",
+        "random_seed": 8128,
+        "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+        "configuration_sha256": {
+          "applications.xml": "7c12490c281445dbfa971ba3361340aecffab537f2e9e4b23bc55c18dd2ca6b2",
+          "cloud.xml": "cc5d4b4623d2268a97b35a09b14fe7dd77727c96ef968a170bc84db1044563da",
+          "edge_datacenters.xml": "70b5a99e00601386a5cce0781dd9c595cbfb575fea15685012c62d71fd95bfd5",
+          "edge_devices.xml": "239861a7a7c2cdc146d4d5d9084e0ea075b1d9397cdbb22435c94259fada3c8f",
+          "simulation_parameters.properties": "39c24d11089a5a450ddb20e2b4bf5592ca26e070c9ecca7ea17410c9e981ddc8"
+        },
+        "workload_override": {
+          "application_index": 2,
+          "arrival_gap_seconds": 0.03,
+          "changes_baseline_configuration": false,
+          "kind": "deterministic_per_task_validation",
+          "source_ue_count": 1,
+          "task_count": 64
+        }
+      }
+    },
+    {
+      "method": "dqn",
+      "mode": "eval",
+      "seed": 8128,
+      "return_code": 0,
+      "run_dir": "runs/20261104T011023903674458_paper-aligned-baseline_dqn_10ue_EDGE_DC_ONLY_seed8128",
+      "status": "completed",
+      "validation_errors": [],
+      "task_accounting": {
+        "completed_tasks": 64,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "pending_by_layer": {
+          "Cloud": 0,
+          "Edge": 0,
+          "Mist": 0
+        },
+        "pending_tasks": 0,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "terminally_failed_tasks": 0
+      },
+      "metrics": {
+        "average_completed_task_total_delay_seconds": 6.313117788461535,
+        "average_completed_task_waiting_time_seconds": 0.759375,
+        "average_cpu_execution_time_seconds": 0.75,
+        "completed_tasks": 64,
+        "energy_consumption": 0.8726,
+        "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+        "energy_unit": "Wh",
+        "failed_tasks": 0,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "pending_tasks": 0,
+        "queue_aware_metrics": null,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "source": "raw/2026-11-04_08-10-28/Sequential_simulation.csv",
+        "successful_tasks": 64,
+        "task_failure_rate": 0.0,
+        "task_pending_rate": 0.0,
+        "task_success_rate": 1.0,
+        "terminally_failed_tasks": 0,
+        "validation_errors": [],
+        "workload_distribution": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "workload_distribution_unit": "tasks dispatched to each destination layer"
+      },
+      "destination_counts": {
+        "EDGE_DATACENTER": 64
+      },
+      "per_task_lifecycle_accounting": {
+        "accounting_valid": true,
+        "completed": 64,
+        "failed": 0,
+        "generated": 64,
+        "pending": 0,
+        "terminal_task_ids": 64
+      },
+      "decision_count": 64,
+      "pair_signature": {
+        "devices": 10,
+        "duration_seconds": 5,
+        "destination_config": "EDGE_DC_ONLY",
+        "random_seed": 8128,
+        "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+        "configuration_sha256": {
+          "applications.xml": "7c12490c281445dbfa971ba3361340aecffab537f2e9e4b23bc55c18dd2ca6b2",
+          "cloud.xml": "cc5d4b4623d2268a97b35a09b14fe7dd77727c96ef968a170bc84db1044563da",
+          "edge_datacenters.xml": "70b5a99e00601386a5cce0781dd9c595cbfb575fea15685012c62d71fd95bfd5",
+          "edge_devices.xml": "239861a7a7c2cdc146d4d5d9084e0ea075b1d9397cdbb22435c94259fada3c8f",
+          "simulation_parameters.properties": "39c24d11089a5a450ddb20e2b4bf5592ca26e070c9ecca7ea17410c9e981ddc8"
+        },
+        "workload_override": {
+          "application_index": 2,
+          "arrival_gap_seconds": 0.03,
+          "changes_baseline_configuration": false,
+          "kind": "deterministic_per_task_validation",
+          "source_ue_count": 1,
+          "task_count": 64
+        }
+      },
+      "dqn_stats": {
+        "mode": "eval",
+        "decisions": 64,
+        "replay_size": 192,
+        "updates": 161,
+        "loss": 0.163017556994,
+        "epsilon": 0.0
+      },
+      "episode_reward": 55.91920923076923
+    },
+    {
+      "method": "trade-off",
+      "mode": null,
+      "seed": 4401,
+      "return_code": 0,
+      "run_dir": "runs/20261104T011034352807783_paper-aligned-baseline_trade-off_10ue_EDGE_DC_ONLY_seed4401",
+      "status": "completed",
+      "validation_errors": [],
+      "task_accounting": {
+        "completed_tasks": 59,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 59,
+          "Mist": 0
+        },
+        "pending_by_layer": {
+          "Cloud": 0,
+          "Edge": 5,
+          "Mist": 0
+        },
+        "pending_tasks": 5,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "terminally_failed_tasks": 0
+      },
+      "metrics": {
+        "average_completed_task_total_delay_seconds": 6.655932203389835,
+        "average_completed_task_waiting_time_seconds": 1.1059322033898302,
+        "average_cpu_execution_time_seconds": 0.75,
+        "completed_tasks": 59,
+        "energy_consumption": 0.8719,
+        "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+        "energy_unit": "Wh",
+        "failed_tasks": 0,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 59,
+          "Mist": 0
+        },
+        "pending_tasks": 5,
+        "queue_aware_metrics": null,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "source": "raw/2026-11-04_08-10-38/Sequential_simulation.csv",
+        "successful_tasks": 59,
+        "task_failure_rate": 0.0,
+        "task_pending_rate": 0.078125,
+        "task_success_rate": 0.921875,
+        "terminally_failed_tasks": 0,
+        "validation_errors": [],
+        "workload_distribution": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "workload_distribution_unit": "tasks dispatched to each destination layer"
+      },
+      "destination_counts": {
+        "EDGE_DATACENTER": 64
+      },
+      "per_task_lifecycle_accounting": null,
+      "decision_count": null,
+      "pair_signature": {
+        "devices": 10,
+        "duration_seconds": 5,
+        "destination_config": "EDGE_DC_ONLY",
+        "random_seed": 4401,
+        "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+        "configuration_sha256": {
+          "applications.xml": "7c12490c281445dbfa971ba3361340aecffab537f2e9e4b23bc55c18dd2ca6b2",
+          "cloud.xml": "cc5d4b4623d2268a97b35a09b14fe7dd77727c96ef968a170bc84db1044563da",
+          "edge_datacenters.xml": "70b5a99e00601386a5cce0781dd9c595cbfb575fea15685012c62d71fd95bfd5",
+          "edge_devices.xml": "239861a7a7c2cdc146d4d5d9084e0ea075b1d9397cdbb22435c94259fada3c8f",
+          "simulation_parameters.properties": "39c24d11089a5a450ddb20e2b4bf5592ca26e070c9ecca7ea17410c9e981ddc8"
+        },
+        "workload_override": {
+          "application_index": 2,
+          "arrival_gap_seconds": 0.03,
+          "changes_baseline_configuration": false,
+          "kind": "deterministic_per_task_validation",
+          "source_ue_count": 1,
+          "task_count": 64
+        }
+      }
+    },
+    {
+      "method": "queue-aware",
+      "mode": null,
+      "seed": 4401,
+      "return_code": 0,
+      "run_dir": "runs/20261104T011044836454018_paper-aligned-baseline_queue-aware_10ue_EDGE_DC_ONLY_seed4401",
+      "status": "completed",
+      "validation_errors": [],
+      "task_accounting": {
+        "completed_tasks": 59,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 59,
+          "Mist": 0
+        },
+        "pending_by_layer": {
+          "Cloud": 0,
+          "Edge": 5,
+          "Mist": 0
+        },
+        "pending_tasks": 5,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "terminally_failed_tasks": 0
+      },
+      "metrics": {
+        "average_completed_task_total_delay_seconds": 6.655932203389835,
+        "average_completed_task_waiting_time_seconds": 1.1059322033898302,
+        "average_cpu_execution_time_seconds": 0.75,
+        "completed_tasks": 59,
+        "energy_consumption": 0.8719,
+        "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+        "energy_unit": "Wh",
+        "failed_tasks": 0,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 59,
+          "Mist": 0
+        },
+        "pending_tasks": 5,
+        "queue_aware_metrics": {
+          "candidate_observations": 2,
+          "selected_by_layer": {
+            "EDGE_DATACENTER": {
+              "mean_queue_wait_estimate_seconds": 0.0,
+              "selected_tasks": 1
+            }
+          },
+          "selected_mean_queue_wait_estimate_seconds": 0.0,
+          "selected_mean_waiting_queue_length": 0.0,
+          "selected_median_queue_wait_estimate_seconds": 0.0,
+          "selected_queue_estimate_count": 1,
+          "selected_queue_estimate_unavailable_count": 0,
+          "source": "raw/queue_decisions.csv",
+          "valid": true
+        },
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "source": "raw/2026-11-04_08-10-48/Sequential_simulation.csv",
+        "successful_tasks": 59,
+        "task_failure_rate": 0.0,
+        "task_pending_rate": 0.078125,
+        "task_success_rate": 0.921875,
+        "terminally_failed_tasks": 0,
+        "validation_errors": [],
+        "workload_distribution": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "workload_distribution_unit": "tasks dispatched to each destination layer"
+      },
+      "destination_counts": {
+        "EDGE_DATACENTER": 64
+      },
+      "per_task_lifecycle_accounting": null,
+      "decision_count": null,
+      "pair_signature": {
+        "devices": 10,
+        "duration_seconds": 5,
+        "destination_config": "EDGE_DC_ONLY",
+        "random_seed": 4401,
+        "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+        "configuration_sha256": {
+          "applications.xml": "7c12490c281445dbfa971ba3361340aecffab537f2e9e4b23bc55c18dd2ca6b2",
+          "cloud.xml": "cc5d4b4623d2268a97b35a09b14fe7dd77727c96ef968a170bc84db1044563da",
+          "edge_datacenters.xml": "70b5a99e00601386a5cce0781dd9c595cbfb575fea15685012c62d71fd95bfd5",
+          "edge_devices.xml": "239861a7a7c2cdc146d4d5d9084e0ea075b1d9397cdbb22435c94259fada3c8f",
+          "simulation_parameters.properties": "39c24d11089a5a450ddb20e2b4bf5592ca26e070c9ecca7ea17410c9e981ddc8"
+        },
+        "workload_override": {
+          "application_index": 2,
+          "arrival_gap_seconds": 0.03,
+          "changes_baseline_configuration": false,
+          "kind": "deterministic_per_task_validation",
+          "source_ue_count": 1,
+          "task_count": 64
+        }
+      }
+    },
+    {
+      "method": "dqn",
+      "mode": "eval",
+      "seed": 4401,
+      "return_code": 0,
+      "run_dir": "runs/20261104T011055115125541_paper-aligned-baseline_dqn_10ue_EDGE_DC_ONLY_seed4401",
+      "status": "completed",
+      "validation_errors": [],
+      "task_accounting": {
+        "completed_tasks": 64,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "pending_by_layer": {
+          "Cloud": 0,
+          "Edge": 0,
+          "Mist": 0
+        },
+        "pending_tasks": 0,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "terminally_failed_tasks": 0
+      },
+      "metrics": {
+        "average_completed_task_total_delay_seconds": 6.313117788461535,
+        "average_completed_task_waiting_time_seconds": 0.759375,
+        "average_cpu_execution_time_seconds": 0.75,
+        "completed_tasks": 64,
+        "energy_consumption": 0.8726,
+        "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
+        "energy_unit": "Wh",
+        "failed_tasks": 0,
+        "generated_tasks": 64,
+        "layer_successful_completions": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "pending_tasks": 0,
+        "queue_aware_metrics": null,
+        "rejected_before_pipeline_tasks": 0,
+        "sent_tasks": 64,
+        "source": "raw/2026-11-04_08-10-59/Sequential_simulation.csv",
+        "successful_tasks": 64,
+        "task_failure_rate": 0.0,
+        "task_pending_rate": 0.0,
+        "task_success_rate": 1.0,
+        "terminally_failed_tasks": 0,
+        "validation_errors": [],
+        "workload_distribution": {
+          "Cloud": 0,
+          "Edge": 64,
+          "Mist": 0
+        },
+        "workload_distribution_unit": "tasks dispatched to each destination layer"
+      },
+      "destination_counts": {
+        "EDGE_DATACENTER": 64
+      },
+      "per_task_lifecycle_accounting": {
+        "accounting_valid": true,
+        "completed": 64,
+        "failed": 0,
+        "generated": 64,
+        "pending": 0,
+        "terminal_task_ids": 64
+      },
+      "decision_count": 64,
+      "pair_signature": {
+        "devices": 10,
+        "duration_seconds": 5,
+        "destination_config": "EDGE_DC_ONLY",
+        "random_seed": 4401,
+        "simulator_revision": "bcdd239fa301bd7164526dc47685058288c305ef",
+        "configuration_sha256": {
+          "applications.xml": "7c12490c281445dbfa971ba3361340aecffab537f2e9e4b23bc55c18dd2ca6b2",
+          "cloud.xml": "cc5d4b4623d2268a97b35a09b14fe7dd77727c96ef968a170bc84db1044563da",
+          "edge_datacenters.xml": "70b5a99e00601386a5cce0781dd9c595cbfb575fea15685012c62d71fd95bfd5",
+          "edge_devices.xml": "239861a7a7c2cdc146d4d5d9084e0ea075b1d9397cdbb22435c94259fada3c8f",
+          "simulation_parameters.properties": "39c24d11089a5a450ddb20e2b4bf5592ca26e070c9ecca7ea17410c9e981ddc8"
+        },
+        "workload_override": {
+          "application_index": 2,
+          "arrival_gap_seconds": 0.03,
+          "changes_baseline_configuration": false,
+          "kind": "deterministic_per_task_validation",
+          "source_ue_count": 1,
+          "task_count": 64
+        }
+      },
+      "dqn_stats": {
+        "mode": "eval",
+        "decisions": 64,
+        "replay_size": 192,
+        "updates": 161,
+        "loss": 0.163017556994,
+        "epsilon": 0.0
+      },
+      "episode_reward": 55.91920923076923
+    }
+  ],
+  "training_checkpoint": "checkpoints/dqn_checkpoint.bin",
+  "checkpoint_sha256_before_eval": "3d140d87f40b35d7fe126d7ac413885d0fcd28e06fd2e6f9891736d427f6358e",
+  "checkpoint_sha256_after_eval": "3d140d87f40b35d7fe126d7ac413885d0fcd28e06fd2e6f9891736d427f6358e",
+  "frozen_evaluation_checkpoint_unchanged": true,
+  "paired_evaluation_validation": [
+    {
+      "seed": 4401,
+      "methods": [
+        "trade-off",
+        "queue-aware",
+        "dqn"
+      ],
+      "same_simulator_workload_config": true
+    },
+    {
+      "seed": 8128,
+      "methods": [
+        "trade-off",
+        "queue-aware",
+        "dqn"
+      ],
+      "same_simulator_workload_config": true
+    }
+  ],
+  "failed_runs": [],
+  "frozen_eval_transition_insertions": 0
+}

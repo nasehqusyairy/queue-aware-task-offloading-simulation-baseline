@@ -9,7 +9,8 @@ public final class PaperAlignedMain {
     public static void main(String[] args) {
         Simulation simulation = new Simulation();
         simulation.setCustomMobilityModel(SeededMobilityModel.class);
-        simulation.setCustomTaskGenerator(PaperAlignedTaskGenerator.class);
+        simulation.setCustomTaskGenerator(Boolean.getBoolean("paper.per-task-validation-workload")
+                ? PerTaskValidationTaskGenerator.class : PaperAlignedTaskGenerator.class);
         simulation.setCustomComputingNodesGenerator(PaperAlignedComputingNodesGenerator.class);
         if (System.getProperty("paper.task-event-trace") != null) {
             simulation.setCustomComputingNode(TaskTracingComputingNode.class);

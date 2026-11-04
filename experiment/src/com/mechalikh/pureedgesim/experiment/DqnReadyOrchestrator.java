@@ -19,10 +19,10 @@ public final class DqnReadyOrchestrator extends PaperAlignedOrchestrator {
             throw new IllegalArgumentException("DqnReadyOrchestrator requires DqnReadySimulationManager");
         }
         String policyName = System.getProperty("paper.per-task-policy", "deterministic-task-modulo");
-        if (!"deterministic-task-modulo".equals(policyName)) {
-            throw new IllegalArgumentException("unsupported validation policy: " + policyName);
-        }
-        policy = new DeterministicTestPolicy();
+        if ("deterministic-task-modulo".equals(policyName)) policy = new DeterministicTestPolicy();
+        else if ("dqn".equals(policyName)) policy = new DqnOffloadingPolicy();
+        else throw new IllegalArgumentException("unsupported per-task policy: " + policyName);
+        ((DqnReadySimulationManager) manager).registerPolicy(policy);
     }
 
     @Override
@@ -45,7 +45,7 @@ public final class DqnReadyOrchestrator extends PaperAlignedOrchestrator {
             throw new IllegalArgumentException("policy must return -1 when no action is eligible");
         }
         ((DqnReadySimulationManager) simulationManager).recordPolicyDecision(
-                task, observation, ids, mask, action, selectedNodeId);
+                task, observation, ids, mask, action, selectedNodeId, policy.decisionMetadata());
         if (action < 0) return -1;
         ComputingNode selected = ordered.get(action);
         if (selected == null || !mask[action]) throw new IllegalStateException("invalid destination escaped action mask");

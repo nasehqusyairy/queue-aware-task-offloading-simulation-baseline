@@ -1,0 +1,3 @@
+task_id,estimate_timestamp_seconds,candidate_id,candidate_type,active_task_count,waiting_queue_length,queue_estimate_available,queue_wait_estimate_seconds,baseline_score_seconds,queue_penalty_weight,queue_penalty_seconds,combined_score_seconds,baseline_rank,combined_rank,ranking_changed,baseline_selected_candidate_id,selected_candidate_id,selected_destination_changed,placement_cache_used,selected
+1,0.06,1,EDGE_DATACENTER,0,0,true,0.0,0.9,1.0,0.0,0.9,1,1,false,1,1,false,false,true
+1,0.06,3,EDGE_DATACENTER,0,0,true,0.0,0.9,1.0,0.0,0.9,2,2,false,1,1,false,false,false

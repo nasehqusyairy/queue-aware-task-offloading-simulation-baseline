@@ -129,7 +129,7 @@ def main() -> int:
         device_profiles, app_profiles, device_counts, app_counts, source_count, expected_tasks = profile_data(
             config, devices, duration
         )
-        if method == "per-task-test":
+        if method in {"per-task-test", "dqn"} or os.environ.get("PAPER_PER_TASK_VALIDATION_WORKLOAD") == "1":
             expected_tasks = 64
             manifest["workload_override"] = {
                 "kind": "deterministic_per_task_validation",
@@ -230,8 +230,10 @@ def main() -> int:
             classpath = f"{class_dir}:{classpath}"
             destination_log = raw / "destinations.csv"
             common_properties = [f"-Dpaper.seed={seed}"] if seed is not None else []
+            if os.environ.get("PAPER_PER_TASK_VALIDATION_WORKLOAD") == "1":
+                common_properties.append("-Dpaper.per-task-validation-workload=true")
             trace_events = (os.environ.get("PAPER_TASK_EVENT_TRACE", "").strip().lower() in {"1", "true", "yes"}
-                            or method == "per-task-test")
+                            or method in {"per-task-test", "dqn"})
             manifest["task_event_trace_enabled"] = trace_events
             command = [
                 "java", *common_properties,
@@ -260,8 +262,30 @@ def main() -> int:
                                 f"-Dpaper.per-task-ledger-log={raw / 'per_task_ledger.csv'}",
                                 "-cp", classpath, "com.mechalikh.pureedgesim.experiment.PerTaskTestMain"])
                 manifest["algorithm"] = "DETERMINISTIC_TEST_POLICY_NOT_DQN"
+            elif method == "dqn":
+                dqn_mode = os.environ.get("DQN_MODE", "train")
+                dqn_config = os.environ.get("DQN_CONFIG")
+                dqn_checkpoint = os.environ.get("DQN_CHECKPOINT")
+                if not dqn_config or not dqn_checkpoint:
+                    raise ValueError("DQN_CONFIG and DQN_CHECKPOINT environment variables are required for method=dqn")
+                transition_log = raw / "dqn_transitions.csv"
+                command.extend(["-Dpaper.per-task-policy=dqn", f"-Dpaper.dqn-mode={dqn_mode}",
+                                f"-Dpaper.dqn-config={Path(dqn_config).resolve()}",
+                                f"-Dpaper.dqn-checkpoint={Path(dqn_checkpoint).resolve()}",
+                                f"-Dpaper.dqn-transition-log={transition_log}",
+                                f"-Dpaper.per-task-decision-log={raw / 'per_task_decisions.csv'}",
+                                f"-Dpaper.per-task-ledger-log={raw / 'per_task_ledger.csv'}",
+                                "-cp", classpath, "com.mechalikh.pureedgesim.experiment.DqnMain"])
+                manifest["algorithm"] = "DQN_PER_TASK_OFFLOADING"
+                manifest["dqn_mode"] = dqn_mode
+                manifest["dqn_config"] = str(Path(dqn_config).resolve())
+                manifest["dqn_checkpoint"] = str(Path(dqn_checkpoint).resolve())
+                manifest["training_seed"] = seed if dqn_mode == "train" else None
+                manifest["validity"] = "DQN pilot software validation; not evidence of learned performance"
             else:
                 command.extend(["-cp", classpath, "com.mechalikh.pureedgesim.experiment.PaperAlignedMain"])
+                if os.environ.get("PAPER_PER_TASK_VALIDATION_WORKLOAD") == "1":
+                    command.append("-Dpaper.per-task-validation-workload=true")
         else:
             command = ["java", "-cp", classpath, "com.mechalikh.pureedgesim.MainApplication"]
         result = subprocess.run(command, cwd=work, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -289,7 +313,7 @@ def main() -> int:
         manifest["simulator_csvs"] = [str(p.relative_to(run)) for p in sorted(raw.rglob("*.csv"))
                                       if p.name != "destinations.csv"]
 
-        if method == "per-task-test":
+        if method in {"per-task-test", "dqn"}:
             decision_path = raw / "per_task_decisions.csv"
             ledger_path = raw / "per_task_ledger.csv"
             if not decision_path.is_file() or not ledger_path.is_file():
@@ -501,7 +525,7 @@ def main() -> int:
                 manifest["local_execution_decisions"] = local_count
                 manifest["offloading_decisions"] = decision_count - local_count
                 manifest["orchestrator_types_observed"] = sorted(orchestrator_types)
-                expected_decision_sources = 1 if method == "per-task-test" else devices
+                expected_decision_sources = 1 if method in {"per-task-test", "dqn"} or os.environ.get("PAPER_PER_TASK_VALIDATION_WORKLOAD") == "1" else devices
                 if len(source_ids) != expected_decision_sources:
                     errors.append(f"destination log observed {len(source_ids)} source UEs; expected {expected_decision_sources}")
                 if target == "EDGE_DC_ONLY" and decision_counts.get("NONE", 0):
@@ -523,7 +547,7 @@ def main() -> int:
         manifest["status"] = "completed" if not errors else "failed"
         if errors:
             manifest["validity"] = "invalid/failed run; artifacts retained and excluded from success claims"
-        elif method == "per-task-test":
+        elif method in {"per-task-test", "dqn"}:
             manifest["validity"] = "deterministic per-task lifecycle validation only; not DQN or performance evidence"
         else:
             manifest["validity"] = "paper-aligned baseline run; not Queue-Aware/GNN/DQN"

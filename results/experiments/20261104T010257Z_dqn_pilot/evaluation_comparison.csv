@@ -1,0 +1,7 @@
+episode,method,mode,seed,status,generated,completed,failed,pending,completion_rate,episode_reward,energy_wh,average_total_delay_seconds,average_waiting_seconds,mean_queue_estimate,destination_counts,decision_count,lifecycle_accounting,loss,replay_size,updates,epsilon,validation_errors
+,trade-off,baseline,8128,completed,64,59,0,5,0.921875,,0.8719,6.655932203389835,1.1059322033898302,,"{""EDGE_DATACENTER"": 64}",,null,,,,,[]
+,queue-aware,baseline,8128,completed,64,59,0,5,0.921875,,0.8719,6.655932203389835,1.1059322033898302,0.0,"{""EDGE_DATACENTER"": 64}",,null,,,,,[]
+,dqn,eval,8128,completed,64,64,0,0,1.0,55.91920923076923,0.8726,6.313117788461535,0.759375,,"{""EDGE_DATACENTER"": 64}",64,"{""accounting_valid"": true, ""completed"": 64, ""failed"": 0, ""generated"": 64, ""pending"": 0, ""terminal_task_ids"": 64}",0.163017556994,192,161,0.0,[]
+,trade-off,baseline,4401,completed,64,59,0,5,0.921875,,0.8719,6.655932203389835,1.1059322033898302,,"{""EDGE_DATACENTER"": 64}",,null,,,,,[]
+,queue-aware,baseline,4401,completed,64,59,0,5,0.921875,,0.8719,6.655932203389835,1.1059322033898302,0.0,"{""EDGE_DATACENTER"": 64}",,null,,,,,[]
+,dqn,eval,4401,completed,64,64,0,0,1.0,55.91920923076923,0.8726,6.313117788461535,0.759375,,"{""EDGE_DATACENTER"": 64}",64,"{""accounting_valid"": true, ""completed"": 64, ""failed"": 0, ""generated"": 64, ""pending"": 0, ""terminal_task_ids"": 64}",0.163017556994,192,161,0.0,[]
