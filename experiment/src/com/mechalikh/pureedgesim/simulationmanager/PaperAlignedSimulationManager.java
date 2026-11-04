@@ -22,7 +22,7 @@ import com.mechalikh.pureedgesim.experiment.QueueAwareComputingNode;
 import com.mechalikh.pureedgesim.experiment.TaskTracingComputingNode;
 
 /** Hard simulation horizon and task-destination audit for paper-aligned runs. */
-public final class PaperAlignedSimulationManager extends DefaultSimulationManager {
+public class PaperAlignedSimulationManager extends DefaultSimulationManager {
     private final Map<Integer, String> orchestrators = new HashMap<>();
     // A destination assignment is not success. Keep it outstanding until a terminal event.
     private final Map<Integer, String> dispatchedButUnresolved = new HashMap<>();

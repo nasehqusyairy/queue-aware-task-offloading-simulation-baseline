@@ -118,7 +118,8 @@ def main() -> int:
         "configuration_sha256": {
             p.name: sha256(p) for p in sorted(config.iterdir()) if p.is_file()
         },
-        "validity": "paper-aligned baseline; not Queue-Aware, GNN, or DQN",
+        "validity": ("deterministic per-task lifecycle validation only; not DQN or performance evidence"
+                     if method == "per-task-test" else "paper-aligned baseline; not Queue-Aware, GNN, or DQN"),
         "energy_scope": "computing nodes (Cloud + Edge Data Centers + user devices); network energy is separate",
     }
     write_json(run / "config.json", manifest)
@@ -128,6 +129,16 @@ def main() -> int:
         device_profiles, app_profiles, device_counts, app_counts, source_count, expected_tasks = profile_data(
             config, devices, duration
         )
+        if method == "per-task-test":
+            expected_tasks = 64
+            manifest["workload_override"] = {
+                "kind": "deterministic_per_task_validation",
+                "task_count": 64,
+                "source_ue_count": 1,
+                "arrival_gap_seconds": 0.03,
+                "application_index": 2,
+                "changes_baseline_configuration": False,
+            }
         home_matrix_encoded = os.environ.get("PAPER_HOME_WORKLOAD_MATRIX", "").strip()
         home_condition = os.environ.get("PAPER_HOME_WORKLOAD_CONDITION", "").strip()
         home_matrix = None
@@ -219,7 +230,8 @@ def main() -> int:
             classpath = f"{class_dir}:{classpath}"
             destination_log = raw / "destinations.csv"
             common_properties = [f"-Dpaper.seed={seed}"] if seed is not None else []
-            trace_events = os.environ.get("PAPER_TASK_EVENT_TRACE", "").strip().lower() in {"1", "true", "yes"}
+            trace_events = (os.environ.get("PAPER_TASK_EVENT_TRACE", "").strip().lower() in {"1", "true", "yes"}
+                            or method == "per-task-test")
             manifest["task_event_trace_enabled"] = trace_events
             command = [
                 "java", *common_properties,
@@ -242,6 +254,12 @@ def main() -> int:
                 command.extend(["-cp", classpath, "com.mechalikh.pureedgesim.experiment.QueueAwareMain"])
                 manifest["queue_penalty_weight"] = queue_weight
                 manifest["algorithm"] = "QUEUE_AWARE_TRADE_OFF"
+            elif method == "per-task-test":
+                command.extend([f"-Dpaper.per-task-policy=deterministic-task-modulo",
+                                f"-Dpaper.per-task-decision-log={raw / 'per_task_decisions.csv'}",
+                                f"-Dpaper.per-task-ledger-log={raw / 'per_task_ledger.csv'}",
+                                "-cp", classpath, "com.mechalikh.pureedgesim.experiment.PerTaskTestMain"])
+                manifest["algorithm"] = "DETERMINISTIC_TEST_POLICY_NOT_DQN"
             else:
                 command.extend(["-cp", classpath, "com.mechalikh.pureedgesim.experiment.PaperAlignedMain"])
         else:
@@ -270,6 +288,80 @@ def main() -> int:
         manifest["working_directory"] = str(work)
         manifest["simulator_csvs"] = [str(p.relative_to(run)) for p in sorted(raw.rglob("*.csv"))
                                       if p.name != "destinations.csv"]
+
+        if method == "per-task-test":
+            decision_path = raw / "per_task_decisions.csv"
+            ledger_path = raw / "per_task_ledger.csv"
+            if not decision_path.is_file() or not ledger_path.is_file():
+                errors.append("per-task decision or lifecycle ledger CSV is missing")
+            else:
+                with decision_path.open(newline="") as stream:
+                    decisions = list(csv.DictReader(stream))
+                with (raw / "destinations.csv").open(newline="") as stream:
+                    destination_rows = [row for row in csv.DictReader(stream) if row.get("record_type") == "DECISION"]
+                decision_ids = [row.get("task_id") for row in decisions]
+                destination_by_id = {row.get("task_id"): row.get("destination_id", "") for row in destination_rows}
+                duplicate_ids = len(decision_ids) != len(set(decision_ids))
+                if duplicate_ids:
+                    errors.append("per-task decision audit contains duplicate task IDs")
+                if len(decisions) != len(destination_rows):
+                    errors.append("per-task and destination audit decision row counts differ")
+                mismatches = [row.get("task_id") for row in decisions
+                              if row.get("actual_applied_destination_id", "") != destination_by_id.get(row.get("task_id"), "")]
+                if mismatches:
+                    errors.append(f"selected/applied destination audit mismatch for task IDs {mismatches[:10]}")
+                unaccounted_calls = [row.get("task_id") for row in decisions
+                                     if row.get("decision_status") not in {"DECIDED", "NO_ELIGIBLE_DESTINATION", "POLICY_NOT_CALLED"}]
+                if unaccounted_calls:
+                    errors.append("per-task decision has unknown decision status")
+                for row in decisions:
+                    if row.get("decision_status") != "DECIDED":
+                        continue
+                    try:
+                        ids = json.loads(row["candidate_edc_ids"])
+                        mask = json.loads(row["action_mask"])
+                        action = int(row["selected_action"])
+                        chosen = int(row["selected_edc_id"])
+                    except (KeyError, ValueError, TypeError, json.JSONDecodeError):
+                        errors.append(f"malformed action mapping for task {row.get('task_id')}")
+                        continue
+                    if len(ids) != len(mask) or action < 0 or action >= len(mask) or not mask[action] or ids[action] != chosen:
+                        errors.append(f"masked or inconsistent action mapping for task {row.get('task_id')}")
+                    if row.get("cache_bypassed", "").lower() != "true":
+                        errors.append(f"per-task decision did not bypass placement cache for task {row.get('task_id')}")
+                with ledger_path.open(newline="") as stream:
+                    ledger_rows = list(csv.DictReader(stream))
+                generated_ids = {row["task_id"] for row in ledger_rows if row["event_name"] == "TASK_GENERATED"}
+                terminal_by_kind = {
+                    kind: [row["task_id"] for row in ledger_rows if row["event_name"] == event_name]
+                    for kind, event_name in (("completed", "TASK_COMPLETED"), ("failed", "TASK_FAILED"), ("pending", "TASK_PENDING_AT_HORIZON"))
+                }
+                if len(generated_ids) != expected_tasks:
+                    errors.append(f"task ledger generated ID count {len(generated_ids)} != {expected_tasks}")
+                if any(len(values) != len(set(values)) for values in terminal_by_kind.values()):
+                    errors.append("task ledger contains duplicate terminal outcomes")
+                terminal_sets = [set(values) for values in terminal_by_kind.values()]
+                if any(terminal_sets[i] & terminal_sets[j] for i in range(3) for j in range(i + 1, 3)):
+                    errors.append("task ledger terminal outcome categories overlap")
+                terminal_ids = set().union(*terminal_sets)
+                if not terminal_ids <= generated_ids:
+                    errors.append("task ledger terminal outcome references an unknown task")
+                terminal_task_ids = terminal_sets[0] | terminal_sets[1]
+                if not terminal_task_ids <= set(decision_ids):
+                    errors.append("terminal task outcome is missing its task decision")
+                ledger_accounting = {"generated": len(generated_ids), **{key: len(values) for key, values in terminal_by_kind.items()},
+                                     "terminal_task_ids": len(terminal_ids), "accounting_valid": len(generated_ids) == len(terminal_ids)}
+                manifest["per_task_lifecycle_accounting"] = ledger_accounting
+                if not ledger_accounting["accounting_valid"]:
+                    errors.append("task ledger lifecycle does not account for every generated task exactly once")
+                manifest["per_task_decision_count"] = len(decisions)
+                manifest["per_task_unique_task_ids"] = len(set(decision_ids))
+                manifest["per_task_destination_mismatches"] = len(mismatches)
+                manifest["per_task_cached_placement_bypasses"] = sum(row.get("cache_bypassed", "").lower() == "true" for row in decisions)
+                manifest["per_task_decision_status_counts"] = {
+                    status: sum(row.get("decision_status") == status for row in decisions)
+                    for status in ("DECIDED", "NO_ELIGIBLE_DESTINATION", "POLICY_NOT_CALLED")
+                }
 
         if profile == "paper-aligned-baseline":
             device_match = re.search(r"PAPER_DEVICE_COUNTS requested=(\d+) actual=(\d+) profiles=([^ ]+) active_task_sources=(\d+) edge_data_centers=(\d+) cloud=(\d+)", result.stdout)
@@ -409,8 +501,9 @@ def main() -> int:
                 manifest["local_execution_decisions"] = local_count
                 manifest["offloading_decisions"] = decision_count - local_count
                 manifest["orchestrator_types_observed"] = sorted(orchestrator_types)
-                if len(source_ids) != devices:
-                    errors.append(f"destination log observed {len(source_ids)} source UEs; expected {devices}")
+                expected_decision_sources = 1 if method == "per-task-test" else devices
+                if len(source_ids) != expected_decision_sources:
+                    errors.append(f"destination log observed {len(source_ids)} source UEs; expected {expected_decision_sources}")
                 if target == "EDGE_DC_ONLY" and decision_counts.get("NONE", 0):
                     errors.append(f"{decision_counts['NONE']} EDGE_DC_ONLY tasks had no eligible EDC destination")
 
@@ -428,8 +521,12 @@ def main() -> int:
             errors.append("no authentic PureEdgeSim CSV was preserved")
         manifest["validation_errors"] = errors
         manifest["status"] = "completed" if not errors else "failed"
-        manifest["validity"] = ("paper-aligned baseline run; not Queue-Aware/GNN/DQN" if not errors
-                                else "invalid/failed run; artifacts retained and excluded from success claims")
+        if errors:
+            manifest["validity"] = "invalid/failed run; artifacts retained and excluded from success claims"
+        elif method == "per-task-test":
+            manifest["validity"] = "deterministic per-task lifecycle validation only; not DQN or performance evidence"
+        else:
+            manifest["validity"] = "paper-aligned baseline run; not Queue-Aware/GNN/DQN"
         manifest["finished_utc"] = utc_now()
         write_json(run / "config.json", manifest)
         write_json(run / "manifest.json", manifest)

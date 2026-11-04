@@ -13,7 +13,7 @@ WORKLOAD_LEVEL=
 RUNS_ROOT="${RUNS_ROOT:-$ROOT/results/runs}"
 
 usage() {
-  printf 'Usage: RUNS_ROOT=DIR ./run.sh [--profile technical-baseline|paper-aligned-baseline] [--method trade-off|round-robin|queue-aware|all] [--devices N | --workload-level low|medium|high] [--duration-seconds N | --duration-minutes N] [--destination-config NAME] [--architecture NAME] [--seed N] [--queue-weight LAMBDA]\n'
+  printf 'Usage: RUNS_ROOT=DIR ./run.sh [--profile technical-baseline|paper-aligned-baseline] [--method trade-off|round-robin|queue-aware|per-task-test|all] [--devices N | --workload-level low|medium|high] [--duration-seconds N | --duration-minutes N] [--destination-config NAME] [--architecture NAME] [--seed N] [--queue-weight LAMBDA]\n'
   printf 'Paper targets: ALL_DEVICES, EDGE_AND_EDGE_DC, EDGE_AND_CLOUD, EDGE_DC_AND_CLOUD, EDGE_ONLY, EDGE_DC_ONLY\n'
   printf 'Paper profile defaults to 200s when --duration-seconds is omitted. Legacy technical profile defaults to 1 minute.\n'
 }
@@ -39,9 +39,12 @@ while (($#)); do
   esac
 done
 [[ "$PROFILE" == technical-baseline || "$PROFILE" == paper-aligned-baseline ]] || { echo 'Error: unknown profile' >&2; exit 2; }
-[[ "$METHOD" == trade-off || "$METHOD" == round-robin || "$METHOD" == queue-aware || "$METHOD" == all ]] || { echo 'Error: method must be trade-off, round-robin, queue-aware, or all' >&2; exit 2; }
+[[ "$METHOD" == trade-off || "$METHOD" == round-robin || "$METHOD" == queue-aware || "$METHOD" == per-task-test || "$METHOD" == all ]] || { echo 'Error: method must be trade-off, round-robin, queue-aware, per-task-test, or all' >&2; exit 2; }
 if [[ "$METHOD" == queue-aware && "$PROFILE" != paper-aligned-baseline ]]; then
   echo 'Error: queue-aware requires paper-aligned-baseline' >&2; exit 2
+fi
+if [[ "$METHOD" == per-task-test && "$PROFILE" != paper-aligned-baseline ]]; then
+  echo 'Error: per-task-test requires paper-aligned-baseline' >&2; exit 2
 fi
 if [[ -n "$WORKLOAD_LEVEL" ]]; then
   [[ "$PROFILE" == paper-aligned-baseline ]] || { echo 'Error: workload levels require paper-aligned-baseline' >&2; exit 2; }
